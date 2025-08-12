@@ -56,10 +56,10 @@ public class TeleOpTemplate extends OpMode
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
+    private DcMotor leftFrontDrive;
+    private DcMotor leftBackDrive;
+    private DcMotor rightFrontDrive;
+    private DcMotor rightBackDrive;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -69,10 +69,10 @@ public class TeleOpTemplate extends OpMode
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");//Port:
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");//Port:
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");//Port:
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");//Port:
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFront");//Port:
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "leftBack");//Port:
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//Port:
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//Port:
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
