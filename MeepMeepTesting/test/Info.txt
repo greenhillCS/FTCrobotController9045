@@ -1,0 +1,9 @@
+Create a folder for the path based either on the tools it uses or who is making it.
+Ex: ClawFourBar or BobAllice
+Copy the Template into the folder under a creative name describing what it does
+Ex: DriveInASquareMeepMeep
+Copy the corresponding drive constants file, if you have one, into said folder
+Make the MeepMeep class extend it, and put the values into necissary places
+If you aren't using positioning sensors, such as a camera, adding a robot_length variable could help for starting positions
+Go to https://learnroadrunner.com/trajectorybuilder-functions.html#forward-distance-double
+Create a path out of the trajectory builder functions
