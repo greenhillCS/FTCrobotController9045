@@ -1,0 +1,6 @@
+This is the testing folder
+Each team member will have a folder here
+Every file made by a team member will start here, then migrate to the main robot code
+There is an identical folder for MeepMeep that has the same guidelines
+For making OpModes just copy one of the templates and configure it as needed
+Good Luck.
