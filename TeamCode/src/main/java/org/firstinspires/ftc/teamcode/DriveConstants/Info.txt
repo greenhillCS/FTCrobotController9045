@@ -1,5 +1,3 @@
 This is the Drive Constants folder
 For each significant physical change made to the robot, make a new drive constants file
-Each drive constants file will first be copied from the template
-Then give the file a name corresponding to the tools on the robot.
-Ex: DriveConstants_ClawFourBar
+For steps on how to do so, see the UpdatingDriveConstants.txt below
