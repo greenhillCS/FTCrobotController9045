@@ -12,14 +12,14 @@ public class MeepMeepTemplate {
         MeepMeep meepMeep = new MeepMeep(800);
 
         // The starting position of the robot, The axis go from the center-0, 0-and go 72 inches outward in each direction
-        Pose2d startPos = new Pose2d(0, 0, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                    drive.trajectorySequenceBuilder(startPos)
+                    drive.trajectorySequenceBuilder(startPose)
                             //Put trajectories here
                             .build()
                 );
