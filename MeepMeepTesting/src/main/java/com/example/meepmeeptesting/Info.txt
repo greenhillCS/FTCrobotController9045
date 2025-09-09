@@ -2,3 +2,5 @@ First, name you own folder just like with the other testing folder
 Then, copy the template there under a new name
 Finally, make a new Application type Configuration with the MeepMeepTesting.main in the first dropdown and then the name of the main MeepMeep class in the other
 and start building your new path
+For the drive constants, just copy the drive constants file you are using into this new folder, replace the necessary values with the variables
+This allows you to more accurately simulate the robot

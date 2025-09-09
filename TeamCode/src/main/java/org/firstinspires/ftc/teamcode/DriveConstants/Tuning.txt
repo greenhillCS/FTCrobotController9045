@@ -12,7 +12,7 @@ For the drive constants that you need to calculate, you should be able to copy t
    Track width is from the middle of the wheels
    We are using Gobilda Yellow Jacket Planetary Gear 5204 435RPM motors for all wheels
 We are using THREE WHEEL ODOMETRY and you can also probably copy over values in the first Three Wheel Odometry tab
-    lateral distance is measured using the middle of the paralell wheels
+    lateral distance is measured using the middle of the parallel wheels
     Forward offset is from the middle of the perpendicular wheel to the center of the robot
 Don't go past 4 decimal places in Feedforward tuning but make sure you are setting the distance to 60 in
     60 in is almost the entire field, each tile is ~24x24 in, plan accordingly
