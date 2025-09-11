@@ -1,3 +1,4 @@
+
 /**
  * build.common.gradle
  *
@@ -21,7 +22,7 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 29
+    compileSdkVersion 36
 
     signingConfigs {
         release {
@@ -45,10 +46,6 @@ android {
             storeFile rootProject.file('libs/ftc.debug.keystore')
             storePassword 'android'
         }
-    }
-
-    aaptOptions {
-        noCompress "tflite"
     }
 
     defaultConfig {
@@ -106,20 +103,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     packagingOptions {
         pickFirst '**/*.so'
-    }
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDir rootProject.file('libs')
     }
     ndkVersion '21.3.6528147'
 }
 
 repositories {
 }
-
