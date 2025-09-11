@@ -8,6 +8,12 @@ import org.rowlandhall.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
 import org.rowlandhall.meepmeep.roadrunner.DefaultBotBuilder;
 import org.rowlandhall.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 public class MeepMeepTemplate {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
@@ -25,7 +31,13 @@ public class MeepMeepTemplate {
                             .build()
                 );
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_INTOTHEDEEP_JUICE_DARK)
+        String path = System.getProperty("user.dir");
+        File parent = new File(path);
+        Image img = null;
+        try { img = ImageIO.read(new File(parent + "\\MeepMeepTesting\\src\\main\\java\\com\\example\\meepmeeptesting\\Testing\\field-2025-juice-dark.png"));}
+        catch(IOException e) {}
+
+        meepMeep.setBackground(img)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)

@@ -6,6 +6,12 @@ import org.rowlandhall.meepmeep.MeepMeep;
 import org.rowlandhall.meepmeep.roadrunner.DefaultBotBuilder;
 import org.rowlandhall.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 public class SquareTest {
     public static void main(String[] args) {
         double difference = 54.5; // difference between peak and trough 54.5
@@ -39,7 +45,13 @@ public class SquareTest {
                         .splineTo(new Vector2d(peak, -peak), Math.toRadians(45))
                         .build());
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_INTOTHEDEEP_JUICE_DARK)
+        String path = System.getProperty("user.dir");
+        File parent = new File(path);
+        Image img = null;
+        try { img = ImageIO.read(new File(parent + "\\MeepMeepTesting\\src\\main\\java\\com\\example\\meepmeeptesting\\Testing\\field-2025-juice-dark.png"));}
+        catch(IOException e) {}
+
+        meepMeep.setBackground(img)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
