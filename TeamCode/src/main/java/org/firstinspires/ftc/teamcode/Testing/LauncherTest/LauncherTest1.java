@@ -51,6 +51,7 @@ public class LauncherTest1 extends OpMode
     // Declare OpMode members.
 private DcMotor rightMotor;
 private DcMotor leftMotor;
+private KiranLaucherTest1 launcher;
     private ElapsedTime runtime = new ElapsedTime();
     /*
      * Code to run ONCE when the driver hits INIT
@@ -62,6 +63,7 @@ private DcMotor leftMotor;
             leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
             leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            launcher = new KiranLaucherTest1(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -89,8 +91,10 @@ private DcMotor leftMotor;
     public void loop() {
 //Runs the whole time when started
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        rightMotor.setPower(1);
-        leftMotor.setPower(1);
+//        rightMotor.setPower(1);
+//        leftMotor.setPower(1);
+        launcher.update();
+
     }
 
     /*
