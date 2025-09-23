@@ -42,7 +42,7 @@ public Pose2d update(){
       telemetry.addData("Robot Pos Y", detection.robotPose.getPosition().y);
       telemetry.addData("Robot Angle Yaw", detection.robotPose.getOrientation().getYaw());
 
-      position = new Pose2d(detection.robotPose.getPosition().x, detection.robotPose.getPosition().y,detection.robotPose.getOrientation().getYaw())
+      position = new Pose2d(detection.robotPose.getPosition().x, detection.robotPose.getPosition().y,detection.robotPose.getOrientation().getYaw());
 
   }
 return position;
