@@ -33,6 +33,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Testing.LauncherTest.KiranLaucherTest1;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -46,15 +50,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class AprilTagTest extends OpMode
 {
     // Declare OpMode members.
-
+    private AprilTagToolClass aprilTagToolClass;
     private ElapsedTime runtime = new ElapsedTime();
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-
+        aprilTagToolClass = new AprilTagToolClass(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -82,6 +88,7 @@ public class AprilTagTest extends OpMode
     public void loop() {
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        aprilTagToolClass.update();
     }
 
     /*
