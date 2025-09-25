@@ -16,7 +16,7 @@ public class KiranLaucherTest1 {
         hardwareMap = h;
         telemetry = t;
         gamepad = g;
-        launcher = hardwareMap.get(DcMotor.class,"rightMotor");
+        launcher = hardwareMap.get(DcMotor.class,"rightMotor"); //Port 0
         launcher.setDirection(DcMotorSimple.Direction.FORWARD);
     }
     public void update(){
