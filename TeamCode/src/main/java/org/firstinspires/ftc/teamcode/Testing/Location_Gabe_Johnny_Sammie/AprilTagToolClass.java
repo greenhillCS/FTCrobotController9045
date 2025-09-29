@@ -36,16 +36,23 @@ public class AprilTagToolClass {
 public Pose2d update(){
   List<AprilTagDetection> detections = aprilTag.getDetections();
   telemetry.addData("Number Of Detections", detections.size());
+  new Pose2d();
   for (AprilTagDetection detection : detections) {
       telemetry.addData("ID",String.format("%s: %s", detection.id, detection.metadata.name));
-      telemetry.addData("Robot Pos X", detection.robotPose.getPosition().x);
-      telemetry.addData("Robot Pos Y", detection.robotPose.getPosition().y);
-      telemetry.addData("Robot Angle Yaw", detection.robotPose.getOrientation().getYaw());
+//      telemetry.addData("Robot Pos X", detection.robotPose.getPosition().x);
+//      telemetry.addData("Robot Pos Y", detection.robotPose.getPosition().y);
+//      telemetry.addData("Robot Angle Yaw", detection.robotPose.getOrientation().getYaw());
 
-      position = new Pose2d(detection.robotPose.getPosition().x, detection.robotPose.getPosition().y,detection.robotPose.getOrientation().getYaw());
+      //position = new Pose2d(detection.robotPose.getPosition().x, detection.robotPose.getPosition().y,detection.robotPose.getOrientation().getYaw());
+      position = new Pose2d( position.getX()+detection.robotPose.getPosition().x, position.getY()+detection.robotPose.getPosition().y, position.getHeading() + detection.robotPose.getOrientation().getYaw());
 
   }
-return position;
+    position = new Pose2d( position.getX()/detections.size(), position.getY()/detections.size(), position.getHeading()/detections.size());
+
+    return position;
+  //April Tag IDs: GPP = 21, PGP = 22, PPG = 23,
+    // Blue Goal = 20
+    // Red Goal = 24
 
 }
 

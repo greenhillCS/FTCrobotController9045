@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -88,7 +89,8 @@ public class AprilTagTest extends OpMode
     public void loop() {
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        aprilTagToolClass.update();
+        Pose2d position = aprilTagToolClass.update();
+        telemetry.addData("Position", position);
     }
 
     /*
