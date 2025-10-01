@@ -22,7 +22,7 @@ public class LifterToolClass {
         lifterLeft = hardwareMap.get(DcMotor.class, "leftLifter");
         lifterLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         lifterRight = hardwareMap.get(DcMotor.class, "rightLifter");
-        lifterRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        lifterRight.setDirection(DcMotorSimple.Direction.FORWARD);
         telemetry.addData("Lifter", "Initialized");
     }
     public void update(){
