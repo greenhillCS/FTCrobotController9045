@@ -49,6 +49,10 @@ public Pose2d update(){
   telemetry.addData("Number Of Detections", detections.size());
   position = new Pose2d();
   positionBack = new Pose2d();
+  if (detections.size()+detectionsBack.size() == 0){
+      position = null;
+      positionBack = null;
+  }
   for (AprilTagDetection detection : detections) {
       telemetry.addData("ID",String.format("%s: %s", detection.id, detection.metadata.name));
 //      telemetry.addData("Robot Pos X", detection.robotPose.getPosition().x);
