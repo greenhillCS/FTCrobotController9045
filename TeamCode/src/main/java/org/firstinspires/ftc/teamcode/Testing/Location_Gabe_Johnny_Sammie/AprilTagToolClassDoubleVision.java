@@ -24,6 +24,7 @@ public class AprilTagToolClassDoubleVision {
     private VisionPortal visionPortalBack;
 
     public Pose2d positionBack;
+    public Pose2d positionFinal;
 
     public AprilTagToolClassDoubleVision(HardwareMap h, Telemetry t, Gamepad g){
         hardwareMap = h;
@@ -73,7 +74,9 @@ public Pose2d update(){
     }
     positionBack = new Pose2d( positionBack.getX()/detections.size(), positionBack.getY()/detections.size(), positionBack.getHeading()/detections.size());
 
-    return position;
+    positionFinal = new Pose2d((positionBack.getX()+position.getX())/2, (positionBack.getY()+position.getY())/2, (positionBack.getHeading() + position.getHeading())/2);
+    return positionFinal;
+
   //April Tag IDs: GPP = 21, PGP = 22, PPG = 23,
     // Blue Goal = 20
     // Red Goal = 24
