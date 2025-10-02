@@ -27,9 +27,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie;
+package org.firstinspires.ftc.teamcode.Testing.LifterTest;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -41,23 +40,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * When a selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
  */
-@TeleOp(name="April Tag Test", group="Location")
+//TODO:Uncomment one of the following and rename group and name as needed.
+@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
-public class AprilTagTest extends OpMode
+public class LifterOpMode extends OpMode
 {
     // Declare OpMode members.
-    private AprilTagToolClassSingleVision aprilTagVision;
+
     private ElapsedTime runtime = new ElapsedTime();
-
-
+    LifterToolClass lifter;
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        aprilTagVision = new AprilTagToolClassSingleVision(hardwareMap, telemetry, gamepad1);
+        lifter = new LifterToolClass(hardwareMap, telemetry, gamepad1);
+
         telemetry.addData("Status", "Initialized");
     }
 
@@ -83,10 +83,9 @@ public class AprilTagTest extends OpMode
      */
     @Override
     public void loop() {
+        lifter.update();
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        Pose2d position = aprilTagVision.update();
-        telemetry.addData("Position", position);
     }
 
     /*

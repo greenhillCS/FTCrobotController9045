@@ -25,6 +25,7 @@ public class AprilTagToolClassDoubleVision {
 
     public Pose2d positionBack;
     public Pose2d positionFinal;
+    private int[] excludes = {21, 22, 23};
 
     public AprilTagToolClassDoubleVision(HardwareMap h, Telemetry t, Gamepad g){
         hardwareMap = h;
@@ -46,12 +47,12 @@ public class AprilTagToolClassDoubleVision {
 public Pose2d update(){
   List<AprilTagDetection> detections = aprilTag.getDetections();
   List<AprilTagDetection> detectionsBack = aprilTagBack.getDetections();
+  int nonMonoDetections = 0;
   telemetry.addData("Number Of Detections", detections.size());
   position = new Pose2d();
   positionBack = new Pose2d();
   if (detections.size()+detectionsBack.size() == 0){
-      position = null;
-      positionBack = null;
+      return null;
   }
   for (AprilTagDetection detection : detections) {
       telemetry.addData("ID",String.format("%s: %s", detection.id, detection.metadata.name));
@@ -60,23 +61,29 @@ public Pose2d update(){
 //      telemetry.addData("Robot Angle Yaw", detection.robotPose.getOrientation().getYaw());
 
       //position = new Pose2d(detection.robotPose.getPosition().x, detection.robotPose.getPosition().y,detection.robotPose.getOrientation().getYaw());
-      position = new Pose2d( position.getX()+detection.robotPose.getPosition().x, position.getY()+detection.robotPose.getPosition().y, position.getHeading() + detection.robotPose.getOrientation().getYaw());
-
+      if (detection.id != 21 && detection.id != 22 && detection.id != 23) {
+          nonMonoDetections++;
+          position = new Pose2d(position.getX() + detection.robotPose.getPosition().x, position.getY() + detection.robotPose.getPosition().y, position.getHeading() + detection.robotPose.getOrientation().getYaw());
+      }
   }
-  position = new Pose2d( position.getX()/detections.size(), position.getY()/detections.size(), position.getHeading()/detections.size());
-
+  position = new Pose2d( position.getX()/nonMonoDetections, position.getY()/nonMonoDetections, position.getHeading()/nonMonoDetections);
+    nonMonoDetections = 0;
 
     for (AprilTagDetection detectionBack : detectionsBack) {
         telemetry.addData("ID",String.format("%s: %s", detectionBack.id, detectionBack.metadata.name));
         //telemetry.addData("Robot Pos X", detection.robotPose.getPosition().x);
         //telemetry.addData("Robot Pos Y", detection.robotPose.getPosition().y);
         //telemetry.addData("Robot Angle Yaw", detection.robotPose.getOrientation().getYaw());
+        if (detectionBack.id != 21 && detectionBack.id != 22 && detectionBack.id != 23){
+            nonMonoDetections ++;
+            positionBack = new Pose2d( positionBack.getX()+detectionBack.robotPose.getPosition().x, positionBack.getY()+detectionBack.robotPose.getPosition().y, positionBack.getHeading() + detectionBack.robotPose.getOrientation().getYaw());
+        }
 
-        positionBack = new Pose2d( positionBack.getX()+detectionBack.robotPose.getPosition().x, positionBack.getY()+detectionBack.robotPose.getPosition().y, positionBack.getHeading() + detectionBack.robotPose.getOrientation().getYaw());
+
 
 
     }
-    positionBack = new Pose2d( positionBack.getX()/detections.size(), positionBack.getY()/detections.size(), positionBack.getHeading()/detections.size());
+    positionBack = new Pose2d( positionBack.getX()/nonMonoDetections, positionBack.getY()/nonMonoDetections, positionBack.getHeading()/nonMonoDetections);
 
     positionFinal = new Pose2d((positionBack.getX()+position.getX())/2, (positionBack.getY()+position.getY())/2, (positionBack.getHeading() + position.getHeading())/2);
     return positionFinal;
