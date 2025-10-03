@@ -32,6 +32,8 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
     public static double LATERAL_DISTANCE = DriveConstants.LATERAL_DISTANCE; // in; distance between the left and right wheels
     public static double FORWARD_OFFSET = DriveConstants.FORWARD_OFFSET; // in; offset of the lateral wheel
+    public static double X_MULTIPLIER = DriveConstants.X_MULTIPLIER;
+    public static double Y_MULTIPLIER = DriveConstants.Y_MULTIPLIER;
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
@@ -50,6 +52,9 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));//Port: 1
         rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightBack"));//Port: 0
         frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftFront"));//Port: 2
+
+        rightEncoder.setDirection(Encoder.Direction.REVERSE);
+        frontEncoder.setDirection(Encoder.Direction.REVERSE);
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
@@ -71,9 +76,9 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         lastEncPositions.add(frontPos);
 
         return Arrays.asList(
-                encoderTicksToInches(leftPos),
-                encoderTicksToInches(rightPos),
-                encoderTicksToInches(frontPos)
+                encoderTicksToInches(leftPos) * X_MULTIPLIER,
+                encoderTicksToInches(rightPos) * X_MULTIPLIER,
+                encoderTicksToInches(frontPos) * Y_MULTIPLIER
         );
     }
 
@@ -90,9 +95,9 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         lastEncVels.add(frontVel);
 
         return Arrays.asList(
-                encoderTicksToInches(leftVel),
-                encoderTicksToInches(rightVel),
-                encoderTicksToInches(frontVel)
+                encoderTicksToInches(leftVel) * X_MULTIPLIER,
+                encoderTicksToInches(rightVel) * X_MULTIPLIER,
+                encoderTicksToInches(frontVel) * Y_MULTIPLIER
         );
     }
 }
