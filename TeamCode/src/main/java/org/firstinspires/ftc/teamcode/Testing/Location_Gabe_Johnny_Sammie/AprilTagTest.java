@@ -47,7 +47,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class AprilTagTest extends OpMode
 {
     // Declare OpMode members.
-    private AprilTagToolClassSingleVision aprilTagVision;
+    private AprilTagToolClassDoubleVision aprilTagVision;
     private ElapsedTime runtime = new ElapsedTime();
 
 
@@ -57,7 +57,7 @@ public class AprilTagTest extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        aprilTagVision = new AprilTagToolClassSingleVision(hardwareMap, telemetry, gamepad1);
+        aprilTagVision = new AprilTagToolClassDoubleVision(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
     }
 
