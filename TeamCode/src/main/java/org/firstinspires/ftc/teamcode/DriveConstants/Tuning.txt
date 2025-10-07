@@ -1,7 +1,7 @@
 Copy the Drive Constants Template and rename it to match the robot's tools (Ex: DriveConstants_ClawFourBar)
 Go here-> https://learnroadrunner.com/drive-constants.html#drive-constants
 Follow all steps in that section and the rest that are used for tuning the robot using notes from here
-This is vest with two people, one on the computer and one on the robot taking orders from the former.
+This is best with two people, one on the computer and one on the robot taking orders from the former.
 Try to start this in hornet block, it might take a while the first time.
 Use as many decimal places as you can in the calculations
 If the number is irrational, just put in the equation for it
