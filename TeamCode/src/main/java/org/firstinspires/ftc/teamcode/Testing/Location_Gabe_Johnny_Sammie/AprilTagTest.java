@@ -29,10 +29,13 @@
 
 package org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie;
 
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.AutonAssets.drive.PatternStorage;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -47,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class AprilTagTest extends OpMode
 {
     // Declare OpMode members.
-    private AprilTagToolClassDoubleVision aprilTagVision;
+    private AprilTagToolClassSingleVision aprilTagVision;
     private ElapsedTime runtime = new ElapsedTime();
 
 
@@ -57,7 +60,7 @@ public class AprilTagTest extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        aprilTagVision = new AprilTagToolClassDoubleVision(hardwareMap, telemetry, gamepad1);
+        aprilTagVision = new AprilTagToolClassSingleVision(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -85,6 +88,9 @@ public class AprilTagTest extends OpMode
     public void loop() {
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        aprilTagVision.updatePattern();
+        String id = PatternStorage.get();
+        telemetry.addData("Pattern", "ID: " + id);
         Pose2d position = aprilTagVision.update();
         telemetry.addData("Position", position);
     }

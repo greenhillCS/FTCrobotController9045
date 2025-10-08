@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
+import org.firstinspires.ftc.teamcode.AutonAssets.drive.PatternStorage;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -36,11 +37,15 @@ public Pose2d update() {
     List<AprilTagDetection> detections = aprilTag.getDetections();
     telemetry.addData("Number Of Detections", detections.size());
     position = new Pose2d();
+
      for (AprilTagDetection detection : detections) {
             telemetry.addData("ID",String.format("%s: %s", detection.id, detection.metadata.name));
 //      telemetry.addData("Robot Pos X", detection.robotPose.getPosition().x);
 //      telemetry.addData("Robot Pos Y", detection.robotPose.getPosition().y);
 //      telemetry.addData("Robot Angle Yaw", detection.robotPose.getOrientation().getYaw());
+
+
+
 
             //position = new Pose2d(detection.robotPose.getPosition().x, detection.robotPose.getPosition().y,detection.robotPose.getOrientation().getYaw());
             position = new Pose2d( position.getX()+detection.robotPose.getPosition().x, position.getY()+detection.robotPose.getPosition().y, position.getHeading() + detection.robotPose.getOrientation().getYaw());
@@ -48,6 +53,29 @@ public Pose2d update() {
     position = new Pose2d( position.getX()/detections.size(), position.getY()/detections.size(), position.getHeading()/detections.size());
     return position;
 }
+public void updatePattern(){
+    List<AprilTagDetection> detections = aprilTag.getDetections();
+    String id = "";
+    for (AprilTagDetection detection : detections){
+        if (detection.id == 21) {
+            id = "GPP";
+        }
+
+        else if (detection.id == 22) {
+            id = "PGP";
+        }
+        else if (detection.id == 23) {
+            id = "PPG";
+        }
+    }
+    PatternStorage.store(id);
+
+    }
+
+
+
+
+
     //April Tag IDs: GPP = 21, PGP = 22, PPG = 23,
     // Blue Goal = 20
     // Red Goal = 24

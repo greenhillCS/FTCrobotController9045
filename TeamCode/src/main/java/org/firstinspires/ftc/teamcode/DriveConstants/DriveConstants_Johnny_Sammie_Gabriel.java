@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.DriveConstants;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 /*
@@ -47,7 +48,7 @@ public class DriveConstants_Johnny_Sammie_Gabriel {
      */
     public static double WHEEL_RADIUS = 1.88976; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 1; // in
+    public static double TRACK_WIDTH = 16.5; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -66,10 +67,11 @@ public class DriveConstants_Johnny_Sammie_Gabriel {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    public static double MAX_VEL = 30;
-    public static double MAX_ACCEL = 30;
-    public static double MAX_ANG_VEL = Math.toRadians(60);
-    public static double MAX_ANG_ACCEL = Math.toRadians(60);
+    public static double MAX_VEL = 67.14584;
+    public static double MAX_ACCEL = 67.14584;
+    public static double MAX_ANG_VEL = Math.toRadians(180);
+    public static double MAX_ANG_ACCEL = Math.toRadians(180);
+
 
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
@@ -85,8 +87,8 @@ public class DriveConstants_Johnny_Sammie_Gabriel {
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
-    public static double LATERAL_DISTANCE = 10; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = 4; // in; offset of the lateral wheel
+    public static double LATERAL_DISTANCE = 12.5; // in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = 4.5; // in; offset of the lateral wheel
 
     //FOR TANK DRIVE ONLY
     public static PIDCoefficients AXIAL_PID = new PIDCoefficients(0, 0, 0);
