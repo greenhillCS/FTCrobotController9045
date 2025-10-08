@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Driver Test TeleOp", group="Decode")
-@Disabled
+
 public class DriverTestTeleOp extends OpMode
 {
     // Declare OpMode members.
@@ -79,10 +79,14 @@ public class DriverTestTeleOp extends OpMode
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFront");//Port:
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "leftBack");//Port:
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//Port:
-        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//Port:
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");//port 1
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");//port 3
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//port 0
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//port 2
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -94,10 +98,6 @@ public class DriverTestTeleOp extends OpMode
         // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         telemetry.addData("Status", "Initialized");
     }
