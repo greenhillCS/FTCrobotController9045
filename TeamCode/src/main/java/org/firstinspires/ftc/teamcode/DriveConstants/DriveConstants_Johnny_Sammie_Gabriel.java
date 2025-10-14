@@ -48,7 +48,7 @@ public class DriveConstants_Johnny_Sammie_Gabriel {
      */
     public static double WHEEL_RADIUS = 1.88976; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 16.5; // in
+    public static double TRACK_WIDTH = 15.35; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -56,9 +56,9 @@ public class DriveConstants_Johnny_Sammie_Gabriel {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
-    public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kV = 0.0114;
+    public static double kA = 0.0025;
+    public static double kStatic = 0.0001;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -69,7 +69,7 @@ public class DriveConstants_Johnny_Sammie_Gabriel {
      */
     public static double MAX_VEL = 67.14584;
     public static double MAX_ACCEL = 67.14584;
-    public static double MAX_ANG_VEL = Math.toRadians(180);
+    public static double MAX_ANG_VEL = Math.toRadians(290.1741631351571);
     public static double MAX_ANG_ACCEL = Math.toRadians(180);
 
 
@@ -79,15 +79,15 @@ public class DriveConstants_Johnny_Sammie_Gabriel {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-    public static double X_MULTIPLIER = 1;
-    public static double Y_MULTIPLIER = 1;
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double X_MULTIPLIER = 0.0965;
+    public static double Y_MULTIPLIER = 0.0958;
+    public static double LATERAL_MULTIPLIER = 1.4778525440951757133224681607165;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
-    public static double LATERAL_DISTANCE = 12.5; // in; distance between the left and right wheels
+    public static double LATERAL_DISTANCE = 12.74735347168802; // in; distance between the left and right wheels
     public static double FORWARD_OFFSET = 4.5; // in; offset of the lateral wheel
 
     //FOR TANK DRIVE ONLY

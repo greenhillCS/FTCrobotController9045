@@ -7,36 +7,47 @@ Use as many decimal places as you can in the calculations
 If the number is irrational, just put in the equation for it
 Before you start make sure to go to the drive constants file in auton assets and change the class it's extending to the one you just made
 Go to bottom of the file for fixes to issues
+
 For the drive constants that you need to calculate, you should be able to copy them over from previous drive constants files
    If not, just calculate them yourself
    Track width is from the middle of the wheels
    We are using Gobilda Yellow Jacket Planetary Gear 5204 435RPM motors for all wheels
+
 We are using THREE WHEEL ODOMETRY and you can also probably copy over values in the first Three Wheel Odometry tab
     lateral distance is measured using the middle of the parallel wheels
-    Forward offset is from the middle of the perpendicular wheel to the center of the robot
-Don't go past 4 decimal places in Feedforward tuning but make sure you are setting the distance to 60 in
-    60 in is almost the entire field, each tile is ~24x24 in, plan accordingly
+        Use the tuning opmode for it afterwards, and then tune it manually a bit for accuracy
+    Forward offset is from the middle of the perpendicular wheel to the center of the robot, you will never get this exact
+
+Don't go past 4 decimal places in Feedforward tuning but make sure you are setting the distance to 90+ in
+    90in is almost the entire field, each tile is ~24x24 in, plan accordingly
     Please navigate to the drive constants tab with the correct name
     When tuning on the website, COPY DOWN ANY TUNED DECIMAL PLACES INTO YOUR DRIVE CONSTANTS FILE
-        This is for all of our sanity, the website doesn't change the actual drive constants file
-Do your best on the straight test tuning
-    Go from the center of whichever face of the robot you started with and measure from there
-    Just use your knowledge of percents and you should be fine
-    Don't use and equation to get exact value, but go to like 6 decimal places if you can
+        This is for all of our sanity, the website doesn't change the actual drive constants file, except for feedforward
+
+Do straight test tuning as many times as needed, accuracy is key.
+
+Lateral Distance should be as good as possible, it should be close to the measured value, if not then run the opmode again
+
 The new track width should be close to the measured one but run it 3 times and take the average to make sure
+
 For turn test just put the robot at the corner of a square or use some tape on the ground and you should be fine
-Follower PID tuning should be quick, make sure you are tuning the right value, do 60 inches and you should be fine.
-    If it's not going to 60 inches, redo Feedforward tuning and straight test tuning
+
+Follower PID tuning should be quick, make sure you are tuning the right value, do 90 inches and you should be fine.
+    If it's not going to 90 inches, redo straight test tuning.
+    If it's not reading the distance right, tune x/y multipliers more.
     Reset the Straight test tuning values and the last two values of Feedforward
     It should be smoothly correcting it's path, don't make it too aggressive
     If it's jittery that's the wrong value
     If it's continuously drifting that's the wrong value
-    Don't ask how I know, just tune kP
+    Don't ask how I know, just tune kP, nothing good will come of doing any others
     You can do the square one for fun but it's not required since not all games have room for it
     Same with spline test, just make sure the path works
+
 Make sure you have saved all the values in your Drive constants file and you're all set!
 
-If it's not going well, go to the localization test opMode and run that.
+
+IMPORTANT: If something isn't configured right or you just tuned a multiplier/lateral distance, go to the localization test opMode and run that, the robot should match up to the field fairly well.
+
 If the tracking is wonky, it's probably either an odometry pod direction or port issue.
     Go to the standard tracking wheel localizer and mess around with the names and directions.
     Do only one change at a time and then test
