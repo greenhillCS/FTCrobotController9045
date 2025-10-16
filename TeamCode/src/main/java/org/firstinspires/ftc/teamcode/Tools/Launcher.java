@@ -9,6 +9,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Launcher {
+    enum STATE {
+        IN,
+        OUT,
+        STOP
+    }
+    private STATE mode = STATE.STOP;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private Gamepad gamepad;
@@ -20,7 +26,7 @@ public class Launcher {
         telemetry = t;
         gamepad = g;
         launcher = hardwareMap.get(DcMotor.class,"launcher"); //Port 0
-        gate = hardwareMap.get(Servo.class,"gate"); //Port 0
+        gate = hardwareMap.get(Servo.class,"gate"); //Port 0 on Control hub
         launcher.setDirection(DcMotorSimple.Direction.FORWARD);
         telemetry.addData("Launcher", "Initialized");
     }
@@ -37,7 +43,41 @@ public class Launcher {
         gate.setPosition(0);
     }
     public void update(){
-        gate.setPosition(Boolean.compare(gamepad.y, false));
-        launcher.setPower(maxPower * (Boolean.compare(gamepad.right_bumper, true)-Boolean.compare(gamepad.left_bumper, true)));
+        //Use the right button on the bottom of the controller to launch artifacts
+        //Use the left button on the bottom of the controller to intake artifacts
+        //Use the top button (Y or triangle) to open the gate when it is launching
+        //The gate will stay open when taking in artifacts
+
+        switch (mode){
+            case IN:
+                if(gamepad.cross){
+                    mode = STATE.OUT;
+                }else if(!gamepad.circle){
+                    mode = STATE.STOP;
+                }
+
+                gate.setPosition(Boolean.compare(gamepad.y, false));
+                launcher.setPower(maxPower);
+                break;
+            case OUT:
+                if(gamepad.circle){
+                    mode = STATE.IN;
+                }else if(!gamepad.cross){
+                    mode = STATE.STOP;
+                }
+
+                open();
+                launcher.setPower(-maxPower);
+                break;
+            case STOP:
+                if(gamepad.circle){
+                    mode = STATE.IN;
+                }else if(gamepad.cross){
+                    mode = STATE.OUT;
+                }
+
+                launcher.setPower(0);
+                break;
+        }
     }
 }
