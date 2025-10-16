@@ -21,6 +21,12 @@ public class Intake {
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
         telemetry.addData("Intake", "Initialized");
     }
+    public void in(){
+        intake.setPower(maxPower);
+    }
+    public void stop(){
+        intake.setPower(0);
+    }
     public void update(){
         intake.setPower(maxPower * (gamepad.right_trigger-gamepad.left_trigger));
     }

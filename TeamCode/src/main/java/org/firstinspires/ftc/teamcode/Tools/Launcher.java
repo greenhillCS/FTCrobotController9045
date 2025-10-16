@@ -24,6 +24,18 @@ public class Launcher {
         launcher.setDirection(DcMotorSimple.Direction.FORWARD);
         telemetry.addData("Launcher", "Initialized");
     }
+    public void out(){
+        launcher.setPower(maxPower);
+    }
+    public void stop(){
+        launcher.setPower(0);
+    }
+    public void open(){
+        gate.setPosition(1);
+    }
+    public void close(){
+        gate.setPosition(0);
+    }
     public void update(){
         gate.setPosition(Boolean.compare(gamepad.y, false));
         launcher.setPower(maxPower * (Boolean.compare(gamepad.right_bumper, true)-Boolean.compare(gamepad.left_bumper, true)));

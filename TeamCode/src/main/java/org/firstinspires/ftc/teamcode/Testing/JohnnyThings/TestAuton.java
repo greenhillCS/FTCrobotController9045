@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AutonAssets.drive.PositionStorage;
 import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.Tools.Intake;
+import org.firstinspires.ftc.teamcode.Tools.Launcher;
 
 @Autonomous(name="Red Auton", group="Testing")
 public class TestAuton extends OpMode {
@@ -18,6 +20,8 @@ public class TestAuton extends OpMode {
     private SampleMecanumDrive drive;
     private Pose2d startPose;
     private TrajectorySequence trajectory;
+    Intake intake;
+    Launcher launcher;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -29,6 +33,8 @@ public class TestAuton extends OpMode {
         startPose = new Pose2d(72-(robotLen/2), 36, Math.toRadians(180));
         Pose2d endPose = new Pose2d(72-10, 36, Math.toRadians(90));
         Pose2d launchPose = new Pose2d(-12, 12, Math.toRadians(135));
+        launcher = new Launcher(hardwareMap, telemetry, gamepad2);
+        intake = new Intake(hardwareMap, telemetry, gamepad2);
         drive = new SampleMecanumDrive(hardwareMap);
 
         drive.setPoseEstimate(startPose);
