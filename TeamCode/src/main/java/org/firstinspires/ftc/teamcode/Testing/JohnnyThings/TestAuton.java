@@ -40,15 +40,60 @@ public class TestAuton extends OpMode {
         drive.setPoseEstimate(startPose);
 
         trajectory = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .splineToLinearHeading(launchPose, Math.toRadians(180))
 
+                .splineToLinearHeading(launchPose, Math.toRadians(180))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    launcher.out();
+                })
                 .waitSeconds(2)
 
                 .splineTo(new Vector2d(-12, 24), Math.toRadians(90))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    intake.in();
+                })
                 .splineTo(new Vector2d(-12, 48), Math.toRadians(90))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    intake.stop();
+                })
+
+
                 .lineToSplineHeading(launchPose)
 
-                .waitSeconds(2)
+
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    intake.in();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    launcher.open();
+                })
+
+
+
+                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                    launcher.close();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                    intake.stop();
+                })
+
+
+
+                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
+                    launcher.open();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
+                    intake.in();
+                })
+
+
+                .UNSTABLE_addTemporalMarkerOffset(3, () -> {
+                    launcher.close();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(3, () -> {
+                    intake.stop();
+                })
+
+                .waitSeconds(3.1)
 
                 .splineTo(new Vector2d(12, 24), Math.toRadians(90))
                 .splineTo(new Vector2d(12, 48), Math.toRadians(90))
