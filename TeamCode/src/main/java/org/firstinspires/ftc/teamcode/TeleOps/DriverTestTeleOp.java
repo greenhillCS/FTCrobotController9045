@@ -61,12 +61,16 @@ public class DriverTestTeleOp extends OpMode
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
-    private static final double ACCELERATION = 1.0;
+    private static final double ACCELERATION = 0.5;
     private static final double MAX_SPEED = 1.0;
     private DcMotor leftFrontDrive;
     private DcMotor leftBackDrive;
     private DcMotor rightFrontDrive;
     private DcMotor rightBackDrive;
+    private double leftFrontPower = 0;
+    private double rightFrontPower = 0;
+    private double leftBackPower = 0;
+    private double rightBackPower = 0;
     Intake intake;
     Launcher launcher;
     private double accelerate(double currentPower, double targetPower, double acceleration){
@@ -143,10 +147,6 @@ public class DriverTestTeleOp extends OpMode
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
-        double leftFrontPower  = axial + lateral + yaw;
-        double rightFrontPower = axial - lateral - yaw;
-        double leftBackPower   = axial - lateral + yaw;
-        double rightBackPower  = axial + lateral - yaw;
 
         // Calculate the target powers for each wheel
         double targetLeftFrontPower = axial + lateral + yaw;
@@ -191,10 +191,10 @@ public class DriverTestTeleOp extends OpMode
             */
 
         // Send calculated power to wheels
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
+        leftFrontDrive.setPower(leftFrontPower * MAX_SPEED);
+        rightFrontDrive.setPower(rightFrontPower * MAX_SPEED);
+        leftBackDrive.setPower(leftBackPower * MAX_SPEED);
+        rightBackDrive.setPower(rightBackPower * MAX_SPEED);
 
         intake.update();
         launcher.update();
