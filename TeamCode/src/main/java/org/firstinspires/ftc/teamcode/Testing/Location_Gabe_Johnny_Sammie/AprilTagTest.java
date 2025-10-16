@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie;
 
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -45,6 +46,7 @@ import org.firstinspires.ftc.teamcode.AutonAssets.drive.PatternStorage;
  * class is instantiated on the Robot Controller and executed.
  */
 @TeleOp(name="April Tag Test", group="Location")
+@Disabled
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
 public class AprilTagTest extends OpMode

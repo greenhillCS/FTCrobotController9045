@@ -52,7 +52,7 @@ import org.firstinspires.ftc.teamcode.Testing.LifterTest.LifterToolClass;
  */
 
 @TeleOp(name="Lifter", group="LifterTeleOp")
-
+@Disabled
 public class LifterTeleOp extends OpMode
 {
     // Declare OpMode members.

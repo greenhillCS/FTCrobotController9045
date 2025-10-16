@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Testing.LifterTest;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -42,6 +43,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 //TODO:Uncomment one of the following and rename group and name as needed.
 @TeleOp(name="Change the name of your TeleOp", group="zzzzz")
+@Disabled
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
 public class LifterOpMode extends OpMode
