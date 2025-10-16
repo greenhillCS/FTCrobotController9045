@@ -29,11 +29,15 @@
 
 package org.firstinspires.ftc.teamcode.TeleOps;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Tools.Intake;
+import org.firstinspires.ftc.teamcode.Tools.Launcher;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -49,6 +53,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
+@Config
 @TeleOp(name="Driver Test TeleOp", group="A_Decode")
 
 public class DriverTestTeleOp extends OpMode
@@ -56,12 +61,14 @@ public class DriverTestTeleOp extends OpMode
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
-    private static final double ACCELERATION = 0.2;
+    private static final double ACCELERATION = 1.0;
     private static final double MAX_SPEED = 1.0;
     private DcMotor leftFrontDrive;
     private DcMotor leftBackDrive;
     private DcMotor rightFrontDrive;
     private DcMotor rightBackDrive;
+    Intake intake;
+    Launcher launcher;
     private double accelerate(double currentPower, double targetPower, double acceleration){
         if (currentPower < targetPower) {
             return Math.min(currentPower + acceleration, targetPower);
@@ -99,7 +106,10 @@ public class DriverTestTeleOp extends OpMode
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
 
-        telemetry.addData("Status", "Initialized");
+        intake = new Intake(hardwareMap, telemetry, gamepad2);
+        launcher = new Launcher(hardwareMap, telemetry, gamepad2);
+
+        telemetry.addData("TeleOp", "Initialized");
     }
 
     /*
@@ -185,6 +195,9 @@ public class DriverTestTeleOp extends OpMode
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+
+        intake.update();
+        launcher.update();
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
