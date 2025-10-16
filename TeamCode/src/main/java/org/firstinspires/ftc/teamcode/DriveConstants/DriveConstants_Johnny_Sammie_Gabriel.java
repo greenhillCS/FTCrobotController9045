@@ -76,8 +76,8 @@ public class DriveConstants_Johnny_Sammie_Gabriel {
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
      */
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, 0);
 
     public static double X_MULTIPLIER = 0.0965;
     public static double Y_MULTIPLIER = 0.0958;
@@ -88,7 +88,7 @@ public class DriveConstants_Johnny_Sammie_Gabriel {
     public static double OMEGA_WEIGHT = 1;
 
     public static double LATERAL_DISTANCE = 12.74735347168802; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = 4.5; // in; offset of the lateral wheel
+    public static double FORWARD_OFFSET = 3.85; // in; offset of the lateral wheel
 
     //FOR TANK DRIVE ONLY
     public static PIDCoefficients AXIAL_PID = new PIDCoefficients(0, 0, 0);

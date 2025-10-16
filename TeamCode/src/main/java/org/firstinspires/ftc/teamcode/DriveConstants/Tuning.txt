@@ -43,6 +43,8 @@ Follower PID tuning should be quick, make sure you are tuning the right value, d
     You can do the square one for fun but it's not required since not all games have room for it
     Same with spline test, just make sure the path works
 
+Run the TrackingWheelForwardOffsetTuner and update the Forward Offset
+
 Make sure you have saved all the values in your Drive constants file and you're all set!
 
 
