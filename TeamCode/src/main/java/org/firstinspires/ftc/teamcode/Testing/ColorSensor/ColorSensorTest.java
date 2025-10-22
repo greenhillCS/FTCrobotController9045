@@ -44,7 +44,7 @@ import org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie.AprilT
  * When a selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
  */
-//TODO:Uncomment one of the following and rename group and name as needed.
+
 @TeleOp(name="Gabriel Color Sensor Test", group="Testing")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
