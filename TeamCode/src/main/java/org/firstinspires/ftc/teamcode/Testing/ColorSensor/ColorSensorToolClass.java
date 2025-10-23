@@ -25,7 +25,8 @@ public class ColorSensorToolClass {
     private Gamepad gamepad;
     private NormalizedColorSensor ballColor;
     private NormalizedRGBA colors;
-    private float [] hsvValue;
+    final float[] hsvValue = new float[3];
+
 
 
 
@@ -33,8 +34,8 @@ public class ColorSensorToolClass {
         hardwareMap = h;
         telemetry = t;
         gamepad = g;
-        ballColor = hardwareMap.get(NormalizedColorSensor.class,"ballColor");
-        ((SwitchableLight)ballColor).enableLight(true);
+        ballColor = hardwareMap.get(NormalizedColorSensor.class,"sensor_color");
+//        ((SwitchableLight)ballColor).enableLight(true);
 
 
 
@@ -52,6 +53,9 @@ colors = ballColor.getNormalizedColors();
             .addData("Saturation", "%.3f", hsvValue[1])
             .addData("Value", "%.3f", hsvValue[2]);
     telemetry.addData("Alpha", "%.3f", colors.alpha);
+
+    //Purple: Hue 225 (210-240)
+    //Green:  Hue 155 (145-165) idk why but green is more accurate
 
 }
 
