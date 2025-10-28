@@ -50,9 +50,9 @@ public class Launcher {
 
         switch (mode){
             case IN:
-                if(gamepad.cross){
+                if(gamepad.left_trigger > 0){
                     mode = STATE.OUT;
-                }else if(!gamepad.circle){
+                }else if(gamepad.right_trigger == 0){
                     mode = STATE.STOP;
                 }
 
@@ -60,9 +60,9 @@ public class Launcher {
                 launcher.setPower(maxPower);
                 break;
             case OUT:
-                if(gamepad.circle){
+                if(gamepad.right_trigger > 0){
                     mode = STATE.IN;
-                }else if(!gamepad.cross){
+                }else if(gamepad.left_trigger == 0){
                     mode = STATE.STOP;
                 }
 
@@ -70,12 +70,13 @@ public class Launcher {
                 launcher.setPower(-maxPower);
                 break;
             case STOP:
-                if(gamepad.circle){
+                if(gamepad.right_trigger > 0){
                     mode = STATE.IN;
-                }else if(gamepad.cross){
+                }else if(gamepad.left_trigger > 0){
                     mode = STATE.OUT;
                 }
 
+                gate.setPosition(Boolean.compare(gamepad.y, false));
                 launcher.setPower(0);
                 break;
         }

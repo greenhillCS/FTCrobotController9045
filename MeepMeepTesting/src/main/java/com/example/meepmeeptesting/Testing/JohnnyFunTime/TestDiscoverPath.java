@@ -35,18 +35,21 @@ public class TestDiscoverPath {
 
                             .waitSeconds(2)
 
+                            .turn(Math.toRadians(-45))
                             .splineTo(new Vector2d(-12, 24), Math.toRadians(90))
                             .splineTo(new Vector2d(-12, 48), Math.toRadians(90))
                             .lineToSplineHeading(launchPose)
 
                             .waitSeconds(2)
 
+                            .turn(Math.toRadians(-135))
                             .splineTo(new Vector2d(12, 24), Math.toRadians(90))
                             .splineTo(new Vector2d(12, 48), Math.toRadians(90))
                             .lineToSplineHeading(launchPose)
 
                             .waitSeconds(2)
 
+                            .turn(Math.toRadians(-135))
                             .splineTo(new Vector2d(36, 24), Math.toRadians(90))
                             .splineTo(new Vector2d(36, 48), Math.toRadians(90))
                             .lineToSplineHeading(launchPose)
