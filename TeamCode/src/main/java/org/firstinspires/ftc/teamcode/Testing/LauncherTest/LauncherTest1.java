@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Testing.LauncherTest;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -45,7 +46,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //TODO:Uncomment one of the following and rename group and name as needed.
 @TeleOp(name="LauncherTest1", group="Test")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
-
+@Disabled
 public class LauncherTest1 extends OpMode
 {
     // Declare OpMode members.

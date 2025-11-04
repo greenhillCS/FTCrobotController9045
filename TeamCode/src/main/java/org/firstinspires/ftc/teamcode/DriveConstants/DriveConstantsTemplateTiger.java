@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.DriveConstants;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 /*
@@ -17,13 +17,13 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
  * and op modes themselves.
  */
 @Config
-public class DriveConstantsTemplate {
+public class DriveConstantsTemplateTiger {
 
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    public static final double TICKS_PER_REV = 1;
-    public static final double MAX_RPM = 1;
+    public static final double TICKS_PER_REV = 103.8;
+    public static final double MAX_RPM = 1620;
 
     /*
      * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
@@ -45,9 +45,9 @@ public class DriveConstantsTemplate {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    public static double WHEEL_RADIUS = 2; // in
+    public static double WHEEL_RADIUS = 2.04; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 1; // in
+    public static double TRACK_WIDTH = 15.5; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -81,8 +81,8 @@ public class DriveConstantsTemplate {
     public static double Y_MULTIPLIER = 1;
     public static double LATERAL_MULTIPLIER = 1;
 
-    public static double VX_WEIGHT = 1;
-    public static double VY_WEIGHT = 1;
+    public static double VX_WEIGHT = 10.9;
+    public static double VY_WEIGHT = ((double) 48 /1002);
     public static double OMEGA_WEIGHT = 1;
 
     public static double LATERAL_DISTANCE = 10; // in; distance between the left and right wheels

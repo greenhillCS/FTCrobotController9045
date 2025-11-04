@@ -26,21 +26,26 @@ public class AprilTagToolClassDoubleVision {
     public Pose2d positionBack;
     public Pose2d positionFinal;
     private int[] excludes = {21, 22, 23};
+    private int[] viewIds;
 
     public AprilTagToolClassDoubleVision(HardwareMap h, Telemetry t, Gamepad g){
         hardwareMap = h;
         telemetry = t;
         gamepad = g;
 
+        viewIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.VERTICAL);
+
         aprilTag = new AprilTagProcessor.Builder().build();
         VisionPortal.Builder builder = new VisionPortal.Builder();
         builder.setCamera(hardwareMap.get(CameraName.class,"Camera"));
+        builder.setLiveViewContainerId(viewIds[0]);
         builder.addProcessor(aprilTag);
         visionPortal = builder.build();
 
         aprilTagBack = new AprilTagProcessor.Builder().build();
         VisionPortal.Builder builderBack = new VisionPortal.Builder();
         builderBack.setCamera(hardwareMap.get(CameraName.class,"CameraBack"));
+        builder.setLiveViewContainerId(viewIds[1]);
         builderBack.addProcessor(aprilTagBack);
         visionPortalBack = builder.build();
     }
@@ -83,7 +88,7 @@ public Pose2d update(){
 
 
     }
-    positionBack = new Pose2d( positionBack.getX()/nonMonoDetections, positionBack.getY()/nonMonoDetections, positionBack.getHeading()/nonMonoDetections);
+    positionBack = new Pose2d( positionBack.getX()/nonMonoDetections, positionBack.getY()/nonMonoDetections, positionBack.getHeading()/nonMonoDetections + 180);
 
     positionFinal = new Pose2d((positionBack.getX()+position.getX())/2, (positionBack.getY()+position.getY())/2, (positionBack.getHeading() + position.getHeading())/2);
     return positionFinal;

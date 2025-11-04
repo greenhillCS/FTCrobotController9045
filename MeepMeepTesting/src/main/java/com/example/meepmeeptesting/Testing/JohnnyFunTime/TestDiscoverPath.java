@@ -19,38 +19,44 @@ public class TestDiscoverPath {
         MeepMeep meepMeep = new MeepMeep(800);
 
         // The starting position of the robot, The axis go from the center-0, 0-and go 72 inches outward in each direction
-        Pose2d startPose = new Pose2d(72-10, 36, Math.toRadians(180));
+        double robotLen = 18;
+        Pose2d startPose = new Pose2d(72-(robotLen/2), 36, Math.toRadians(180));
+        Pose2d endPose = new Pose2d(72-(robotLen/2), 36, Math.toRadians(90));
+        Pose2d launchPose = new Pose2d(-12, 12, Math.toRadians(135));
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel 60, maxAccel 60, maxAngVel 180, maxAngAccel 180, track width 15
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 11)
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
                     drive.trajectorySequenceBuilder(startPose)
                             //Put trajectories here
-                            .splineToLinearHeading(new Pose2d(0, 0, Math.toRadians(135)), Math.toRadians(180))
+                            .splineToLinearHeading(launchPose, Math.toRadians(180))
 
                             .waitSeconds(2)
 
+                            .turn(Math.toRadians(-45))
                             .splineTo(new Vector2d(-12, 24), Math.toRadians(90))
                             .splineTo(new Vector2d(-12, 48), Math.toRadians(90))
-                            .lineToSplineHeading(new Pose2d(0, 0, Math.toRadians(135)))
+                            .lineToSplineHeading(launchPose)
 
                             .waitSeconds(2)
 
+                            .turn(Math.toRadians(-135))
                             .splineTo(new Vector2d(12, 24), Math.toRadians(90))
                             .splineTo(new Vector2d(12, 48), Math.toRadians(90))
-                            .lineToSplineHeading(new Pose2d(0, 0, Math.toRadians(135)))
+                            .lineToSplineHeading(launchPose)
 
                             .waitSeconds(2)
 
+                            .turn(Math.toRadians(-135))
                             .splineTo(new Vector2d(36, 24), Math.toRadians(90))
                             .splineTo(new Vector2d(36, 48), Math.toRadians(90))
-                            .lineToSplineHeading(new Pose2d(0, 0, Math.toRadians(135)))
+                            .lineToSplineHeading(launchPose)
 
                             .waitSeconds(2)
 
-                            .lineToSplineHeading(new Pose2d(37.75, -31.75, Math.toRadians(90)))
+                            .lineToSplineHeading(endPose)
                             .build()
                 );
 

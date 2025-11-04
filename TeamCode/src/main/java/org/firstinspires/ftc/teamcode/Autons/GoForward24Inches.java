@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Testing.Templates;
+package org.firstinspires.ftc.teamcode.Autons;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.AutonAssets.drive.PositionStorage;
 import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="Change the name of your Auton", group="zzzzz")
-@Disabled
-public class AutonTemplate extends OpMode {
+@Autonomous(name="Go Forward 24 Inches", group="A_Decode")
+
+public class GoForward24Inches extends OpMode {
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -26,12 +26,13 @@ public class AutonTemplate extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initializing");
 
-        startPose = new Pose2d(0, 0, Math.toRadians(0));
+        startPose = new Pose2d(72-(18.0/2), 12, Math.toRadians(180));
         drive = new SampleMecanumDrive(hardwareMap);
 
         drive.setPoseEstimate(startPose);
 
         trajectory = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .forward(24)
                 .build();
 
         telemetry.addData("Status", "Initialized");

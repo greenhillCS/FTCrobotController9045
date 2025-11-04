@@ -27,11 +27,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Testing.LifterTest;
+package org.firstinspires.ftc.teamcode.Testing.NewToolsNovDec;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -42,23 +40,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * class is instantiated on the Robot Controller and executed.
  */
 //TODO:Uncomment one of the following and rename group and name as needed.
-@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
-@Disabled
+//@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
-public class LifterOpMode extends OpMode
+public class AprilTagDistance extends OpMode
 {
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
-    LifterToolClass lifter;
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        lifter = new LifterToolClass(hardwareMap, telemetry, gamepad1);
 
         telemetry.addData("Status", "Initialized");
     }
@@ -85,7 +80,6 @@ public class LifterOpMode extends OpMode
      */
     @Override
     public void loop() {
-        lifter.update();
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
