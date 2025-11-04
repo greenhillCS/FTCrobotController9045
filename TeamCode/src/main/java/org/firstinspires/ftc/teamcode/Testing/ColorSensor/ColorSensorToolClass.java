@@ -18,6 +18,17 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
+/*
+1. Make a function to find out the color of the ball in each slot and assign that to an array (Look
+up Enumerators for this)
+2. Test this code using the TeleOp by calling said function in the update function and displaying
+its output using telemetry
+3. Create a function that Returns what index in said array contains a given color
+4. Test this by adding some if statements for the A and B buttons on the gamepad, when A is pressed
+find the index of a purple ball, when B is pressed find the index of a green ball and display this
+output using telemetry.
+ */
+
 public class ColorSensorToolClass {
     //private VisionPortal visionPortal;
     private HardwareMap hardwareMap;

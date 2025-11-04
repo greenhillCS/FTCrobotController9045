@@ -61,7 +61,7 @@ public class DriverTestTeleOp extends OpMode
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
-    private static final double ACCELERATION = 0.5;
+    private static final double ACCELERATION = 0.25;
     private static final double MAX_SPEED = 1.0;
     private DcMotor leftFrontDrive;
     private DcMotor leftBackDrive;
@@ -94,6 +94,10 @@ public class DriverTestTeleOp extends OpMode
         leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");//port 3
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//port 0
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//port 2
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);

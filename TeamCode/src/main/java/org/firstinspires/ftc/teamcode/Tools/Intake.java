@@ -39,7 +39,6 @@ public class Intake {
         //Use dpad_down to expel artifacts continuously
         //Use the leftmost button (square or x) to stop the intake
 
-        intake.setPower(maxPower * (gamepad.right_trigger-gamepad.left_trigger));
         switch (mode){
             case IN:
                 if(gamepad.dpad_down){

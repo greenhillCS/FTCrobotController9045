@@ -47,6 +47,7 @@ public class TestAuton extends OpMode {
                 })
                 .waitSeconds(2)
 
+                .turn(Math.toRadians(-45))
                 .splineTo(new Vector2d(-12, 24), Math.toRadians(90))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     intake.in();
@@ -95,12 +96,14 @@ public class TestAuton extends OpMode {
 
                 .waitSeconds(3.1)
 
+                .turn(Math.toRadians(-135))
                 .splineTo(new Vector2d(12, 24), Math.toRadians(90))
                 .splineTo(new Vector2d(12, 48), Math.toRadians(90))
                 .lineToSplineHeading(launchPose)
 
                 .waitSeconds(2)
 
+                .turn(Math.toRadians(-135))
                 .splineTo(new Vector2d(36, 24), Math.toRadians(90))
                 .splineTo(new Vector2d(36, 48), Math.toRadians(90))
                 .lineToSplineHeading(launchPose)
