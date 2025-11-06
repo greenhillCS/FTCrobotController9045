@@ -29,8 +29,21 @@
 
 package org.firstinspires.ftc.teamcode.Testing.NewToolsNovDec;
 
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.AutonAssets.drive.PatternStorage;
+import org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie.AprilTagToolClassSingleVision;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.List;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -40,21 +53,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * class is instantiated on the Robot Controller and executed.
  */
 //TODO:Uncomment one of the following and rename group and name as needed.
-//@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
+@TeleOp(name="April Tag Stuff", group="Testing")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
 public class AprilTagDistance extends OpMode
 {
-    // Declare OpMode members.
 
+    private AprilTagToolClass aprilTagToolClass;
     private ElapsedTime runtime = new ElapsedTime();
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
+    double distance = 6.7;
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-
+        aprilTagToolClass = new AprilTagToolClass(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -63,6 +75,7 @@ public class AprilTagDistance extends OpMode
      */
     @Override
     public void init_loop() {
+
 
     }
 
@@ -82,7 +95,14 @@ public class AprilTagDistance extends OpMode
     public void loop() {
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        distance = aprilTagToolClass.getDistance();
+        ;
+        telemetry.addData("Distance", distance);
+
+
+
     }
+
 
     /*
      * Code to run ONCE after the driver hits STOP
