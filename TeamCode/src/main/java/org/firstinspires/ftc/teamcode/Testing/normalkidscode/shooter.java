@@ -8,27 +8,27 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class shooter extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor motorLeft;
-    private DcMotor motorRight;
+    private DcMotor shooterLeft;
+    private DcMotor shooterRight;
 
 
 
     @Override
     public void init() {
-        motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
-        motorRight = hardwareMap.get(DcMotor.class, "motorRight");
-        motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterLeft = hardwareMap.get(DcMotor.class, "shooterLeft");
+        shooterRight = hardwareMap.get(DcMotor.class, "shooterRight");
+        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
 
     @Override
     public void loop() {
         if (gamepad1.a)  {
-            motorLeft.setPower(1);
-            motorRight.setPower(1);
+            shooterLeft.setPower(1);
+            shooterRight.setPower(1);
         }
-        motorLeft.setPower(0);
-        motorRight.setPower(0);
+        shooterLeft.setPower(0);
+        shooterRight.setPower(0);
 
     }
 }
