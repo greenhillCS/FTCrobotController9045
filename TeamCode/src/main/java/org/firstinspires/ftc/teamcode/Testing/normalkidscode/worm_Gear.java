@@ -11,7 +11,7 @@ public class worm_Gear extends OpMode {
 
     @Override
     public void init() {
-        worm_Gear = hardwareMap.get(DcMotor.class, "worm_Gear");
+        worm_Gear = hardwareMap.get(DcMotor.class, "wormGear");
     }
 
     @Override

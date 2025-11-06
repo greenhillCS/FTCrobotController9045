@@ -33,6 +33,9 @@ package org.firstinspires.ftc.teamcode.Testing.NewToolsNovDec;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -63,6 +66,9 @@ public class AprilTagDistance extends OpMode
     private AprilTagToolClass aprilTagToolClass;
     private ArtifactTrajectory artifactTrajectory;
     private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor shooterLeft;
+    private DcMotor shooterRight;
+    private Servo flicker;
     double distance = 6.7;
     double omega_w0 = 200*Math.PI;
     double angle = 45.0;
@@ -74,6 +80,12 @@ public class AprilTagDistance extends OpMode
         aprilTagToolClass = new AprilTagToolClass(hardwareMap, telemetry, gamepad1);
         artifactTrajectory = new ArtifactTrajectory(omega_w0);
         telemetry.addData("Status", "Initialized");
+        aprilTagToolClass.worm_Gear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterLeft = hardwareMap.get(DcMotor.class, "shooterLeft");
+        shooterRight = hardwareMap.get(DcMotor.class, "shooterRight");
+        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        flicker = hardwareMap.get(Servo.class, "flicker");
+        flicker.setPosition(0.5);
     }
 
     /*
@@ -105,9 +117,21 @@ public class AprilTagDistance extends OpMode
         angle = artifactTrajectory.solveForAngle(distance*0.0254+0.1524,46.0);
         telemetry.addData("Distance: ", distance);
         telemetry.addData("Angle: ", angle);
-
-
-
+        aprilTagToolClass.worm_Gear.setTargetPosition((int) ((384.5/360)*angle));
+        aprilTagToolClass.worm_Gear.setPower(0.5);
+        telemetry.addData("ticks to run to: ", (int) ((384.5/360)*angle));
+        if (gamepad1.a)  {
+            shooterLeft.setPower(1);
+            shooterRight.setPower(1);
+        }
+        shooterLeft.setPower(0);
+        shooterRight.setPower(0);
+        if (gamepad1.y) {
+            flicker.setPosition(1);
+        }
+        if (gamepad1.x) {
+            flicker.setPosition(0);
+        }
 
     }
     //SanaysFunction.get angle (x distance, y distance)
