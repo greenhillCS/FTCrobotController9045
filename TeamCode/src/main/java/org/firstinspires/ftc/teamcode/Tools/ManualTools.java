@@ -23,7 +23,7 @@ public class ManualTools {
         telemetry = t;
         gamepad = g;
         
-        worm_Gear = hardwareMap.get(DcMotor.class, "worm_Gear");
+        worm_Gear = hardwareMap.get(DcMotor.class, "wormGear");
         
         flicker = hardwareMap.get(Servo.class, "flicker");
         flicker.setPosition(0.5);
@@ -34,19 +34,19 @@ public class ManualTools {
 
     }
     public void update(){
-        worm_Gear.setPower(gamepad.right_stick_y);
+        worm_Gear.setPower(-gamepad.right_stick_y/4);
         
-        if (gamepad.y) {
+        if (gamepad.right_trigger > 0.5) {
             flicker.setPosition(1);
         }
         else {
-            flicker.setPosition(0);
+            flicker.setPosition(0.5);
         }
         
         
         if (gamepad.x)  {
-            shooterLeft.setPower(1);
-            shooterRight.setPower(1);
+            shooterLeft.setPower(0.75);
+            shooterRight.setPower(0.75);
         }
         else {
             shooterLeft.setPower(0);
