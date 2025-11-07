@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Testing.NewToolsNovDec;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -21,12 +22,14 @@ public class AprilTagToolClass {
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private Gamepad gamepad;
+    public DcMotor worm_Gear;
 
     public Pose2d position;
     double distance;
     private static final boolean isBlue = false;
     private ElapsedTime runtime = new ElapsedTime();
     private static final boolean USE_WEBCAM = true;
+    private double ticksPerRevolution = 384.5;
 
 
     public AprilTagToolClass(HardwareMap h, Telemetry t, Gamepad g){
@@ -35,6 +38,7 @@ public class AprilTagToolClass {
         gamepad = g;
 
         aprilTag = new AprilTagProcessor.Builder().build();
+        worm_Gear = hardwareMap.get(DcMotor.class, "wormGear");
 
 
         aprilTag.setDecimation(1);
@@ -79,3 +83,4 @@ public class AprilTagToolClass {
         return distance;
     }
 }
+

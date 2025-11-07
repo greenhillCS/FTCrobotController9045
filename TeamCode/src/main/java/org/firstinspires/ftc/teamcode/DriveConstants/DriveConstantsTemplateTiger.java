@@ -77,12 +77,12 @@ public class DriveConstantsTemplateTiger {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-    public static double X_MULTIPLIER = 1;
-    public static double Y_MULTIPLIER = 1;
+    public static double X_MULTIPLIER = ((double) 48 /1002); //use this one
+    public static double Y_MULTIPLIER = ((double) 48 /1002); //use this one from localization
     public static double LATERAL_MULTIPLIER = 1;
 
-    public static double VX_WEIGHT = 10.9;
-    public static double VY_WEIGHT = ((double) 48 /1002);
+    public static double VX_WEIGHT = 1;
+    public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
     public static double LATERAL_DISTANCE = 10; // in; distance between the left and right wheels

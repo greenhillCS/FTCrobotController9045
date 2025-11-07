@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Tools.Intake;
 import org.firstinspires.ftc.teamcode.Tools.Launcher;
+import org.firstinspires.ftc.teamcode.Tools.ManualTools;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -71,8 +72,10 @@ public class DriverTestTeleOp extends OpMode
     private double rightFrontPower = 0;
     private double leftBackPower = 0;
     private double rightBackPower = 0;
-    Intake intake;
-    Launcher launcher;
+
+    ManualTools manualTools;
+
+
     private double accelerate(double currentPower, double targetPower, double acceleration){
         if (currentPower < targetPower) {
             return Math.min(currentPower + acceleration, targetPower);
@@ -102,6 +105,7 @@ public class DriverTestTeleOp extends OpMode
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        manualTools = new ManualTools(hardwareMap, telemetry, gamepad2);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -114,8 +118,7 @@ public class DriverTestTeleOp extends OpMode
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
 
-        intake = new Intake(hardwareMap, telemetry, gamepad2);
-        launcher = new Launcher(hardwareMap, telemetry, gamepad2);
+
 
         telemetry.addData("TeleOp", "Initialized");
     }
@@ -200,8 +203,9 @@ public class DriverTestTeleOp extends OpMode
         leftBackDrive.setPower(leftBackPower * MAX_SPEED);
         rightBackDrive.setPower(rightBackPower * MAX_SPEED);
 
-        intake.update();
-        launcher.update();
+        manualTools.update();
+
+
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
