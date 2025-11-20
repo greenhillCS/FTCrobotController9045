@@ -27,13 +27,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Testing.LauncherTest;
+package org.firstinspires.ftc.teamcode.Testing.NewToolsNovDec;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -44,28 +45,68 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * class is instantiated on the Robot Controller and executed.
  */
 //TODO:Uncomment one of the following and rename group and name as needed.
-@TeleOp(name="LauncherTest1", group="Test")
+@TeleOp(name="LauncherAngleTest", group="Test")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 @Disabled
-public class LauncherTest1 extends OpMode
+public class LauncherAngleTest extends OpMode
 {
-    // Declare OpMode members.
-private DcMotor rightMotor;
-private DcMotor leftMotor;
-private KiranLaucherTest1 launcher;
+    private DcMotor launcherRightMotor;
+    private DcMotor launcherLeftMotor;
+    private DcMotor angleAdjustMotor;
+
     private ElapsedTime runtime = new ElapsedTime();
+
+    private int position = 300;
+
+    private void startLauncher() {
+        // starts the launcher motors
+        rightMotor.setPower(1);
+        leftMotor.setPower(1);
+    }
+
+    private void stopLauncher() {
+        // starts the launcher motors
+        rightMotor.setPower(0);
+        leftMotor.setPower(0);
+    }
+
+    private void updatePosition(int inc) {
+        position += inc;
+    }
+
+    private void moveToPosition() {
+        angleAdjustMotor.setTargetPosition(position);
+
+        // Switch to RUN_TO_POSITION mode
+        angleAdjustMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        angleAdjustMotor.setPower(0.6);
+
+        while (angleAdjustMotor.isBusy()) {
+            telemetry.addData("velocity", motor.getVelocity());
+            telemetry.addData("position", motor.getCurrentPosition());
+            telemetry.addData("is at target", !motor.isBusy());
+            telemetry.update();
+        }
+    }
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initializing");
-            rightMotor = hardwareMap.get(DcMotor.class,"rightMotor");
-            leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
 
-            leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-            launcher = new KiranLaucherTest1(hardwareMap, telemetry, gamepad1);
+        // set correct directions of launcher motors
+        telemetry.addData("Status", "Initializing");
+        launcherRightMotor = hardwareMap.get(DcMotor.class,"rightMotor");
+        launcherLeftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
+
+        angleAdjustMotor = hardwareMap.get(DcMotor.class, "angleAdjustMotor");
+
+        launcherLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        launcherRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        angleAdjustMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         telemetry.addData("Status", "Initialized");
     }
 
@@ -74,7 +115,7 @@ private KiranLaucherTest1 launcher;
      */
     @Override
     public void init_loop() {
-//Runs all the time until start
+        //Runs all the time until start
     }
 
     /*
@@ -82,7 +123,7 @@ private KiranLaucherTest1 launcher;
      */
     @Override
     public void start() {
-    //Runs once when started
+        //Runs once when started
         runtime.reset();
     }
 
@@ -91,12 +132,27 @@ private KiranLaucherTest1 launcher;
      */
     @Override
     public void loop() {
-//Runs the whole time when started
+        //Runs the whole time when started
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-//        rightMotor.setPower(1);
-//        leftMotor.setPower(1);
-        launcher.update();
 
+        // check gamepad to set desired angle (position)
+        if (gamepad1.left_bumper) {
+            updatePosition(-10);
+        } else if (gamepad1.right_bumper) {
+            updatePosition(10);
+        }
+
+        if (gamepad1.a) {
+            // move to angle
+            moveToPosition();
+        }
+
+        // Set the angle motor's target position to 300 ticks
+        startLauncher();
+
+        if (gamepad1.x) {
+            stopLauncher();
+        }
     }
 
     /*
@@ -104,6 +160,7 @@ private KiranLaucherTest1 launcher;
      */
     @Override
     public void stop() {
+
     }
 //Runs one time when the code is stopped
 }
