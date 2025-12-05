@@ -36,7 +36,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Testing.DualWheelShooter.DualWheelShooterMotors;
 import org.firstinspires.ftc.teamcode.Tools.Intake;
 import org.firstinspires.ftc.teamcode.Tools.Launcher;
 import org.firstinspires.ftc.teamcode.Tools.ManualTools;
@@ -73,7 +72,6 @@ public class DriverTestTeleOp extends OpMode
     private double rightFrontPower = 0;
     private double leftBackPower = 0;
     private double rightBackPower = 0;
-    DualWheelShooterMotors shooter;
 
     ManualTools manualTools;
 
@@ -108,7 +106,6 @@ public class DriverTestTeleOp extends OpMode
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         manualTools = new ManualTools(hardwareMap, telemetry, gamepad2);
-        shooter = new DualWheelShooterMotors(hardwareMap, telemetry, gamepad2);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -207,7 +204,6 @@ public class DriverTestTeleOp extends OpMode
         rightBackDrive.setPower(rightBackPower * MAX_SPEED);
 
         manualTools.update();
-        shooter.update();
 
 
 
