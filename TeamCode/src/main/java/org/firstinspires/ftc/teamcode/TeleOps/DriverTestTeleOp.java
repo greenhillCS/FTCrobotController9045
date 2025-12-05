@@ -74,7 +74,7 @@ public class DriverTestTeleOp extends OpMode
     private double rightBackPower = 0;
 
     ManualTools manualTools;
-
+    Intake intake;
 
     private double accelerate(double currentPower, double targetPower, double acceleration){
         if (currentPower < targetPower) {
@@ -106,6 +106,7 @@ public class DriverTestTeleOp extends OpMode
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         manualTools = new ManualTools(hardwareMap, telemetry, gamepad2);
+        intake = new Intake(hardwareMap, telemetry, gamepad2);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -204,6 +205,7 @@ public class DriverTestTeleOp extends OpMode
         rightBackDrive.setPower(rightBackPower * MAX_SPEED);
 
         manualTools.update();
+        intake.update();
 
 
 
