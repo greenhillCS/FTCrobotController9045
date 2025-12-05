@@ -28,12 +28,11 @@
  */
 
 package org.firstinspires.ftc.teamcode.Testing.Sorter;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Testing.ColorSensor.ColorSensorToolClass;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -43,13 +42,13 @@ import org.firstinspires.ftc.teamcode.Testing.ColorSensor.ColorSensorToolClass;
  * class is instantiated on the Robot Controller and executed.
  */
 //TODO:Uncomment one of the following and rename group and name as needed.
-@TeleOp(name="Random Ahh Sorter Test", group="Sorter")
+//@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
-public class CoolSorterTest extends OpMode
+public class SorterRotate extends OpMode
 {
-    private SorterToolClass sorter;
     // Declare OpMode members.
+    private Servo sorterServo;
 
     private ElapsedTime runtime = new ElapsedTime();
     /*
@@ -58,8 +57,9 @@ public class CoolSorterTest extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        sorter = new SorterToolClass(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
+        sorterServo = hardwareMap.get(Servo.class, "sorterServo");
+        sorterServo.setPosition(0.5);
     }
 
     /*
@@ -85,11 +85,14 @@ public class CoolSorterTest extends OpMode
     @Override
     public void loop() {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        SorterToolClass index = new SorterToolClass(0);
-        sorter.Update();
-
+        if (gamepad1.y) {
+            sorterServo.setPosition(1);
+        }
+        if (gamepad1.x) {
+            sorterServo.setPosition(0);
+        }
     }
-   // }
+
     /*
      * Code to run ONCE after the driver hits STOP
      */

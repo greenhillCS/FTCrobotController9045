@@ -28,6 +28,7 @@ package org.firstinspires.ftc.teamcode.Testing.Sorter;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -37,18 +38,17 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Testing.ColorSensor.ColorSensorToolClass;
+// import org.firstinspires.ftc.teamcode.Testing.normalkidscode.flickerNew;
+// import org.firstinspires.ftc.teamcode.Testing.normalkidscode.shooterNew;
 
 public class SorterToolClass {
-    private static int colorPosistion1;
-    private static int colorPosistion2;
-    private static int colorPosistion3;
-    private static int newColorPosistion1;
-    private static int newColorPosistion2;
-    private static int newColorPosistion3;
+    private static int[] newColor = new int[3];
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private Gamepad gamepad;
     private NormalizedColorSensor ballColor;
+    private int index;
+    private boolean isPressed = false;
     private NormalizedRGBA colors;
     final float[] hsvValue = new float[3];
 
@@ -58,37 +58,58 @@ public class SorterToolClass {
         gamepad = g;
         ballColor = hardwareMap.get(NormalizedColorSensor.class,"sensor_color");
     }
+
+    public SorterToolClass(int index){
+        this.index = index;
+    }
+   public void setIndex(){
+        index++;
+   }
+   /* flickerNew flicker;
+    shooterNew shooter;
+    boolean wantsToShoot;
+    SorterRotateToolClass rotate; */
 public void Update(){
+    if (gamepad.crossWasPressed()){
+        isPressed = true;
+    }else{
+        isPressed = false;
+    }
     colors = ballColor.getNormalizedColors();
     Color.colorToHSV(colors.toColor(), hsvValue);
 
     //sets the first posistion of intake as green, purple or not there
                    if (hsvValue[0] <= 165 && hsvValue[0] >= 145) {
-                       colorPosistion1 = 1;
+                       newColor[index] = 2;
+                     //  rotate.update();
                    } else if (210 <= hsvValue[0] && hsvValue[0] <= 240) {
-                       colorPosistion1 = 2;
-                   } else {
-                       colorPosistion1 = 0;
+                       newColor[index] = 1;
+                    //   rotate.update();
+                   }
+     /*              else if(wantsToShoot){
+                       flicker.update();
+                       shooter.update();
+                       rotate.update();
+                       flicker.update();
+                       shooter.update();
+                       rotate.update();
+                       flicker.update();
+                       shooter.update();
+                   } */
+                   else {
+                       newColor[index] = 0;
+                   }
+                   if (gamepad.crossWasPressed()){
+                       index++;
+                       telemetry.addData("If Gamepad working: ", "True");
+                   } else if(!isPressed){
+                       telemetry.addData("If Gamepad working: ", "False");
                    }
 
- /*                  if (colorPosistion2 == (ball needed)){
-                       shoot();
-                   } else{
-                       rotate();
-                   }*/
-
-                   //Cycles the balls to the next position
-                   colorPosistion1 = newColorPosistion1;
-                   colorPosistion2 = newColorPosistion2;
-                   colorPosistion3 = newColorPosistion3;
-
-                   newColorPosistion1 = colorPosistion2;
-                   newColorPosistion2 = colorPosistion3;
-                   newColorPosistion3 = colorPosistion1;
-
-    telemetry.addData("Positions: ", colorPosistion1 + ", " + colorPosistion2 + ", " + colorPosistion3);
+    //Cycles the balls to the next position
+    telemetry.addData("Positions: ", newColor[0] + ", " + newColor[1] + ", " + newColor[2]);
     telemetry.addData("HsvValue: : ", hsvValue[0]);
+    telemetry.addData("Index: ", index);
+
 }
-public void rotate(){}
-    public void shoot(){}
 }
