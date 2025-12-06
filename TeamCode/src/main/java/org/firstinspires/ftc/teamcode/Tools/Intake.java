@@ -43,7 +43,7 @@ public class Intake {
             case IN:
                 if(gamepad.dpad_down){
                     mode = STATE.OUT;
-                }else if(gamepad.x){
+                }else if(gamepad.y){
                     mode = STATE.STOP;
                 }
                 intake.setPower(maxPower);
@@ -51,7 +51,7 @@ public class Intake {
             case OUT:
                 if(gamepad.dpad_up){
                     mode = STATE.IN;
-                }else if(gamepad.x){
+                }else if(gamepad.y){
                     mode = STATE.STOP;
                 }
                 intake.setPower(-maxPower);

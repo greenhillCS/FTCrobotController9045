@@ -74,6 +74,7 @@ public class DriverTestTeleOp extends OpMode
     private double rightBackPower = 0;
 
     ManualTools manualTools;
+    Intake intake;
 
 
     private double accelerate(double currentPower, double targetPower, double acceleration){
@@ -93,9 +94,9 @@ public class DriverTestTeleOp extends OpMode
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");//port 1
-        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");//port 3
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//port 0
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");//port 0
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");//port 1
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//port 3
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//port 2
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -105,7 +106,9 @@ public class DriverTestTeleOp extends OpMode
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
         manualTools = new ManualTools(hardwareMap, telemetry, gamepad2);
+        intake = new Intake(hardwareMap, telemetry, gamepad2);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -204,7 +207,7 @@ public class DriverTestTeleOp extends OpMode
         rightBackDrive.setPower(rightBackPower * MAX_SPEED);
 
         manualTools.update();
-
+        intake.update();
 
 
         // Show the elapsed game time and wheel power.
