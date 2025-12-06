@@ -5,8 +5,11 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -24,31 +27,45 @@ public class AprilTagOmniAuton extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private SampleMecanumDrive drive;
-    private Pose2d startPose;
-    private TrajectorySequence trajectory;
+    private double maxPower = 1.0;
     RobotAutoDriveToAprilTagOmniToolClass distance;
-    Intake intake;
-    Launcher flicker;
-    DualWheelShooterMotors shooter;
+    private DcMotor frontRight;
+    private DcMotor frontLeft;
+    private DcMotor backRight;
+    private DcMotor backLeft;
+    private DcMotor intake;
+    private Servo flicker;
+    private DcMotor shooterLeft;
+    private DcMotor shooterRight;
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         distance = new RobotAutoDriveToAprilTagOmniToolClass(55, hardwareMap, telemetry, gamepad2);
-        intake = new Intake(hardwareMap, telemetry, gamepad2);
-        telemetry.addData("Status", "Initializing");
-        intake.update();
-        startPose = new Pose2d(72-(18.0/2), 12, Math.toRadians(180));
+
+        frontRight = hardwareMap.get(DcMotor.class, "rightFront");
+        frontLeft = hardwareMap.get(DcMotor.class, "leftFront");
+        backRight = hardwareMap.get(DcMotor.class, "rightBack");
+        backLeft = hardwareMap.get(DcMotor.class, "leftBack");
+
         drive = new SampleMecanumDrive(hardwareMap);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        drive.setPoseEstimate(startPose);
+        intake = hardwareMap.get(DcMotor.class,"intake"); //Port 1
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        trajectory = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .splineTo(new Vector2d(13, 12), Math.toRadians(90))
-                .splineTo(new Vector2d(13, 38), Math.toRadians(90))
-                .back(26)
-                .build();
+        flicker = hardwareMap.get(Servo.class, "flicker");
+
+        shooterLeft = hardwareMap.get(DcMotor.class, "shooterLeft");
+        shooterRight = hardwareMap.get(DcMotor.class, "shooterRight");
+        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        telemetry.addData("Status", "Initializing");
+
         telemetry.addData("Status", "Initialized");
     }
 
@@ -65,7 +82,22 @@ public class AprilTagOmniAuton extends OpMode {
      */
     @Override
     public void start() {
-        drive.followTrajectorySequenceAsync(trajectory);
+        intake.setPower(maxPower);
+        shooterLeft.setPower(1);
+        shooterRight.setPower(1);
+
+        if (runtime.seconds() < 1){
+            frontLeft.setPower (.5);
+            frontRight.setPower (.5);
+            backRight.setPower (.5);
+            backLeft.setPower (.5);
+        }
+        else {
+            frontLeft.setPower(0);
+            frontRight.setPower(0);
+            backRight.setPower(0);
+            backLeft.setPower(0);
+        }
         runtime.reset();
     }
 
@@ -74,19 +106,28 @@ public class AprilTagOmniAuton extends OpMode {
      */
     @Override
     public void loop() {
-
-        distance.update();
-        flicker.update();
-        shooter.update();
+        if(runtime.seconds() < 30){
+            intake.setPower(maxPower);
+            shooterLeft.setPower(1);
+            shooterRight.setPower(1);
+        }
+        if(runtime.seconds() > 1 && runtime.seconds() <5){
+            distance.update();
+            distance.setDESIRED_YAW(30);
+        }
+        if(runtime.seconds() > 5 && runtime.seconds() < 6){
+            flicker.setPosition(1);
+        }
+        if(runtime.seconds() > 6){
+            flicker.setPosition(0.4);
+            shooterRight.setPower(0);
+            shooterLeft.setPower(0);
+            intake.setPower(0);
+        }
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop() {
-        PositionStorage.store(trajectory.end());
-    }
-
 }

@@ -93,6 +93,7 @@ public class RobotAutoDriveToAprilTagOmniToolClass
 {
     // Adjust these numbers to suit your robot.
     double DESIRED_DISTANCE; //  this is how close the camera should get to the target (inches)
+    double DESIRED_YAW;
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
@@ -155,6 +156,9 @@ public class RobotAutoDriveToAprilTagOmniToolClass
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
     }
+    public void setDESIRED_YAW(double DESIRED_YAW){
+        this.DESIRED_YAW = DESIRED_YAW;
+    }
 
 
     public void update()
@@ -198,7 +202,7 @@ public class RobotAutoDriveToAprilTagOmniToolClass
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
                 double  headingError    = desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw;
+                double  yawError        = desiredTag.ftcPose.yaw + DESIRED_YAW;
 
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
                 drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
