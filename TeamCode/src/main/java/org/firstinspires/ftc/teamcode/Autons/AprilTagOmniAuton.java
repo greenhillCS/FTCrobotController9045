@@ -35,10 +35,10 @@ public class AprilTagOmniAuton extends OpMode {
     public void init() {
         distance = new RobotAutoDriveToAprilTagOmniToolClass(55, hardwareMap, telemetry, gamepad2);
 
-        frontRight = hardwareMap.get(DcMotor.class, "rightFront");
-        frontLeft = hardwareMap.get(DcMotor.class, "leftFront");
-        backRight = hardwareMap.get(DcMotor.class, "rightBack");
-        backLeft = hardwareMap.get(DcMotor.class, "leftBack");
+        frontRight = hardwareMap.get(DcMotor.class, "rightFront");//Port 3
+        frontLeft = hardwareMap.get(DcMotor.class, "leftFront");//Port 0
+        backRight = hardwareMap.get(DcMotor.class, "rightBack");//Port2
+        backLeft = hardwareMap.get(DcMotor.class, "leftBack");//Port 1
 
         drive = new SampleMecanumDrive(hardwareMap);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
