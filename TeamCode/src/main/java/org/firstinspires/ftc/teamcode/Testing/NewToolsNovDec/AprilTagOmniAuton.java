@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Testing.NewToolsNovDec;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -12,6 +13,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.AutonAssets.drive.PositionStorage;
 import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.Testing.DualWheelShooter.DualWheelShooterMotors;
+import org.firstinspires.ftc.teamcode.Tools.Intake;
+import org.firstinspires.ftc.teamcode.Tools.Launcher;
 
 @Autonomous(name="BIG JUICY AUTON", group="Testing")
 @Disabled
@@ -23,21 +27,27 @@ public class AprilTagOmniAuton extends OpMode {
     private Pose2d startPose;
     private TrajectorySequence trajectory;
     RobotAutoDriveToAprilTagOmniToolClass distance;
+    Intake intake;
+    Launcher flicker;
+    DualWheelShooterMotors shooter;
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         distance = new RobotAutoDriveToAprilTagOmniToolClass(55, hardwareMap, telemetry, gamepad2);
+        intake = new Intake(hardwareMap, telemetry, gamepad2);
         telemetry.addData("Status", "Initializing");
-
+        intake.update();
         startPose = new Pose2d(72-(18.0/2), 12, Math.toRadians(180));
         drive = new SampleMecanumDrive(hardwareMap);
 
         drive.setPoseEstimate(startPose);
 
         trajectory = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .forward(24)
+                .splineTo(new Vector2d(13, 12), Math.toRadians(90))
+                .splineTo(new Vector2d(13, 38), Math.toRadians(90))
+                .back(26)
                 .build();
         telemetry.addData("Status", "Initialized");
     }
@@ -66,6 +76,8 @@ public class AprilTagOmniAuton extends OpMode {
     public void loop() {
 
         distance.update();
+        flicker.update();
+        shooter.update();
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
 
