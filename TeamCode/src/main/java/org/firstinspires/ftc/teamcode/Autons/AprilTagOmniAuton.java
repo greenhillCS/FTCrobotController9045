@@ -104,10 +104,10 @@ public class AprilTagOmniAuton extends OpMode {
         }
         if(runtime.seconds() > 1 && runtime.seconds() <5){
             distance.update();
-            distance.setDESIRED_YAW(30);
         }
         if(runtime.seconds() > 5 && runtime.seconds() < 6){
             flicker.setPosition(1);
+            distance.setDESIRED_YAW(30);
         }
         if(runtime.seconds() > 6){
             flicker.setPosition(0.4);
