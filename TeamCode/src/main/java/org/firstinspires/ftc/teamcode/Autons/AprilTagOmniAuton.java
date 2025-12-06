@@ -1,24 +1,15 @@
-package org.firstinspires.ftc.teamcode.Testing.NewToolsNovDec;
+package org.firstinspires.ftc.teamcode.Autons;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.AutonAssets.drive.PositionStorage;
 import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.Testing.DualWheelShooter.DualWheelShooterMotors;
-import org.firstinspires.ftc.teamcode.Tools.Intake;
-import org.firstinspires.ftc.teamcode.Tools.Launcher;
+import org.firstinspires.ftc.teamcode.Tools.RobotAutoDriveToAprilTagOmniToolClass;
 
 @Autonomous(name="BIG JUICY AUTON", group="Testing")
 @Disabled

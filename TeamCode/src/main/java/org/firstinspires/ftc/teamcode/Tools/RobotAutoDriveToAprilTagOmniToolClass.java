@@ -27,11 +27,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Testing.NewToolsNovDec;
+package org.firstinspires.ftc.teamcode.Tools;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -40,14 +37,11 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /*
  * This OpMode illustrates using a camera to locate and drive towards a specific AprilTag.
@@ -124,7 +118,7 @@ public class RobotAutoDriveToAprilTagOmniToolClass
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
     boolean targetFound = false;
 
-    RobotAutoDriveToAprilTagOmniToolClass(double DESIRED_DISTANCE, HardwareMap h, Telemetry t, Gamepad g){
+    public RobotAutoDriveToAprilTagOmniToolClass(double DESIRED_DISTANCE, HardwareMap h, Telemetry t, Gamepad g){
         hardwareMap = h;
         telemetry = t;
         gamepad = g;
