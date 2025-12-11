@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 import org.firstinspires.ftc.teamcode.Tools.Intake;
 import org.firstinspires.ftc.teamcode.Tools.Launcher;
 import org.firstinspires.ftc.teamcode.Tools.ManualTools;
@@ -73,6 +74,8 @@ public class DriverTestTeleOp extends OpMode
     private double leftBackPower = 0;
     private double rightBackPower = 0;
 
+    AlianceColorSyncTool AlianceColor;
+
     ManualTools manualTools;
     Intake intake;
 
@@ -109,6 +112,7 @@ public class DriverTestTeleOp extends OpMode
 
         manualTools = new ManualTools(hardwareMap, telemetry, gamepad2);
         intake = new Intake(hardwareMap, telemetry, gamepad2);
+        AlianceColor = new AlianceColorSyncTool(hardwareMap,telemetry,gamepad2);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -208,7 +212,7 @@ public class DriverTestTeleOp extends OpMode
 
         manualTools.update();
         intake.update();
-
+        AlianceColor.update();
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
