@@ -11,8 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class shooterNew{
 
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor shooterLeft;
-    private DcMotor shooterRight;
+    private DcMotor shooter;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private Gamepad gamepad;
@@ -21,17 +20,13 @@ public class shooterNew{
         hardwareMap = h;
         telemetry = t;
         gamepad = g;
-        shooterLeft = h.get(DcMotor.class, "shooterLeft");
-        shooterRight = h.get(DcMotor.class, "shooterRight");
-        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooter = h.get(DcMotor.class, "shooter");
     }
 
     public void update(){
         if (gamepad.a)  {
-            shooterLeft.setPower(1);
-            shooterRight.setPower(1);
+            shooter.setPower(1);
         }
-        shooterLeft.setPower(0);
-        shooterRight.setPower(0);
+        shooter.setPower(0);
     }
 }
