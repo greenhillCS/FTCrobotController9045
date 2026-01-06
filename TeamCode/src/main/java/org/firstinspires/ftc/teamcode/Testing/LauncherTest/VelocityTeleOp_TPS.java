@@ -21,7 +21,7 @@ public class VelocityTeleOp_TPS extends OpMode {
 
     public static double computeVel(double distanceMeters) {
         double theta = Math.toRadians(LAUNCH_ANGLE_DEG);
-        return Math.sqrt((distanceMeters * GRAVITY) / Math.sin(2  theta));
+        return Math.sqrt((distanceMeters * GRAVITY) / Math.sin(2  *theta));
     }
 
     // TODO: tune to flywheel radius and gear ratio (1:1)
