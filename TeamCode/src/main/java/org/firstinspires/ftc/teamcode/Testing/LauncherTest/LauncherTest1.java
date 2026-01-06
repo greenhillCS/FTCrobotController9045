@@ -62,8 +62,9 @@ private KiranLaucherTest1 launcher;
         telemetry.addData("Status", "Initializing");
             rightMotor = hardwareMap.get(DcMotor.class,"rightMotor");
             leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
-            leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-            rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             launcher = new KiranLaucherTest1(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
     }
@@ -81,7 +82,7 @@ private KiranLaucherTest1 launcher;
      */
     @Override
     public void start() {
-//Runs once when started
+    //Runs once when started
         runtime.reset();
     }
 
