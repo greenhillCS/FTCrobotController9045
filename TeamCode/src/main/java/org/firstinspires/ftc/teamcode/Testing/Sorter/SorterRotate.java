@@ -27,15 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Testing.ColorSensor;
+package org.firstinspires.ftc.teamcode.Testing.Sorter;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.AutonAssets.drive.PatternStorage;
-import org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie.AprilTagToolClassSingleVision;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -44,14 +41,15 @@ import org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie.AprilT
  * When a selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
  */
-
-@TeleOp(name="TryingOp", group="Testing")
+//TODO:Uncomment one of the following and rename group and name as needed.
+//@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
-public class ColorSensorTest extends OpMode
+public class SorterRotate extends OpMode
 {
     // Declare OpMode members.
-    private ColorSensorToolClass colorSensor;
+    private Servo sorterServo;
+
     private ElapsedTime runtime = new ElapsedTime();
     /*
      * Code to run ONCE when the driver hits INIT
@@ -59,8 +57,9 @@ public class ColorSensorTest extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        colorSensor = new ColorSensorToolClass(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
+        sorterServo = hardwareMap.get(Servo.class, "sorterServo");
+        sorterServo.setPosition(0.5);
     }
 
     /*
@@ -85,14 +84,13 @@ public class ColorSensorTest extends OpMode
      */
     @Override
     public void loop() {
-
-
-
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-
-        colorSensor.update();
-
-
+        if (gamepad1.y) {
+            sorterServo.setPosition(1);
+        }
+        if (gamepad1.x) {
+            sorterServo.setPosition(0);
+        }
     }
 
     /*

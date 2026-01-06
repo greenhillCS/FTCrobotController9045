@@ -27,15 +27,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Testing.ColorSensor;
+package org.firstinspires.ftc.teamcode.Testing.Ayan_Try;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import android.graphics.Color;
+
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.AutonAssets.drive.PatternStorage;
-import org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie.AprilTagToolClassSingleVision;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -44,25 +52,46 @@ import org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie.AprilT
  * When a selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
  */
-
+//TODO:Uncomment one of the following and rename group and name as needed.
 @TeleOp(name="TryingOp", group="Testing")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
-public class ColorSensorTest extends OpMode
+public class TryingOp extends OpMode
 {
     // Declare OpMode members.
-    private ColorSensorToolClass colorSensor;
+
     private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor slideMotor;
+    private Servo sorterServo;
+    private CRServo intakeServo;
+    private Rev2mDistanceSensor backDistance;
+    private NormalizedColorSensor ballColor;
+    private float[] hsvValues;
+    private NormalizedRGBA colors;
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        colorSensor = new ColorSensorToolClass(hardwareMap, telemetry, gamepad1);
+
+        slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        sorterServo = hardwareMap.get(Servo.class, "sorterServo");
+
+        intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
+        intakeServo.setDirection(CRServo.Direction.FORWARD);
+
+        backDistance = hardwareMap.get(Rev2mDistanceSensor.class, "backDistance");
+
+        ballColor = hardwareMap.get(NormalizedColorSensor.class, "ballColor");
+        ((SwitchableLight) ballColor).enableLight(true);
+
         telemetry.addData("Status", "Initialized");
     }
-
+//trying change
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
@@ -86,13 +115,20 @@ public class ColorSensorTest extends OpMode
     @Override
     public void loop() {
 
+        colors = ballColor.getNormalizedColors();
+        Color.colorToHSV(colors.toColor(), hsvValues);
 
+        intakeServo.setPower(1);
+
+        sorterServo.setPosition(1);
+
+        slideMotor.setPower(1);
+
+        if (backDistance.getDistance(DistanceUnit.CM) == 10) {
+            telemetry.addData("distance", "10");
+        }
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-
-        colorSensor.update();
-
-
     }
 
     /*

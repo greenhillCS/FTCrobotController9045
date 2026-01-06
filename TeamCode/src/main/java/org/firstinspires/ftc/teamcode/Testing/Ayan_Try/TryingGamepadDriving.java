@@ -1,13 +1,3 @@
-package org.firstinspires.ftc.teamcode.Testing.Location_Niam_Ayan_Aarav;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.Testing.LifterTest.LifterToolClass;
-
 /* Copyright (c) 2017 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,6 +27,14 @@ import org.firstinspires.ftc.teamcode.Testing.LifterTest.LifterToolClass;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package org.firstinspires.ftc.teamcode.Testing.Ayan_Try;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -51,28 +49,44 @@ import org.firstinspires.ftc.teamcode.Testing.LifterTest.LifterToolClass;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Lifter", group="LifterTeleOp")
+@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
 @Disabled
-public class LifterTeleOp extends OpMode
+public class TryingGamepadDriving extends OpMode
 {
     // Declare OpMode members.
-    LifterToolClass lifter;
-
+// try commit
     private ElapsedTime runtime = new ElapsedTime();
-    double speed = 0.5;
-    private DcMotor wormMotorDrive;
+    private static final double ACCELERATION = 0.2;
+    private static final double MAX_SPEED = 1.0;
+    private DcMotor leftFrontDrive;
+    private DcMotor leftBackDrive;
+    private DcMotor rightFrontDrive;
+    private DcMotor rightBackDrive;
+    private double accelerate(double currentPower, double targetPower, double acceleration){
+        if (currentPower < targetPower) {
+            return Math.min(currentPower + acceleration, targetPower);
+        } else if (currentPower > targetPower) {
+            return Math.max(currentPower - acceleration, targetPower);
+        }
+        return targetPower;
+    }
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        LifterToolClass lifter;
-        lifter = new LifterToolClass(hardwareMap, telemetry, gamepad1);
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");//port 1
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");//port 3
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//port 0
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//port 2
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -110,18 +124,44 @@ public class LifterTeleOp extends OpMode
      */
     @Override
     public void loop() {
-
+        double max;
 
         // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-
+        double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+        double lateral =  gamepad1.left_stick_x;
+        double yaw     =  gamepad1.right_stick_x;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
+        double leftFrontPower  = axial + lateral + yaw;
+        double rightFrontPower = axial - lateral - yaw;
+        double leftBackPower   = axial - lateral + yaw;
+        double rightBackPower  = axial + lateral - yaw;
 
+        // Calculate the target powers for each wheel
+        double targetLeftFrontPower = axial + lateral + yaw;
+        double targetRightFrontPower = axial - lateral - yaw;
+        double targetLeftBackPower = axial - lateral + yaw;
+        double targetRightBackPower = axial + lateral - yaw;
+
+        // Apply acceleration to the wheel powers
+        leftFrontPower = accelerate(leftFrontPower, targetLeftFrontPower, ACCELERATION);
+        rightFrontPower = accelerate(rightFrontPower, targetRightFrontPower, ACCELERATION);
+        leftBackPower = accelerate(leftBackPower, targetLeftBackPower, ACCELERATION);
+        rightBackPower = accelerate(rightBackPower, targetRightBackPower, ACCELERATION);
 
         // Normalize the values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.
+        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
 
+        if (max > 1.0) {
+            leftFrontPower  /= max;
+            rightFrontPower /= max;
+            leftBackPower   /= max;
+            rightBackPower  /= max;
+        }
 
         // This is test code:
         //
@@ -139,10 +179,18 @@ public class LifterTeleOp extends OpMode
             rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
             rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
             */
-lifter.update();
 
+        // Send calculated power to wheels
+        leftFrontDrive.setPower(leftFrontPower);
+        rightFrontDrive.setPower(rightFrontPower);
+        leftBackDrive.setPower(leftBackPower);
+        rightBackDrive.setPower(rightBackPower);
 
         // Show the elapsed game time and wheel power.
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
+        telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+        telemetry.update();
     }
 
     /*
