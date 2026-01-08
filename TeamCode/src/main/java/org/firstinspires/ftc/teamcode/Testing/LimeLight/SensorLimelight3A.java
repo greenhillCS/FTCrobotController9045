@@ -39,6 +39,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
@@ -66,10 +67,14 @@ import java.util.List;
  *   and the ip address the Limelight device assigned the Control Hub and which is displayed in small text
  *   below the name of the Limelight on the top level configuration screen.
  */
-@TeleOp(name = "Sensor: Limelight3A", group = "Sensor")
+@TeleOp(name = "Sensor: Limelight3A industry baby", group = "Sensor")
 public class SensorLimelight3A extends LinearOpMode {
 
     private Limelight3A limelight;
+    public DcMotor turretMotor;
+    public double error = 0;
+    public double speed = 0.5;
+    public double fov = 54.5;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -108,6 +113,12 @@ public class SensorLimelight3A extends LinearOpMode {
                 for (LLResultTypes.FiducialResult fr : fiducialResults) {
                     telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
                 }
+
+                //54.5 degree fov
+                error = (fov/2)-result.getTx();
+                // if the qr code is left of center, so tx is less than 340, need to turn left
+                turretMotor.setPower(speed*(error/fov));
+                //right now the speed scale is set to 0.5
 
             } else {
                 telemetry.addData("Limelight", "No data available");
