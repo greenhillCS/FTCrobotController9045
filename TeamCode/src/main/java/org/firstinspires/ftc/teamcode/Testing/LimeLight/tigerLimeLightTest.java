@@ -11,6 +11,9 @@ public class tigerLimeLightTest extends LinearOpMode {
 
     private Limelight3A limelight;
     public DcMotor turretMotor;
+    public double error = 0;
+    public double speed = 0.5;
+    public double fov = 54.5;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -36,7 +39,14 @@ public class tigerLimeLightTest extends LinearOpMode {
                     telemetry.addData("ty", result.getTy());
                     telemetry.addData("Botpose", botpose.toString());
                 }
+                //54.5 degree fov
+                error = (fov/2)-result.getTx();
+                // if the qr code is left of center, so tx is less than 340, need to turn left
+                turretMotor.setPower(speed*(error/fov));
+                //right now the speed scale is set to 0.5
 
+
+                //add magnetic swith functionality
 
             }
         }
