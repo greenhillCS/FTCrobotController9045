@@ -73,13 +73,15 @@ public class SensorLimelight3A extends LinearOpMode {
     private Limelight3A limelight;
     public DcMotor turretMotor;
     public double error = 0;
-    public double speed = 0.5;
+    public double speed = 1;
     public double fov = 54.5;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        turretMotor = hardwareMap.get(DcMotor.class, "turret");
+
 
         telemetry.setMsTransmissionInterval(11);
 
@@ -115,9 +117,9 @@ public class SensorLimelight3A extends LinearOpMode {
                 }
 
                 //54.5 degree fov
-                error = (fov/2)-result.getTx();
+                error = result.getTx();
                 // if the qr code is left of center, so tx is less than 340, need to turn left
-                turretMotor.setPower(speed*(error/fov));
+                turretMotor.setPower(-speed*(error/fov));
                 //right now the speed scale is set to 0.5
 
             } else {
