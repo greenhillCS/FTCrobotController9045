@@ -18,7 +18,7 @@ public class Intake {
     private Telemetry telemetry;
     private Gamepad gamepad;
     private DcMotor intake;
-    private double maxPower = 1.0;
+    private double maxPower = 0.5;
 
     public Intake(HardwareMap h, Telemetry t, Gamepad g) {
         hardwareMap = h;
