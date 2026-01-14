@@ -26,6 +26,9 @@ public class TejDesignTools {
     DcMotorEx launcher;
     double maxLauncherPower = 1;
     double idleLauncherPower = 0.5;
+
+    boolean launcherPressed = false;
+    boolean previousButtonState = false;
     DcMotor turret;
     double maxTurretPower = 0.5;
     Servo hood;
@@ -91,15 +94,22 @@ public class TejDesignTools {
                 break;
         }
     }
-    private void updateLauncher(){
-//        if(gamepad.right_trigger > 0.5){
-//            telemetry.addData("Launcher", "Max Power!!");
-//            launcher.setPower(maxLauncherPower);
-//        }else {
-//            telemetry.addData("Launcher", "Idle Power...");
-//            launcher.setPower(idleLauncherPower);
-//        }
-        launcher.setVelocity(tps);
+    private void updateLauncher() {
+
+        boolean currentButtonState = gamepad.a;
+
+        if (currentButtonState && !previousButtonState) {
+
+            launcherPressed = !launcherPressed;
+
+        }
+
+        previousButtonState = currentButtonState;
+
+        if (launcherPressed) {
+
+            launcher.setVelocity(tps);
+        }
     }
     private void updateTurret(){
         turret.setPower(gamepad.left_stick_x * maxTurretPower);
