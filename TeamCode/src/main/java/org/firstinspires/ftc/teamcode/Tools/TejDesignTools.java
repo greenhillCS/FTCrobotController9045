@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Tools;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -22,8 +23,7 @@ public class TejDesignTools {
     Telemetry telemetry;
     Gamepad gamepad;
     DcMotor intake;
-    boolean isPressed = false;
-    DcMotor launcher;
+    DcMotorEx launcher;
     double maxLauncherPower = 1;
     double idleLauncherPower = 0.5;
     DcMotor turret;
@@ -31,6 +31,7 @@ public class TejDesignTools {
     Servo hood;
     double hoodPosition = 0;
     Servo gate;
+    double tps = 1550;
 
     public TejDesignTools(HardwareMap h, Telemetry t, Gamepad g){
         //Initialize devices and other variables here
@@ -41,8 +42,8 @@ public class TejDesignTools {
         intake = hardwareMap.get(DcMotor.class,"intake");// Port 0
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        launcher = hardwareMap.get(DcMotor.class,"launcher");// Port 2
-        launcher.setDirection(DcMotorSimple.Direction.FORWARD);
+        launcher = hardwareMap.get(DcMotorEx.class,"launcher");// Port 2
+        launcher.setDirection(DcMotorSimple.Direction.REVERSE);
 
         turret = hardwareMap.get(DcMotor.class, "turret");// Port 1
         turret.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -60,9 +61,10 @@ public class TejDesignTools {
 
                 intake.setPower(1);
 
-                if(gamepad.dpad_down){
+                if(gamepad.dpad_left){
                     state = STATE.STOP;
-                    isPressed = true;
+                }else if(gamepad.dpad_down){
+                    state = STATE.OUT;
                 }
                 break;
             case OUT:
@@ -70,9 +72,10 @@ public class TejDesignTools {
 
                 intake.setPower(-1);
 
-                if(gamepad.dpad_up){
+                if(gamepad.dpad_left){
                     state = STATE.STOP;
-                    isPressed = true;
+                }else if(gamepad.dpad_up){
+                    state = STATE.IN;
                 }
                 break;
             case STOP:
@@ -80,24 +83,23 @@ public class TejDesignTools {
 
                 intake.setPower(0);
 
-                if(gamepad.dpad_up && !isPressed){
+                if(gamepad.dpad_up){
                     state = STATE.IN;
-                }else if(gamepad.dpad_down && !isPressed){
+                }else if(gamepad.dpad_down){
                     state = STATE.OUT;
-                }else {
-                    isPressed = false;
                 }
                 break;
         }
     }
     private void updateLauncher(){
-        if(gamepad.right_trigger > 0.5){
-            telemetry.addData("Launcher", "Max Power!!");
-            launcher.setPower(maxLauncherPower);
-        }else {
-            telemetry.addData("Launcher", "Idle Power...");
-            launcher.setPower(idleLauncherPower);
-        }
+//        if(gamepad.right_trigger > 0.5){
+//            telemetry.addData("Launcher", "Max Power!!");
+//            launcher.setPower(maxLauncherPower);
+//        }else {
+//            telemetry.addData("Launcher", "Idle Power...");
+//            launcher.setPower(idleLauncherPower);
+//        }
+        launcher.setVelocity(tps);
     }
     private void updateTurret(){
         turret.setPower(gamepad.left_stick_x * maxTurretPower);
@@ -127,8 +129,8 @@ public class TejDesignTools {
         //Logic that goes in the loop goes here
         updateIntake();
 
-        updateTurret();
-        updateHood();
+//        updateTurret();
+//        updateHood();
 
         updateLauncher();
 //        updateGate();
