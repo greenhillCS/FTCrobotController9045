@@ -56,8 +56,10 @@ public class tigerLimeLightTest extends LinearOpMode {
                 // if the qr code is left of center, so tx is less than 340, need to turn left
                 if(magnet.getState() && runtime.seconds() >= 0.1) {
                     runtime.reset();
+                    searchPower *= -1;
                     if(searching){
                         searching = false;
+                        turretMotor.setPower(0);
                     }
 
                 }

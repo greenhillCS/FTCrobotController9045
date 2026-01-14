@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 import org.firstinspires.ftc.teamcode.Tools.TejDesignTools;
 
 /*
@@ -37,6 +38,7 @@ public class TejDesignTeleOp extends OpMode
     private DcMotor rightFrontDrive;
     private DcMotor rightBackDrive;
     private TejDesignTools tejTools;
+    private AlianceColorSyncTool AC;
     private double accelerate(double currentPower, double targetPower, double acceleration){
         if (currentPower < targetPower) {
             return Math.min(currentPower + acceleration, targetPower);
@@ -64,6 +66,7 @@ public class TejDesignTeleOp extends OpMode
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         tejTools = new TejDesignTools(hardwareMap, telemetry, gamepad2);
+        AC = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad1);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -84,7 +87,7 @@ public class TejDesignTeleOp extends OpMode
      */
     @Override
     public void init_loop() {
-
+        AC.update();
     }
 
     /*
