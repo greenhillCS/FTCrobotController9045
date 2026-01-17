@@ -41,6 +41,7 @@ public class tigerLimeLightTest extends LinearOpMode {
          * Starts polling for data.
          */
         limelight.start();
+        waitForStart();
 
         while (opModeIsActive()) {
             LLResult result = limelight.getLatestResult();

@@ -35,6 +35,9 @@ public class TejDesignTools {
     double hoodPosition = 0;
     Servo gate;
     double tps = 1550;
+    double farTps = 1150;
+    double medTps = 1050;
+    double shortTps = 1000;
 
     public TejDesignTools(HardwareMap h, Telemetry t, Gamepad g){
         //Initialize devices and other variables here
@@ -106,8 +109,14 @@ public class TejDesignTools {
 
         previousButtonState = currentButtonState;
 
-        if (launcherPressed) {
+        if(gamepad.right_bumper){
+            tps = farTps;
+        }else if(gamepad.left_bumper){
+            tps = medTps;
+        }
 
+
+        if (launcherPressed) {
             launcher.setVelocity(tps);
         }
     }

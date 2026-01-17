@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode.Testing.LimeLight;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
@@ -40,6 +40,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
@@ -70,17 +72,30 @@ import java.util.List;
 @TeleOp(name = "Sensor: Limelight3A industry baby", group = "Sensor")
 public class SensorLimelight3A extends LinearOpMode {
 
+    enum STATE {
+        SCANNING,
+        FOUND,
+        SWITCH
+    }
+    STATE state = STATE.SCANNING;
     private Limelight3A limelight;
     public DcMotor turretMotor;
     public double error = 0;
     public double speed = 1;
     public double fov = 54.5;
+    private double searchPower = 1;
+    private double dWait = 0.2;
+    private boolean searching = false;
+    private DigitalChannel magnet;
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException
     {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         turretMotor = hardwareMap.get(DcMotor.class, "turret");
+        magnet = hardwareMap.get(DigitalChannel.class, "magnet");
+        magnet.setMode(DigitalChannel.Mode.INPUT);
 
 
         telemetry.setMsTransmissionInterval(11);
@@ -106,24 +121,59 @@ public class SensorLimelight3A extends LinearOpMode {
                     status.getPipelineIndex(), status.getPipelineType());
 
             LLResult result = limelight.getLatestResult();
-            if (result.isValid()) {
-                // Access general information
-                Pose3D botpose = result.getBotpose();
+            switch(state) {
+                case FOUND:
+                    // Access general information
+                    if(!result.isValid()){
+                        state = STATE.SCANNING;
+                        break;
+                    }
 
-                // Access april tag results
-                List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-                for (LLResultTypes.FiducialResult fr : fiducialResults) {
-                    telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
-                }
+                    Pose3D botpose = result.getBotpose();
 
-                //54.5 degree fov
-                error = result.getTx();
-                // if the qr code is left of center, so tx is less than 340, need to turn left
-                turretMotor.setPower(-speed*(error/fov));
-                //right now the speed scale is set to 0.5
+                    // Access april tag results
+                    List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+                    for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                        telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
+                    }
 
-            } else {
-                telemetry.addData("Limelight", "No data available");
+                    //54.5 degree fov
+                    error = result.getTx();
+
+                    if (magnet.getState() && runtime.seconds() >= dWait) {
+                        runtime.reset();
+                        searchPower *= 1;
+                        state = STATE.SWITCH;
+                        break;
+                    }
+
+                    double power = speed * (error / fov);
+                    turretMotor.setPower(power);
+                    searchPower = Math.abs(power) / power;
+                    //right now the speed scale is set to 0.5
+
+
+                    //add magnetic swith functionality
+                    break;
+                case SWITCH:
+                    if(magnet.getState() && runtime.seconds() > dWait){
+                        runtime.reset();
+                        state = STATE.SCANNING;
+                        break;
+                    }
+                    turretMotor.setPower(searchPower);
+                    break;
+                case SCANNING:
+                    if(result.isValid()){
+                        state = STATE.FOUND;
+                        break;
+                    }
+                    else if (magnet.getState() && runtime.seconds() > dWait) {
+                        runtime.reset();
+                        searchPower *= -1;
+                    }
+                    turretMotor.setPower(searchPower);
+                    break;
             }
 
             telemetry.update();
