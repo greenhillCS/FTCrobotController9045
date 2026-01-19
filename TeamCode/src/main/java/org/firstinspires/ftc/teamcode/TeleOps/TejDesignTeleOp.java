@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
+import org.firstinspires.ftc.teamcode.Testing.LimeLight.TurretLimelight;
 import org.firstinspires.ftc.teamcode.Tools.TejDesignTools;
 
 /*
@@ -39,6 +40,7 @@ public class TejDesignTeleOp extends OpMode
     private DcMotor rightBackDrive;
     private TejDesignTools tejTools;
     private AlianceColorSyncTool AC;
+    private TurretLimelight turret;
     private double accelerate(double currentPower, double targetPower, double acceleration){
         if (currentPower < targetPower) {
             return Math.min(currentPower + acceleration, targetPower);
@@ -67,6 +69,7 @@ public class TejDesignTeleOp extends OpMode
 
         tejTools = new TejDesignTools(hardwareMap, telemetry, gamepad2);
         AC = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad1);
+        turret = new TurretLimelight(hardwareMap, telemetry, gamepad2);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -95,7 +98,7 @@ public class TejDesignTeleOp extends OpMode
      */
     @Override
     public void start() {
-
+        turret.updateID();
         runtime.reset();
     }
 
@@ -167,6 +170,7 @@ public class TejDesignTeleOp extends OpMode
         rightBackDrive.setPower(rightBackPower);
 
         tejTools.update();
+//        turret.update();
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());

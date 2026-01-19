@@ -35,9 +35,9 @@ public class TejDesignTools {
     double hoodPosition = 0;
     Servo gate;
     double tps = 1550;
-    double farTps = 1150;
-    double medTps = 1050;
-    double shortTps = 1000;
+    double farTps = 900;
+    double medTps = 750;
+    double shortTps = 700;
 
     public TejDesignTools(HardwareMap h, Telemetry t, Gamepad g){
         //Initialize devices and other variables here
@@ -99,7 +99,7 @@ public class TejDesignTools {
     }
     private void updateLauncher() {
 
-        boolean currentButtonState = gamepad.a;
+        boolean currentButtonState = gamepad.right_bumper;
 
         if (currentButtonState && !previousButtonState) {
 
@@ -109,10 +109,12 @@ public class TejDesignTools {
 
         previousButtonState = currentButtonState;
 
-        if(gamepad.right_bumper){
+        if(gamepad.triangle){
             tps = farTps;
-        }else if(gamepad.left_bumper){
+        }else if(gamepad.circle){
             tps = medTps;
+        }else if(gamepad.cross){
+            tps = shortTps;
         }
 
 

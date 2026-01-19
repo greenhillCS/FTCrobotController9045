@@ -44,6 +44,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class SensorLimelight3A extends LinearOpMode {
     public double error = 0;
     public double speed = 1;
     public double fov = 54.5;
-    private double searchPower = 1;
+    private double searchPower = 0.4;
     private double dWait = 0.2;
     private boolean searching = false;
     private DigitalChannel magnet;
@@ -123,6 +124,7 @@ public class SensorLimelight3A extends LinearOpMode {
             LLResult result = limelight.getLatestResult();
             switch(state) {
                 case FOUND:
+                    telemetry.addData("STATE", "Found");
                     // Access general information
                     if(!result.isValid()){
                         state = STATE.SCANNING;
@@ -130,6 +132,9 @@ public class SensorLimelight3A extends LinearOpMode {
                     }
 
                     Pose3D botpose = result.getBotpose();
+                    Position pos = botpose.getPosition();
+                    telemetry.addData("Position", "X: " + pos.x + " Y: " + pos.y);
+
 
                     // Access april tag results
                     List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
@@ -140,41 +145,44 @@ public class SensorLimelight3A extends LinearOpMode {
                     //54.5 degree fov
                     error = result.getTx();
 
-                    if (magnet.getState() && runtime.seconds() >= dWait) {
+                    if (!magnet.getState() && runtime.seconds() > dWait) {
                         runtime.reset();
-                        searchPower *= 1;
+                        searchPower *= -1;
                         state = STATE.SWITCH;
                         break;
                     }
 
                     double power = speed * (error / fov);
-                    turretMotor.setPower(power);
-                    searchPower = Math.abs(power) / power;
+                    turretMotor.setPower(-power);
+                    searchPower = (Math.abs(power) / power) * Math.abs(searchPower);
                     //right now the speed scale is set to 0.5
 
 
                     //add magnetic swith functionality
                     break;
                 case SWITCH:
-                    if(magnet.getState() && runtime.seconds() > dWait){
+                    telemetry.addData("STATE", "Searching");
+                    if(!magnet.getState() && runtime.seconds() > dWait){
                         runtime.reset();
                         state = STATE.SCANNING;
                         break;
                     }
-                    turretMotor.setPower(searchPower);
+                    turretMotor.setPower(speed);
                     break;
                 case SCANNING:
+                    telemetry.addData("STATE", "Scanning");
                     if(result.isValid()){
                         state = STATE.FOUND;
                         break;
                     }
-                    else if (magnet.getState() && runtime.seconds() > dWait) {
+                    else if (!magnet.getState() && runtime.seconds() > dWait) {
                         runtime.reset();
                         searchPower *= -1;
                     }
                     turretMotor.setPower(searchPower);
                     break;
             }
+            wait(17);
 
             telemetry.update();
         }
