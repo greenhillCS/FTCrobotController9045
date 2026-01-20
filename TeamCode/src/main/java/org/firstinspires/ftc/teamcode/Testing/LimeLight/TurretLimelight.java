@@ -33,14 +33,15 @@ public class TurretLimelight{
     SensorLimelight3A.STATE state = SensorLimelight3A.STATE.SCANNING;
     private Limelight3A limelight;
     public DcMotor turretMotor;
-    public double error = 0;
+    public double error = 1;
     public double speed = 1;
     public double fov = 54.5;
     private double searchPower = 0.4;
-    private double dWait = 0.2;
+    private double dWait = 1;
     private boolean searching = false;
     private DigitalChannel magnet;
     private int id = 0;
+    private int invalidNum = 0;
     private ElapsedTime runtime = new ElapsedTime();
 
     public TurretLimelight(HardwareMap h, Telemetry t, Gamepad g){
@@ -80,29 +81,6 @@ public class TurretLimelight{
     }
     public void update(){
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        runtime.reset();
         LLStatus status = limelight.getStatus();
         telemetry.addData("Name", "%s",
                 status.getName());
@@ -112,7 +90,6 @@ public class TurretLimelight{
                 status.getPipelineIndex(), status.getPipelineType());
 
         LLResult result = limelight.getLatestResult();
-
         // Access april tag results
         boolean correct = true;
 
@@ -126,38 +103,44 @@ public class TurretLimelight{
                 }
             }
         }
+        if(!result.isValid()){
+            invalidNum++;
+        }
 
         switch (state) {
             case FOUND:
-                telemetry.addData("STATE", "Found");
-                // Access general information
-                if (!result.isValid() || !correct) {
-                    state = SensorLimelight3A.STATE.SCANNING;
-                    break;
-                }
 
-                Pose3D botpose = result.getBotpose();
-                Position pos = botpose.getPosition();
-                telemetry.addData("Position", "X: " + pos.x + " Y: " + pos.y);
+                    telemetry.addData("STATE", "Found");
+                    // Access general information
+                    if ((!result.isValid() || !correct) && invalidNum > 5) {
+                        invalidNum = 0;
+                        state = SensorLimelight3A.STATE.SCANNING;
+                        break;
+                    }
 
-                //54.5 degree fov
-                error = result.getTx();
+                    Pose3D botpose = result.getBotpose();
+                    Position pos = botpose.getPosition();
+                    telemetry.addData("Position", "X: " + pos.x + " Y: " + pos.y);
 
-                if (!magnet.getState() && runtime.seconds() > dWait) {
-                    runtime.reset();
-                    searchPower *= -1;
-                    state = SensorLimelight3A.STATE.SWITCH;
-                    break;
-                }
+                    //54.5 degree fov
+                    error = result.getTx();
 
-                double power = speed * (error / fov);
+                    if (!magnet.getState() && runtime.seconds() > dWait) {
+                        runtime.reset();
+                        searchPower *= -1;
+                        state = SensorLimelight3A.STATE.SWITCH;
+                        break;
+                    }
 
-                turretMotor.setPower(-power);
-                searchPower = (Math.abs(power) / power) * Math.abs(searchPower);
-                //right now the speed scale is set to 0.5
+                    double power = speed / (error / fov);
+
+                    turretMotor.setPower(power);
+                    searchPower = (Math.abs(power) / power) * Math.abs(searchPower);
+                    //right now the speed scale is set to 0.5
 
 
-                //add magnetic swith functionality
+                    //add magnetic swith functionality
+
                 break;
             case SWITCH:
                 telemetry.addData("STATE", "Searching");
@@ -166,7 +149,7 @@ public class TurretLimelight{
                     state = SensorLimelight3A.STATE.SCANNING;
                     break;
                 }
-                turretMotor.setPower(speed);
+                turretMotor.setPower(searchPower);
                 break;
             case SCANNING:
                 telemetry.addData("STATE", "Scanning");
@@ -180,6 +163,10 @@ public class TurretLimelight{
                 turretMotor.setPower(searchPower);
                 break;
         }
-
+        telemetry.addData("Power", searchPower);
+        telemetry.addData("magnet", magnet.getState());
+        telemetry.addData("isValid", result.isValid());
+        telemetry.addData("correct", correct);
+        telemetry.addData("runtime", runtime.seconds());
     }
 }
