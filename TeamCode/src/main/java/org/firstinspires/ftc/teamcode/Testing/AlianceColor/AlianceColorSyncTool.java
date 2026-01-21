@@ -28,9 +28,7 @@ public class AlianceColorSyncTool {
 
     public void update(){
         //Logic that goes in the loop goes here
-        buttonXPressed = gamepad.x;
-        buttonYPressed = gamepad.y;
-        // Gamepad
+
         if (gamepad.x && !buttonXPressed) {
             if (selectedColor.equals("Blue")) {
                 selectedColor = "None";
@@ -46,6 +44,9 @@ public class AlianceColorSyncTool {
                 selectedColor = "Red";
             }
         }
+        buttonXPressed = gamepad.x;
+        buttonYPressed = gamepad.y;
+
         telemetry.addData("ColorStored", selectedColor);
     }
 
