@@ -52,7 +52,7 @@ public class TejDesignTools {
         launcher.setDirection(DcMotorSimple.Direction.REVERSE);
 
         turret = hardwareMap.get(DcMotor.class, "turret");// Port 1
-        turret.setDirection(DcMotorSimple.Direction.REVERSE);
+//        turret.setDirection(DcMotorSimple.Direction.REVERSE);
 
         hood = hardwareMap.get(Servo.class, "hood");// Port 0
         hood.setPosition(hoodPosition);

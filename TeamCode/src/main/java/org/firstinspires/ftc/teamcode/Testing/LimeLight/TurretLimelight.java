@@ -43,7 +43,7 @@ public class TurretLimelight{
     private int id = 0;
     private int invalidNum = 0;
     private ElapsedTime runtime = new ElapsedTime();
-
+    boolean correct = true;
     public TurretLimelight(HardwareMap h, Telemetry t, Gamepad g){
         //Initialize devices and other variables here
         hardwareMap = h;
@@ -91,7 +91,7 @@ public class TurretLimelight{
 
         LLResult result = limelight.getLatestResult();
         // Access april tag results
-        boolean correct = true;
+
 
         if(result.isValid() && id != 0){
             correct = false;
@@ -103,17 +103,14 @@ public class TurretLimelight{
                 }
             }
         }
-        if(!result.isValid()){
-            invalidNum++;
-        }
+
 
         switch (state) {
             case FOUND:
 
                     telemetry.addData("STATE", "Found");
                     // Access general information
-                    if ((!result.isValid() || !correct) && invalidNum > 5) {
-                        invalidNum = 0;
+                    if (!result.isValid() || !correct) {
                         state = SensorLimelight3A.STATE.SCANNING;
                         break;
                     }
@@ -132,10 +129,10 @@ public class TurretLimelight{
                         break;
                     }
 
-                    double power = speed / (error / fov);
+                    double power = -(error/fov);
 
                     turretMotor.setPower(power);
-                    searchPower = (Math.abs(power) / power) * Math.abs(searchPower);
+//                    searchPower = (Math.abs(power) / power) * Math.abs(searchPower);
                     //right now the speed scale is set to 0.5
 
 

@@ -170,7 +170,7 @@ public class TejDesignTeleOp extends OpMode
         rightBackDrive.setPower(rightBackPower);
 
         tejTools.update();
-//        turret.update();
+        turret.update();
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
