@@ -37,7 +37,7 @@ public class TurretLimelight{
     public double speed = 1;
     public double fov = 54.5;
     private double searchPower = 0.4;
-    private double dWait = 1;
+    private double dWait = 0.2;
     private boolean searching = false;
     private DigitalChannel magnet;
     private int id = 0;
@@ -80,33 +80,36 @@ public class TurretLimelight{
         }
     }
     public void update(){
+        if(-0.05 > gamepad.left_stick_x || gamepad.left_stick_x > 0.05){
+            telemetry.addData("STATE", "manual");
+            turretMotor.setPower(searchPower*-gamepad.left_stick_x);
+        }else {
+            LLStatus status = limelight.getStatus();
+            telemetry.addData("Name", "%s",
+                    status.getName());
+            telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
+                    status.getTemp(), status.getCpu(), (int) status.getFps());
+            telemetry.addData("Pipeline", "Index: %d, Type: %s",
+                    status.getPipelineIndex(), status.getPipelineType());
 
-        LLStatus status = limelight.getStatus();
-        telemetry.addData("Name", "%s",
-                status.getName());
-        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
-                status.getTemp(), status.getCpu(), (int) status.getFps());
-        telemetry.addData("Pipeline", "Index: %d, Type: %s",
-                status.getPipelineIndex(), status.getPipelineType());
-
-        LLResult result = limelight.getLatestResult();
-        // Access april tag results
+            LLResult result = limelight.getLatestResult();
+            // Access april tag results
 
 
-        if(result.isValid() && id != 0){
-            correct = false;
-            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-            for (LLResultTypes.FiducialResult fr : fiducialResults) {
-                telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
-                if(fr.getFiducialId() == id){
-                    correct = true;
+            if (result.isValid() && id != 0) {
+                correct = false;
+                List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+                for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                    telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
+                    if (fr.getFiducialId() == id) {
+                        correct = true;
+                    }
                 }
             }
-        }
 
 
-        switch (state) {
-            case FOUND:
+            switch (state) {
+                case FOUND:
 
                     telemetry.addData("STATE", "Found");
                     // Access general information
@@ -129,41 +132,44 @@ public class TurretLimelight{
                         break;
                     }
 
-                    double power = -(error/fov);
-
+                    double power = -(error / fov);
+                    searchPower = (Math.abs(power) / power) * Math.abs(searchPower);
+                    if (-5 < error && error < 5) {
+                        power = 0;
+                    }
                     turretMotor.setPower(power);
-//                    searchPower = (Math.abs(power) / power) * Math.abs(searchPower);
                     //right now the speed scale is set to 0.5
 
 
                     //add magnetic swith functionality
 
-                break;
-            case SWITCH:
-                telemetry.addData("STATE", "Searching");
-                if (!magnet.getState() && runtime.seconds() > dWait) {
-                    runtime.reset();
-                    state = SensorLimelight3A.STATE.SCANNING;
                     break;
-                }
-                turretMotor.setPower(searchPower);
-                break;
-            case SCANNING:
-                telemetry.addData("STATE", "Scanning");
-                if (result.isValid() && correct) {
-                    state = SensorLimelight3A.STATE.FOUND;
+                case SWITCH:
+                    telemetry.addData("STATE", "Searching");
+                    if (!magnet.getState() && runtime.seconds() > dWait) {
+                        state = SensorLimelight3A.STATE.SCANNING;
+                        break;
+                    }
+                    turretMotor.setPower(searchPower);
                     break;
-                } else if (!magnet.getState() && runtime.seconds() > dWait) {
-                    runtime.reset();
-                    searchPower *= -1;
-                }
-                turretMotor.setPower(searchPower);
-                break;
+                case SCANNING:
+                    telemetry.addData("STATE", "Scanning");
+                    if (result.isValid() && correct) {
+                        state = SensorLimelight3A.STATE.FOUND;
+                        break;
+                    } else if (!magnet.getState() && runtime.seconds() > dWait) {
+                        runtime.reset();
+                        searchPower *= -1;
+                    }
+                    turretMotor.setPower(searchPower);
+                    break;
+            }
+
+            telemetry.addData("Power", searchPower);
+            telemetry.addData("magnet", magnet.getState());
+            telemetry.addData("isValid", result.isValid());
+            telemetry.addData("correct", correct);
+            telemetry.addData("runtime", runtime.seconds());
         }
-        telemetry.addData("Power", searchPower);
-        telemetry.addData("magnet", magnet.getState());
-        telemetry.addData("isValid", result.isValid());
-        telemetry.addData("correct", correct);
-        telemetry.addData("runtime", runtime.seconds());
     }
 }
