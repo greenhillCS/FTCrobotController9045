@@ -44,12 +44,12 @@ public class FourMotorsTestCode extends OpMode {
         runtime.reset();
 
         // Continuous spinning powers
-        intakeMotor.setPower(0.6);        // intake speed
-        pusherMotor.setPower(0.5);        // wheel pusher speed
+        intakeMotor.setPower(1.0);        // intake speed
+        pusherMotor.setPower(1.0);        // wheel pusher speed
 
         // Shooter motors VERY fast
-        shooterMotorLeft.setPower(1.0);
-        shooterMotorRight.setPower(1.0);
+        shooterMotorLeft.setPower(0.5);
+        shooterMotorRight.setPower(0.5);
     }
 
     @Override
