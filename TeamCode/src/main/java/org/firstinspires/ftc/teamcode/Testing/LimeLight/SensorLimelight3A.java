@@ -73,7 +73,7 @@ import java.util.List;
 @TeleOp(name = "Sensor: Limelight3A industry baby", group = "Sensor")
 public class SensorLimelight3A extends LinearOpMode {
 
-    enum STATE {
+    public enum STATE {
         SCANNING,
         FOUND,
         SWITCH

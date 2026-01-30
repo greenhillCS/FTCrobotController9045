@@ -1,43 +1,44 @@
 package org.firstinspires.ftc.teamcode.Autons;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.AutonAssets.drive.PositionStorage;
 import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.Testing.LimeLight.SensorLimelight3A;
 import org.firstinspires.ftc.teamcode.Tools.Intake;
-import org.firstinspires.ftc.teamcode.Tools.RobotAutoDriveToAprilTagOmniToolClass;
+import org.firstinspires.ftc.teamcode.Tools.Launcher;
 
-@Autonomous(name="BIG JUICY AUTON", group="Testing")
-public class AprilTagOmniAuton extends OpMode {
+@Autonomous(name="LimeLight Auton Test", group="Autons")
+@Disabled
+public class AutonLimeLight extends OpMode {
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
     private SampleMecanumDrive drive;
     private double maxPower = 1.0;
-    RobotAutoDriveToAprilTagOmniToolClass distance;
     private DcMotor frontRight;
     private DcMotor frontLeft;
     private DcMotor backRight;
     private DcMotor backLeft;
+    private DcMotorEx launcher;
     private DcMotor intake;
-    private Servo flicker;
-    private DcMotor shooterLeft;
-    private DcMotor shooterRight;
+    double shortTps = 700;
 
-    private Intake.STATE mode = Intake.STATE.STOP;
-
+    SensorLimelight3A.STATE cameraState = SensorLimelight3A.STATE.SCANNING;
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        distance = new RobotAutoDriveToAprilTagOmniToolClass(55, hardwareMap, telemetry, gamepad2);
-
         frontRight = hardwareMap.get(DcMotor.class, "leftBack");//Port 3 was RF
         frontLeft = hardwareMap.get(DcMotor.class, "rightBack");//Port 0 was LF
         backRight = hardwareMap.get(DcMotor.class, "leftFront");//Port2 was RB
@@ -54,16 +55,20 @@ public class AprilTagOmniAuton extends OpMode {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        intake = hardwareMap.get(DcMotor.class,"intake"); //Port 1
+        intake = hardwareMap.get(DcMotor.class,"intake");// Port 0
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        flicker = hardwareMap.get(Servo.class, "flicker");
+        launcher = hardwareMap.get(DcMotorEx.class,"launcher");// Port 2
+        launcher.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shooterLeft = hardwareMap.get(DcMotor.class, "shooterLeft");
-        shooterRight = hardwareMap.get(DcMotor.class, "shooterRight");
-        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
 
         telemetry.addData("Status", "Initializing");
+
+        drive = new SampleMecanumDrive(hardwareMap);
+
 
         telemetry.addData("Status", "Initialized");
     }
@@ -81,12 +86,7 @@ public class AprilTagOmniAuton extends OpMode {
      */
     @Override
     public void start() {
-        intake.setPower(maxPower);
-        shooterLeft.setPower(1);
-        shooterRight.setPower(1);
-
-
-
+        launcher.setVelocity(shortTps);
         runtime.reset();
     }
 
@@ -95,44 +95,36 @@ public class AprilTagOmniAuton extends OpMode {
      */
     @Override
     public void loop() {
-        if(runtime.seconds() < 0.5){
+        if(runtime.seconds() < 0.5 && !cameraState.equals(SensorLimelight3A.STATE.FOUND)){
             frontLeft.setPower (-.5);
             frontRight.setPower (-.5);
             backRight.setPower (-.5);
             backLeft.setPower (-.5);
         }
-        if(runtime.seconds() < 30){
-            intake.setPower(maxPower);
-            shooterLeft.setPower(1);
-            shooterRight.setPower(1);
+        if(cameraState.equals(SensorLimelight3A.STATE.FOUND) || runtime.seconds() > 0.5 && runtime.seconds() < 5){
+            intake.setPower(1);
         }
-        if(runtime.seconds() > 2 && runtime.seconds() <12){
-            distance.update();
+        if(runtime.seconds() > 5 && runtime.seconds() < 5.5) {
+            intake.setPower(0);
+            launcher.setVelocity(0);
+            frontLeft.setPower(-.5);
+            frontRight.setPower(-.5);
+            backLeft.setPower(.5);
+            backLeft.setPower(.5);
         }
-        if(runtime.seconds() > 12 && runtime.seconds() < 13){
-            flicker.setPosition(1);
-            backRight.setPower(0);
-
-
-        }
-        if(runtime.seconds() > 13 && runtime.seconds() < 20) {
-            distance.setDESIRED_YAW(30);
-            distance.update();
-        }
-        if (runtime.seconds() > 20){
-                frontLeft.setPower(0);
-                frontRight.setPower(0);
-                backRight.setPower(0);
-                backLeft.setPower(0);
-                flicker.setPosition(0.4);
-                shooterRight.setPower(0);
-                shooterLeft.setPower(0);
-                intake.setPower(0);
+        if (runtime.seconds() > 5.5){
+            frontLeft.setPower(0);
+            frontRight.setPower(0);
+            backLeft.setPower(0);
+            backLeft.setPower(0);
         }
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+    }
+
+
     }
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
-}
+
