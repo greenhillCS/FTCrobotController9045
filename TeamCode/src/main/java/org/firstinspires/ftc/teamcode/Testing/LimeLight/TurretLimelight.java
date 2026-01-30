@@ -36,7 +36,7 @@ public class TurretLimelight{
     public double error = 1;
     public double speed = 1;
     public double fov = 54.5;
-    private double searchPower = 0.4;
+    private double searchPower = 0.25;
     private double dWait = 0.2;
     private boolean searching = false;
     private DigitalChannel magnet;
@@ -82,7 +82,7 @@ public class TurretLimelight{
     public void update(){
         if(-0.05 > gamepad.left_stick_x || gamepad.left_stick_x > 0.05){
             telemetry.addData("STATE", "manual");
-            turretMotor.setPower(searchPower*-gamepad.left_stick_x);
+            turretMotor.setPower(Math.abs(searchPower)*-gamepad.left_stick_x);
         }else {
             LLStatus status = limelight.getStatus();
             telemetry.addData("Name", "%s",

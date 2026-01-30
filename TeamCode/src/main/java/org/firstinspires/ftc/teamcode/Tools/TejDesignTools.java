@@ -34,10 +34,10 @@ public class TejDesignTools {
     Servo hood;
     double hoodPosition = 0;
     Servo gate;
-    double tps = 1550;
     double farTps = 900;
     double medTps = 750;
     double shortTps = 700;
+    double tps = shortTps;
 
     public TejDesignTools(HardwareMap h, Telemetry t, Gamepad g){
         //Initialize devices and other variables here
