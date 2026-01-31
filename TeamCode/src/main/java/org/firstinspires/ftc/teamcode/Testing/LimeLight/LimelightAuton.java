@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 
-@Autonomous(name="LimelightAuton", group="Limelight")
+@Autonomous(name="LimelightAuton Near", group="Limelight")
 
 public class LimelightAuton extends OpMode {
     // Declare OpMode members.

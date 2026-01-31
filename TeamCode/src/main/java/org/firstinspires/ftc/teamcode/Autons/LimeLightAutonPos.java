@@ -26,6 +26,7 @@ public class LimeLightAutonPos extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private SampleMecanumDrive drive;
     private Limelight3A limelight;
+    private double hightPillar = 43.5;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -72,10 +73,10 @@ public class LimeLightAutonPos extends OpMode {
 
             LLResult result = limelight.getLatestResult();
         if (result.isValid()) {
-            Pose3D botpose = result.getBotpose();
-            Position pos = botpose.getPosition();
-            telemetry.addData("Position", "X: " + pos.x + " Y: " + pos.y);
-
+    double angle = result.getTy();
+    double distance = hightPillar / (double)Math.tan(result.getTy());
+    telemetry.addData("Angle: ", angle);
+    telemetry.addData("Distance: ", distance);
             // Access april tag results
             List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
             for (LLResultTypes.FiducialResult fr : fiducialResults) {

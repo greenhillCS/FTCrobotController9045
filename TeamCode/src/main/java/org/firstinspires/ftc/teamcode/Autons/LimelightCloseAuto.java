@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.Testing.JohnnyThings;
+package org.firstinspires.ftc.teamcode.Autons;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -9,12 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.teamcode.AutonAssets.drive.PositionStorage;
-import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name="Change the name of your Auton", group="zzzzz")
 @Disabled

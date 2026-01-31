@@ -121,6 +121,8 @@ public class TejDesignTools {
         if (launcherPressed) {
             launcher.setVelocity(tps);
         }
+        telemetry.addData("LauncherPressed", launcherPressed);
+        telemetry.addData("TPS", tps);
     }
     private void updateTurret(){
         turret.setPower(gamepad.left_stick_x * maxTurretPower);
