@@ -30,7 +30,7 @@ public class LimelightAuton extends OpMode {
     private DcMotor intake;
     private double moveBackEnd = 1.4;
     private double speedupEnd = 14;
-    private double launchEnd1 = speedupEnd + 0.75;
+    private double launchEnd1 = speedupEnd + 0.6;
     private double waitEnd = launchEnd1 + 0.5;
     private double launchEnd2 = waitEnd + 4;
     private double parkEnd = launchEnd2 + 1;

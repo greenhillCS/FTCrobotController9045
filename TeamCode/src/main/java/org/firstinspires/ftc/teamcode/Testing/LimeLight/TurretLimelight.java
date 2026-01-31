@@ -45,6 +45,8 @@ public class TurretLimelight{
     private int invalidNum = 0;
     private ElapsedTime runtime = new ElapsedTime();
     boolean correct = true;
+    private boolean last = false;
+    public boolean turretOn = true;
     public TurretLimelight(HardwareMap h, Telemetry t, Gamepad g){
         //Initialize devices and other variables here
         hardwareMap = h;
@@ -84,7 +86,15 @@ public class TurretLimelight{
         if(-0.05 > gamepad.left_stick_x || gamepad.left_stick_x > 0.05){
             telemetry.addData("STATE", "manual");
             turretMotor.setPower(Math.abs(manualPower)*-gamepad.left_stick_x);
-        }else {
+        }
+//        else if(gamepad.left_bumper && !last){
+//            turretOn = !turretOn;
+//            last = true;
+//        }else if(!turretOn){
+//            turretMotor.setPower(0);
+//        }
+        else {
+            last = false;
             LLStatus status = limelight.getStatus();
             telemetry.addData("Name", "%s",
                     status.getName());
