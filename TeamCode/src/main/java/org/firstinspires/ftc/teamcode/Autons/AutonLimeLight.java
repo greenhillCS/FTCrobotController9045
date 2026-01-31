@@ -51,7 +51,7 @@ public class AutonLimeLight extends OpMode {
         frontLeft = hardwareMap.get(DcMotor.class, "rightBack");//Port 0 was LF
         backRight = hardwareMap.get(DcMotor.class, "leftFront");//Port2 was RB
         backLeft = hardwareMap.get(DcMotor.class, "rightFront");//Port 1 was LB
-
+        turret = new TurretLimelight(hardwareMap, telemetry, gamepad2);
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -66,8 +66,6 @@ public class AutonLimeLight extends OpMode {
         intake = hardwareMap.get(DcMotor.class,"intake");// Port 0
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        launcher = hardwareMap.get(DcMotorEx.class,"launcher");// Port 2
-        launcher.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 

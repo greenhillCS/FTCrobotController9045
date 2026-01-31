@@ -32,7 +32,7 @@ public class TejDesignTeleOp extends OpMode
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
-    private static final double ACCELERATION = 0.35;
+    private static final double ACCELERATION = 0.45;
     private static final double MAX_SPEED = 1.0;
     private DcMotor leftFrontDrive;
     private DcMotor leftBackDrive;
