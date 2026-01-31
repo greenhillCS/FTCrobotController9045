@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 
-@Autonomous(name="Change the name of your Auton", group="zzzzz")
-@Disabled
+@Autonomous(name="LimelightAuton", group="Limelight")
+
 public class LimelightAuton extends OpMode {
     // Declare OpMode members.
 
@@ -28,9 +28,13 @@ public class LimelightAuton extends OpMode {
     private DcMotor rightBackDrive;
     private DcMotorEx launcher;
     private DcMotor intake;
-    private double speedupEnd = 8;
-    private double launchEnd = speedupEnd + 4;
-    private double parkEnd = launchEnd + 2;
+    private double moveBackEnd = 1.4;
+    private double speedupEnd = 14;
+    private double launchEnd1 = speedupEnd + 0.75;
+    private double waitEnd = launchEnd1 + 0.5;
+    private double launchEnd2 = waitEnd + 4;
+    private double parkEnd = launchEnd2 + 1;
+    private double speed = -0.5;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -75,6 +79,7 @@ public class LimelightAuton extends OpMode {
     @Override
     public void start() {
         turret.updateID();
+        launcher.setVelocity(700);
         runtime.reset();
     }
 
@@ -83,28 +88,49 @@ public class LimelightAuton extends OpMode {
      */
     @Override
     public void loop() {
-        if(runtime.seconds() < launchEnd){
+        if(runtime.seconds() < launchEnd2 && runtime.seconds() > moveBackEnd) {
             turret.update();
+            telemetry.addData("Turret: ", "Active");
+        }else {
+            telemetry.addData("Turret: ", "Inactive");
         }
 
-        if(runtime.seconds() < speedupEnd){
-            launcher.setVelocity(700);
-        }else if(runtime.seconds() < launchEnd){
+        if(runtime.seconds() < moveBackEnd) {
+            rightFrontDrive.setPower(speed);
+            leftFrontDrive.setPower(speed);
+            rightBackDrive.setPower(speed);
+            leftBackDrive.setPower(speed);
+            telemetry.addData("Moving Back until Runtime: ", moveBackEnd);
+        }else if(runtime.seconds() < speedupEnd) {
+            rightFrontDrive.setPower(0);
+            leftFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
+            leftBackDrive.setPower(0);
+            telemetry.addData("Speeding Up until Runtime: ", speedupEnd);
+        }else if(runtime.seconds() < launchEnd1) {
             intake.setPower(1);
-        }else if(runtime.seconds() < parkEnd){
-            launcher.setPower(0);
+            telemetry.addData("Launching (1/2) until Runtime: ", launchEnd1);
+        }else if(runtime.seconds() < waitEnd) {
             intake.setPower(0);
-            rightFrontDrive.setPower(0.5);
-            leftFrontDrive.setPower(0.5);
-            rightBackDrive.setPower(0.5);
-            leftBackDrive.setPower(0.5);
+            telemetry.addData("Waiting until Runtime: ", waitEnd);
+        }else if(runtime.seconds() < launchEnd2) {
+            intake.setPower(1);
+            telemetry.addData("Launching (2/2) until Runtime: ", launchEnd2);
+        }else if(runtime.seconds() < parkEnd) {
+            launcher.setVelocity(0);
+            intake.setPower(0);
+            rightFrontDrive.setPower(speed);
+            leftFrontDrive.setPower(speed);
+            rightBackDrive.setPower(speed);
+            leftBackDrive.setPower(speed);
+            telemetry.addData("Parking until Runtime: ", parkEnd);
         }else {
-            launcher.setPower(0);
             intake.setPower(0);
             rightFrontDrive.setPower(0);
             leftFrontDrive.setPower(0);
             rightBackDrive.setPower(0);
             leftBackDrive.setPower(0);
+            telemetry.addData("Parking until: ", "TeleOp Start");
         }
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }

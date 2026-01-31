@@ -25,12 +25,12 @@ public class TurretLimelight{
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad;
-    enum STATE {
+    public enum STATE {
         SCANNING,
         FOUND,
         SWITCH
     }
-    SensorLimelight3A.STATE state = SensorLimelight3A.STATE.SCANNING;
+    STATE state = STATE.SCANNING;
     private Limelight3A limelight;
     public DcMotor turretMotor;
     public double error = 1;
@@ -114,7 +114,7 @@ public class TurretLimelight{
                     telemetry.addData("STATE", "Found");
                     // Access general information
                     if (!result.isValid() || !correct) {
-                        state = SensorLimelight3A.STATE.SCANNING;
+                        state = STATE.SCANNING;
                         break;
                     }
 
@@ -128,7 +128,7 @@ public class TurretLimelight{
                     if (!magnet.getState() && runtime.seconds() > dWait) {
                         runtime.reset();
                         searchPower *= -1;
-                        state = SensorLimelight3A.STATE.SWITCH;
+                        state = STATE.SWITCH;
                         break;
                     }
 
@@ -147,7 +147,7 @@ public class TurretLimelight{
                 case SWITCH:
                     telemetry.addData("STATE", "Searching");
                     if (!magnet.getState() && runtime.seconds() > dWait) {
-                        state = SensorLimelight3A.STATE.SCANNING;
+                        state = STATE.SCANNING;
                         break;
                     }
                     turretMotor.setPower(searchPower);
@@ -155,7 +155,7 @@ public class TurretLimelight{
                 case SCANNING:
                     telemetry.addData("STATE", "Scanning");
                     if (result.isValid() && correct) {
-                        state = SensorLimelight3A.STATE.FOUND;
+                        state = STATE.FOUND;
                         break;
                     } else if (!magnet.getState() && runtime.seconds() > dWait) {
                         runtime.reset();
