@@ -30,7 +30,7 @@ public class TurretLimelight{
         FOUND,
         SWITCH
     }
-    STATE state = STATE.SCANNING;
+    public STATE state = STATE.SCANNING;
     private Limelight3A limelight;
     public DcMotor turretMotor;
     public double error = 1;
@@ -145,9 +145,9 @@ public class TurretLimelight{
 
                     double power = -(error / fov);
                     searchPower = (Math.abs(power) / power) * Math.abs(searchPower);
-                    if (-5 < error && error < 5) {
-                        power = 0;
-                    }
+//                    if (-5 < error && error < 5) {
+//                        power = 0;
+//                    }
                     turretMotor.setPower(power);
                     //right now the speed scale is set to 0.5
 

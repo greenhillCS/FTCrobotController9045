@@ -34,9 +34,9 @@ public class TejDesignTools {
     Servo hood;
     double hoodPosition = 0;
     Servo gate;
-    double farTps = 900;
-    double medTps = 750;
-    double shortTps = 700;
+    double farTps = 950;
+    double medTps = 850;
+    double shortTps = 750;
     double tps = shortTps;
 
     public TejDesignTools(HardwareMap h, Telemetry t, Gamepad g){
@@ -120,6 +120,8 @@ public class TejDesignTools {
 
         if (launcherPressed) {
             launcher.setVelocity(tps);
+        }else{
+            launcher.setVelocity(0);
         }
         telemetry.addData("LauncherPressed", launcherPressed);
         telemetry.addData("TPS", tps);

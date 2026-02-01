@@ -1,23 +1,16 @@
 package org.firstinspires.ftc.teamcode.Autons;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.AutonAssets.drive.PositionStorage;
 import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 import org.firstinspires.ftc.teamcode.Testing.LimeLight.SensorLimelight3A;
 import org.firstinspires.ftc.teamcode.Testing.LimeLight.TurretLimelight;
-import org.firstinspires.ftc.teamcode.Tools.Intake;
-import org.firstinspires.ftc.teamcode.Tools.Launcher;
 
 @Autonomous(name="LimelightAuton Far", group="Autons")
 
@@ -35,17 +28,16 @@ public class AutonLimeLight extends OpMode {
     private DcMotor intake;
     private TurretLimelight turret;
 
-    private double shortTps = 700;
+    private double farTps = 1000;
     private AlianceColorSyncTool as;
 
 
-    SensorLimelight3A.STATE cameraState = SensorLimelight3A.STATE.SCANNING;
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        as = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad2);
+        as = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad1);
 
         frontRight = hardwareMap.get(DcMotor.class, "leftBack");//Port 3 was RF
         frontLeft = hardwareMap.get(DcMotor.class, "rightBack");//Port 0 was LF
@@ -53,10 +45,10 @@ public class AutonLimeLight extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "rightFront");//Port 1 was LB
         turret = new TurretLimelight(hardwareMap, telemetry, gamepad2);
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -67,7 +59,8 @@ public class AutonLimeLight extends OpMode {
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
-
+        launcher = hardwareMap.get(DcMotorEx.class,"launcher");// Port 2
+        launcher.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -93,7 +86,7 @@ public class AutonLimeLight extends OpMode {
     @Override
     public void start() {
         turret.updateID();
-        launcher.setVelocity(shortTps);
+        launcher.setVelocity(farTps);
         runtime.reset();
     }
 
@@ -104,7 +97,7 @@ public class AutonLimeLight extends OpMode {
     public void loop() {
         turret.update();
         if(runtime.seconds() < 14){
-            launcher.setVelocity(shortTps);
+            launcher.setVelocity(farTps);
         }
         if (runtime.seconds() > 19 && runtime.seconds() < 20){
             frontLeft.setPower (.5);
@@ -112,7 +105,7 @@ public class AutonLimeLight extends OpMode {
             backRight.setPower (.5);
             backLeft.setPower (.5);
         }
-        if (runtime.seconds() > 14 && runtime.seconds() < 19 && cameraState.equals(SensorLimelight3A.STATE.FOUND)){
+        if (runtime.seconds() > 14 && runtime.seconds() < 19 && turret.state.equals(TurretLimelight.STATE.FOUND)){
             intake.setPower(maxPower);
         }
         if (runtime.seconds() > 20 && runtime.seconds() < 20.5){

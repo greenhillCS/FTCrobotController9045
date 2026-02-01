@@ -42,7 +42,7 @@ public class LimelightAuton extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initializing");
 
-        as = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad2);
+        as = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad1);
 
         turret = new TurretLimelight(hardwareMap, telemetry, gamepad2);
 
