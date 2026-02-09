@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.Testing.LimeLight.SensorLimelight3A;
 import java.util.List;
 
 @Autonomous(name="Big juicy Limelight auton", group="zzzzz")
-public class LimeLightAutonPos extends OpMode {
+public classLimeLightAutonPos extends OpMode {
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
