@@ -83,7 +83,7 @@ import java.util.List;
  */
 
 @TeleOp(name="LimeLight Drive To AprilTag", group = "Concept")
-public class RoboticsCompSciTeam1 extends LinearOpMode
+public class Team10Code extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
     double DESIRED_DISTANCE = 30.0; //  this is how close the camera should get to the target (inches)
