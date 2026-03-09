@@ -37,10 +37,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -50,7 +58,7 @@ import java.util.List;
  * class is instantiated on the Robot Controller and executed.
  */
 //TODO:Uncomment one of the following and rename group and name as needed.
-//@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
+@TeleOp(name="Random Limelight Thingy", group="zzzzz")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
 public class NiamTest extends OpMode {
@@ -79,6 +87,9 @@ public class NiamTest extends OpMode {
     double drive = 0;        // Desired forward power/speed (-1 to +1)
     double strafe = 0;        // Desired strafe power/speed (-1 to +1)
     double turn = 0;        // Desired turning power/speed (-1 to +1)
+    public AprilTagProcessor aprilTag;
+    public VisionPortal visionPortal;
+    LLResultTypes.FiducialResult fiducial;
              public void update(double DESIRED_DISTANCE, double DESIRED_YAW){
 
                      LLResult result = limelight.getLatestResult();
@@ -90,6 +101,8 @@ public class NiamTest extends OpMode {
                          double headingError = 0;
                          double rangeError = 0;
                          List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
+
+
                          for (LLResultTypes.FiducialResult fiducial : fiducials) {
                              int id = fiducial.getFiducialId(); // The ID number of the fiducial
                              double x = fiducial.getTargetXDegrees(); // Where it is (left-right)
@@ -122,6 +135,40 @@ public class NiamTest extends OpMode {
                          turn = 0.2;
                          telemetry.addData("Limelight", "No Targets");
                      }
+                 targetFound = false;
+                 AprilTagDetection desiredTag  = null;
+
+            // Step through the list of detected tags and look for a matching tag
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            for (AprilTagDetection detection : currentDetections) {
+                // Look to see if we have size info on this tag.
+                if (detection.metadata != null) {
+                    //  Check to see if we want to track towards this tag.
+                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                        // Yes, we want to use this tag.
+                        targetFound = true;
+                        desiredTag = detection;
+                        break;  // don't look any further.
+                    } else {
+                        // This tag is in the library, but we do not want to track it right now.
+                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+                    }
+                } else {
+                    // This tag is NOT in the library, so we don't have enough information to track to it.
+                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+                }
+            }
+
+            // Tell the driver what we see, and what to do.
+            if (targetFound) {
+                telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
+                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
+                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
+                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+            } else {
+                telemetry.addData("\n>","Drive using joysticks to find valid target\n");
+            }
                      moveRobot(drive, strafe, turn);
             }
     public void moveRobot(double x, double y, double yaw) {
@@ -194,9 +241,28 @@ public class NiamTest extends OpMode {
     NiamTest obj;
     @Override
     public void loop() {
-obj.update(120, -45);
-obj.update(30, -45);
+        if (fiducial.getFiducialId() == 20) {
+            if (fiducial.getFiducialId() == 20){
+            obj.update(118, -45);
+            obj.update(22, -45);
+        }
+         else if (fiducial.getFiducialId() == 24) {
+            obj.update(22, 45);
+            obj.update(118, 45);
+        }
+        }
+        if (fiducial.getFiducialId() == 24){
+            if (fiducial.getFiducialId() == 24){
+                obj.update(118, 45);
+                obj.update(22, 45);
+            }
+            else if (fiducial.getFiducialId() == 20){
+                obj.update(22, -45);
+                obj.update(118, -45);
+            }
+        }
     }
+
 
     /*
      * Code to run ONCE after the driver hits STOP
