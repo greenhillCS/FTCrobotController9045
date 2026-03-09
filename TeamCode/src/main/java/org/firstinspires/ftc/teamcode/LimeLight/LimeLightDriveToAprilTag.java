@@ -86,7 +86,7 @@ import java.util.concurrent.TimeUnit;
  *
  */
 
-@TeleOp(name="LimeLight Drive To AprilTag", group = "Concept")
+@TeleOp(name="Team 10 Limelight", group = "Concept")
 public class LimeLightDriveToAprilTag extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
