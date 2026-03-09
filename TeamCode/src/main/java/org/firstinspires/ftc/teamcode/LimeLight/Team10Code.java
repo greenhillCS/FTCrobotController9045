@@ -166,8 +166,10 @@ public class Team10Code extends LinearOpMode
                     yawError = yaw - DESIRED_YAW;
                     headingError =  heading - DESIRED_HEADING;
                     rangeError = range - DESIRED_DISTANCE;
+                    double height = 29 - 17.5;
+                    double distanceFromTag = height * (1/(Math.tan(y))); //height * cot(theta)
 
-                    telemetry.addData("Range", range);
+                    telemetry.addData("Range", distanceFromTag);
                     telemetry.addData("Heading", heading);
                     telemetry.addData("Yaw", yaw);
 
