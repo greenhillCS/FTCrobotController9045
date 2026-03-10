@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Testing.Templates;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name="Change the name of your Auton", group="zzzzz")
+@Disabled
 public class AutonTemplate extends OpMode {
     // Declare OpMode members.
 

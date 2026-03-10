@@ -49,17 +49,27 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Change the name of your TeleOp", group="Change the group of your TeleOp")
+@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
 @Disabled
 public class TeleOpTemplate extends OpMode
 {
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
+    private static final double ACCELERATION = 0.2;
+    private static final double MAX_SPEED = 1.0;
     private DcMotor leftFrontDrive;
     private DcMotor leftBackDrive;
     private DcMotor rightFrontDrive;
     private DcMotor rightBackDrive;
+    private double accelerate(double currentPower, double targetPower, double acceleration){
+        if (currentPower < targetPower) {
+            return Math.min(currentPower + acceleration, targetPower);
+        } else if (currentPower > targetPower) {
+            return Math.max(currentPower - acceleration, targetPower);
+        }
+        return targetPower;
+    }
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -69,10 +79,14 @@ public class TeleOpTemplate extends OpMode
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFront");//Port:
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "leftBack");//Port:
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//Port:
-        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//Port:
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");//port 1
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");//port 3
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//port 0
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//port 2
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -84,10 +98,6 @@ public class TeleOpTemplate extends OpMode
         // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         telemetry.addData("Status", "Initialized");
     }
@@ -127,6 +137,18 @@ public class TeleOpTemplate extends OpMode
         double rightFrontPower = axial - lateral - yaw;
         double leftBackPower   = axial - lateral + yaw;
         double rightBackPower  = axial + lateral - yaw;
+
+        // Calculate the target powers for each wheel
+        double targetLeftFrontPower = axial + lateral + yaw;
+        double targetRightFrontPower = axial - lateral - yaw;
+        double targetLeftBackPower = axial - lateral + yaw;
+        double targetRightBackPower = axial + lateral - yaw;
+
+        // Apply acceleration to the wheel powers
+        leftFrontPower = accelerate(leftFrontPower, targetLeftFrontPower, ACCELERATION);
+        rightFrontPower = accelerate(rightFrontPower, targetRightFrontPower, ACCELERATION);
+        leftBackPower = accelerate(leftBackPower, targetLeftBackPower, ACCELERATION);
+        rightBackPower = accelerate(rightBackPower, targetRightBackPower, ACCELERATION);
 
         // Normalize the values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.
@@ -168,6 +190,7 @@ public class TeleOpTemplate extends OpMode
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
         telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+        telemetry.update();
     }
 
     /*

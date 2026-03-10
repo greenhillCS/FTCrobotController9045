@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Testing.LauncherTest;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -45,12 +46,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //TODO:Uncomment one of the following and rename group and name as needed.
 @TeleOp(name="LauncherTest1", group="Test")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
-
+@Disabled
 public class LauncherTest1 extends OpMode
 {
     // Declare OpMode members.
 private DcMotor rightMotor;
 private DcMotor leftMotor;
+private KiranLaucherTest1 launcher;
     private ElapsedTime runtime = new ElapsedTime();
     /*
      * Code to run ONCE when the driver hits INIT
@@ -60,8 +62,10 @@ private DcMotor leftMotor;
         telemetry.addData("Status", "Initializing");
             rightMotor = hardwareMap.get(DcMotor.class,"rightMotor");
             leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
-            leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-            rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            launcher = new KiranLaucherTest1(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -78,7 +82,7 @@ private DcMotor leftMotor;
      */
     @Override
     public void start() {
-//Runs once when started
+    //Runs once when started
         runtime.reset();
     }
 
@@ -89,8 +93,10 @@ private DcMotor leftMotor;
     public void loop() {
 //Runs the whole time when started
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        rightMotor.setPower(1);
-        leftMotor.setPower(1);
+//        rightMotor.setPower(1);
+//        leftMotor.setPower(1);
+        launcher.update();
+
     }
 
     /*
