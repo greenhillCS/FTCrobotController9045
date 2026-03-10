@@ -90,9 +90,9 @@ import java.util.concurrent.TimeUnit;
 public class LimeLightDriveToAprilTag extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
-    double DESIRED_DISTANCE = 30.0; //  this is how close the camera should get to the target (inches)
-    double DESIRED_YAW = 0;
-    double DESIRED_HEADING = 0;
+    double DESIRED_DISTANCE = 67; //  this is how close the camera should get to the target (inches)
+    double DESIRED_YAW = -51;
+    double DESIRED_HEADING = 5;
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
@@ -113,6 +113,12 @@ public class LimeLightDriveToAprilTag extends LinearOpMode
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static final int DESIRED_TAG_ID = 24;     // Choose the tag you want to approach or set to -1 for ANY tag.
 
+
+
+    //sumn abt arrays w points i think
+
+    double[][] coordsYHRI = {{-51, 5, 67, 24}};
+    int currentIndex = 0;
     @Override public void runOpMode()
     {
         boolean targetFound     = false;    // Set to true when an AprilTag target is detected
@@ -167,6 +173,10 @@ public class LimeLightDriveToAprilTag extends LinearOpMode
                     double range = pose.getPosition().z * 39.3701;
                     double yaw = pose.getOrientation().getPitch(AngleUnit.DEGREES) * -1;
                     double heading = tx;
+                    if (id == coordsYHRI[currentIndex][3]){
+                        //all the code for changing 'the one'
+                        DESIRED_YAW = coordsYHRI[currentIndex][0];
+                    }
                     yawError = yaw - DESIRED_YAW;
                     headingError =  heading - DESIRED_HEADING;
                     rangeError = range - DESIRED_DISTANCE;
