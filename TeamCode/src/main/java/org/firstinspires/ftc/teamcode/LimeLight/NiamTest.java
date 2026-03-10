@@ -81,7 +81,7 @@ public class NiamTest extends OpMode {
     private DcMotor backLeft = null;  //  Used to control the left back drive wheel
     private DcMotor backRight = null;  //  Used to control the right back drive wheel
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    private static final int DESIRED_TAG_ID = 24;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    private static int DESIRED_TAG_ID;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private ElapsedTime runtime = new ElapsedTime();
     boolean targetFound = false;    // Set to true when an AprilTag target is detected
     double drive = 0;        // Desired forward power/speed (-1 to +1)
@@ -90,93 +90,95 @@ public class NiamTest extends OpMode {
     public AprilTagProcessor aprilTag;
     public VisionPortal visionPortal;
     LLResultTypes.FiducialResult fiducial;
-             public void update(double DESIRED_DISTANCE, double DESIRED_YAW){
 
-                     LLResult result = limelight.getLatestResult();
-                     if (result != null && result.isValid()) {
-                         double tx = result.getTx(); // How far left or right the target is (degrees)
-                         double ty = result.getTy(); // How far up or down the target is (degrees)
-                         double ta = result.getTa(); // How big the target looks (0%-100% of the image)
-                         double yawError = 0;
-                         double headingError = 0;
-                         double rangeError = 0;
-                         List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
+    public void update(double DESIRED_DISTANCE, double DESIRED_YAW, int DESIRED_TAG_ID) {
+
+        LLResult result = limelight.getLatestResult();
+        if (result != null && result.isValid()) {
+            double tx = result.getTx(); // How far left or right the target is (degrees)
+            double ty = result.getTy(); // How far up or down the target is (degrees)
+            double ta = result.getTa(); // How big the target looks (0%-100% of the image)
+            double yawError = 0;
+            double headingError = 0;
+            double rangeError = 0;
+            List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
 
 
-                         for (LLResultTypes.FiducialResult fiducial : fiducials) {
-                             int id = fiducial.getFiducialId(); // The ID number of the fiducial
-                             double x = fiducial.getTargetXDegrees(); // Where it is (left-right)
-                             double y = fiducial.getTargetYDegrees(); // Where it is (up-down)
-                             Pose3D pose = fiducial.getTargetPoseCameraSpace();
-                             double range = pose.getPosition().z * 39.3701;
-                             double yaw = pose.getOrientation().getPitch(AngleUnit.DEGREES) * -1;
-                             double heading = tx;
-                             yawError = yaw - DESIRED_YAW;
-                             headingError = heading - DESIRED_HEADING;
-                             rangeError = range - DESIRED_DISTANCE;
+            for (LLResultTypes.FiducialResult fiducial : fiducials) {
+                int id = fiducial.getFiducialId(); // The ID number of the fiducial
+                double x = fiducial.getTargetXDegrees(); // Where it is (left-right)
+                double y = fiducial.getTargetYDegrees(); // Where it is (up-down)
+                Pose3D pose = fiducial.getTargetPoseCameraSpace();
+                double range = pose.getPosition().z * 39.3701;
+                double yaw = pose.getOrientation().getPitch(AngleUnit.DEGREES) * -1;
+                double heading = tx;
+                yawError = yaw - DESIRED_YAW;
+                headingError = heading - DESIRED_HEADING;
+                rangeError = range - DESIRED_DISTANCE;
 
-                             telemetry.addData("Range", range);
-                             telemetry.addData("Heading", heading);
-                             telemetry.addData("Yaw", yaw);
+                telemetry.addData("Range", range);
+                telemetry.addData("Heading", heading);
+                telemetry.addData("Yaw", yaw);
 
-                             telemetry.addData("Range Error", rangeError);
-                             telemetry.addData("Heading Error", headingError);
-                             telemetry.addData("Yaw Error", yawError);
+                telemetry.addData("Range Error", rangeError);
+                telemetry.addData("Heading Error", headingError);
+                telemetry.addData("Yaw Error", yawError);
 
-                         }
-                         // Use the speed and turn "gains" to calculate how we want the robot to move.
-                         drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                         turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-                         strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+            }
+            // Use the speed and turn "gains" to calculate how we want the robot to move.
+            drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+            turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
-                     } else {
-                         drive = 0.0;
-                         strafe = 0.0;
-                         turn = 0.2;
-                         telemetry.addData("Limelight", "No Targets");
-                     }
-                 targetFound = false;
-                 AprilTagDetection desiredTag  = null;
+        } else {
+            drive = 0.0;
+            strafe = 0.0;
+            turn = 0.2;
+            telemetry.addData("Limelight", "No Targets");
+        }
+        targetFound = false;
+        AprilTagDetection desiredTag = null;
 
-            // Step through the list of detected tags and look for a matching tag
-            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-            for (AprilTagDetection detection : currentDetections) {
-                // Look to see if we have size info on this tag.
-                if (detection.metadata != null) {
-                    //  Check to see if we want to track towards this tag.
-                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-                        // Yes, we want to use this tag.
-                        targetFound = true;
-                        desiredTag = detection;
-                        break;  // don't look any further.
-                    } else {
-                        // This tag is in the library, but we do not want to track it right now.
-                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
-                    }
+        // Step through the list of detected tags and look for a matching tag
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            // Look to see if we have size info on this tag.
+            if (detection.metadata != null) {
+                //  Check to see if we want to track towards this tag.
+                if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                    // Yes, we want to use this tag.
+                    targetFound = true;
+                    desiredTag = detection;
+                    break;  // don't look any further.
                 } else {
-                    // This tag is NOT in the library, so we don't have enough information to track to it.
-                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+                    // This tag is in the library, but we do not want to track it right now.
+                    telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
                 }
-            }
-
-            // Tell the driver what we see, and what to do.
-            if (targetFound) {
-                telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
-                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
             } else {
-                telemetry.addData("\n>","Drive using joysticks to find valid target\n");
+                // This tag is NOT in the library, so we don't have enough information to track to it.
+                telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
             }
-                     moveRobot(drive, strafe, turn);
-            }
+        }
+
+        // Tell the driver what we see, and what to do.
+        if (targetFound) {
+            telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
+            telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+            telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+            telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
+            telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
+        } else {
+            telemetry.addData("\n>", "Drive using joysticks to find valid target\n");
+        }
+        moveRobot(drive, strafe, turn);
+    }
+
     public void moveRobot(double x, double y, double yaw) {
         // Calculate wheel powers.
-        double leftFrontPower    =  x -y -yaw;
-        double rightFrontPower   =  x +y +yaw;
-        double leftBackPower     =  x +y -yaw;
-        double rightBackPower    =  x -y +yaw;
+        double leftFrontPower = x - y - yaw;
+        double rightFrontPower = x + y + yaw;
+        double leftBackPower = x + y - yaw;
+        double rightBackPower = x - y + yaw;
 
         // Normalize wheel powers to be less than 1.0
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
@@ -196,6 +198,7 @@ public class NiamTest extends OpMode {
         backLeft.setPower(leftBackPower);
         backRight.setPower(rightBackPower);
     }
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -239,37 +242,33 @@ public class NiamTest extends OpMode {
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     NiamTest obj;
+
     @Override
     public void loop() {
-        if (fiducial.getFiducialId() == 20) {
-            if (fiducial.getFiducialId() == 20){
-            obj.update(118, -45);
-            obj.update(22, -45);
-        }
-         else if (fiducial.getFiducialId() == 24) {
-            obj.update(22, 45);
-            obj.update(118, 45);
-        }
-        }
-        if (fiducial.getFiducialId() == 24){
-            if (fiducial.getFiducialId() == 24){
-                obj.update(118, 45);
-                obj.update(22, 45);
+        while (targetFound) {
+            if (fiducial.getFiducialId() == 20) {
+                obj.update(118, -45, 20);
+                obj.update(22, -45, 20);
+                obj.update(22, 45, 24);
+                obj.update(118, 45, 24);
             }
-            else if (fiducial.getFiducialId() == 20){
-                obj.update(22, -45);
-                obj.update(118, -45);
+        }
+        while (targetFound) {
+            if (fiducial.getFiducialId() == 24) {
+                obj.update(118, 45, 24);
+                obj.update(22, 45, 24);
+                obj.update(22, -45, 20);
+                obj.update(118, -45, 20);
             }
         }
     }
+        /*
+         * Code to run ONCE after the driver hits STOP
+         */
+        @Override
+        public void stop () {
+        }
 
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
 }
 
 
