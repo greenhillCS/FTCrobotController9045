@@ -146,8 +146,8 @@ public class AyanTestReal extends LinearOpMode
         int[] ballID = { 20, 20, 24, 24, 20, 20, 24 };
 
         double[] ballDistance = { 72.8, 28.6, 64, 34.5, 63.6, 70, 70 };
-        double[] ballHeading = { -8.05, -15.3, -7, -9.17, 5.02, 0, 4.6 };
-        double[] ballYaw = { 51.5, 52.2, 36.4, 33.7, -34.6, 20, -50 };
+        double[] ballHeading = { -4.6, -15.3, -7, -9.17, 5.02, 0, 4.6 };
+        double[] ballYaw = { 50, 52.2, 36.4, 33.7, -34.6, 20, -50 };
         int totalBalls = 0;
         // D: 28.6 H: -15.3 Y: 52.2
         // D: 34.5 H: -9.17 Y: 33.7
