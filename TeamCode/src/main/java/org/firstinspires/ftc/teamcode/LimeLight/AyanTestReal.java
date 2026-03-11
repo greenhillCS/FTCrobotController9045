@@ -82,7 +82,7 @@ import java.util.List;
  *
  */
 
-@TeleOp(name="Team 10 Limelight", group = "Concept")
+@TeleOp(name="Team 10 Real", group = "Concept")
 public class AyanTestReal extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
@@ -97,9 +97,9 @@ public class AyanTestReal extends LinearOpMode
     final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
     final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
-    final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
+    final double MAX_AUTO_SPEED = 1.0;   //  Clip the approach speed to this max value (adjust for your robot)
+    final double MAX_AUTO_STRAFE= 1.0;   //  Clip the approach speed to this max value (adjust for your robot)
+    final double MAX_AUTO_TURN  = 0.75;   //  Clip the turn speed to this max value (adjust for your robot)
 
     private DcMotor frontLeft   = null;  //  Used to control the left front drive wheel
     private DcMotor frontRight  = null;  //  Used to control the right front drive wheel
@@ -143,16 +143,18 @@ public class AyanTestReal extends LinearOpMode
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
         waitForStart();
-        int[] ballID = { 20, 20, 24, 24 };
+        int[] ballID = { 20, 20, 24, 24, 20, 20, 24 };
 
-        double[] ballDistance = { 0.0, 0.0, 0.0, 0.0 };
-        double[] ballHeading = { 0.0, 0.0, 0.0, 0.0 };
-        double[] ballYaw = { 0.0, 0.0, 0.0, 0.0 };
+        double[] ballDistance = { 72.8, 28.6, 64, 34.5, 63.6, 70, 70 };
+        double[] ballHeading = { -8.05, -15.3, -7, -9.17, 5.02, -3.45, 4.6 };
+        double[] ballYaw = { 51.5, 52.2, 36.4, 33.7, -34.6, -12.5, -50 };
         int totalBalls = 0;
-
-        while (opModeIsActive() && totalBalls < 4) {
+        // D: 28.6 H: -15.3 Y: 52.2
+        // D: 34.5 H: -9.17 Y: 33.7
+        // D: 70 H: -3.45 Y: -12.5
+        while (opModeIsActive() && totalBalls < 7) {
             LLResult result = limelight.getLatestResult();
-            targetFound = false;
+
             drive = 0;
             strafe = 0;
             turn = 0;
@@ -160,11 +162,14 @@ public class AyanTestReal extends LinearOpMode
             double headingError = 0;
             double rangeError = 0;
 
-            if (result != null && result.isValid()) {
+            if (result != null && result.isValid() && targetFound == true) {
                 List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
+
+                targetFound = false;
 
                 for (LLResultTypes.FiducialResult fiducial : fiducials) {
                     int id = fiducial.getFiducialId();
+
 
 
                     if (id == ballID[totalBalls]) {
@@ -180,13 +185,23 @@ public class AyanTestReal extends LinearOpMode
                         headingError = heading - ballHeading[totalBalls];
                         yawError = yaw - ballYaw[totalBalls];
 
+                        telemetry.addData("Range", range);
+                        telemetry.addData("Heading", heading);
+                        telemetry.addData("Yaw", yaw);
+
+                        telemetry.addData("Range Error", rangeError);
+                        telemetry.addData("Heading Error", headingError);
+                        telemetry.addData("Yaw Error", yawError);
+
                         drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
                         turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
                         strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
 
 
-                        if (Math.abs(rangeError) < 1.0 && Math.abs(headingError) < 2.0) {
+
+
+                        if (Math.abs(rangeError) < 2.5 && Math.abs(headingError) < 2.5 && Math.abs(yawError) < 2.5) {
                             totalBalls++;
                         }
 
@@ -199,7 +214,7 @@ public class AyanTestReal extends LinearOpMode
 
             } else {
 
-                moveRobot(0, 0, 0.2);
+                moveRobot(0, 0, 0.5);
                 telemetry.addData("Limelight", "No Targets");
             }
 
