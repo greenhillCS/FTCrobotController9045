@@ -143,15 +143,13 @@ public class AyanTestReal extends LinearOpMode
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
         waitForStart();
-        int[] ballID = { 20, 20, 24, 24, 20, 24, 24 };
+        int[] ballID = { 20, 20, 24, 24, 20, 20, 24 };
 
-        double[] ballDistance = { 72.8, 28.6, 64, 34.5, 63.6, 70, 70 };
+        double[] ballDistance = { 68.0, 28.6, 64, 34.5, 63.6, 77, 69.0 };
         double[] ballHeading = { -4.6, -15.3, -7, -9.17, 5.02, 0, 4.6 };
-        double[] ballYaw = { 50, 52.2, 36.4, 33.7, -34.6, 20, -50 };
+        double[] ballYaw = { 50, 53.0, 36.4, 33.7, -34.6, -3.0, -55.0 };
         int totalBalls = 0;
-        // D: 28.6 H: -15.3 Y: 52.2
-        // D: 34.5 H: -9.17 Y: 33.7
-        // D: 70 H: -3.45 Y: -12.5
+
         while (opModeIsActive() && totalBalls < 7) {
             LLResult result = limelight.getLatestResult();
             targetFound = false;
