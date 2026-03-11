@@ -154,7 +154,7 @@ public class AyanTestReal extends LinearOpMode
         // D: 70 H: -3.45 Y: -12.5
         while (opModeIsActive() && totalBalls < 7) {
             LLResult result = limelight.getLatestResult();
-
+            targetFound = false;
             drive = 0;
             strafe = 0;
             turn = 0;
@@ -162,10 +162,10 @@ public class AyanTestReal extends LinearOpMode
             double headingError = 0;
             double rangeError = 0;
 
-            if (result != null && result.isValid() && targetFound == true) {
+            if (result != null && result.isValid()) {
                 List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
 
-                targetFound = false;
+
 
                 for (LLResultTypes.FiducialResult fiducial : fiducials) {
                     int id = fiducial.getFiducialId();
