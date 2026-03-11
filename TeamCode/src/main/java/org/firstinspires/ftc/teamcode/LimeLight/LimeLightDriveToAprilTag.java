@@ -105,7 +105,7 @@ public class LimeLightDriveToAprilTag extends LinearOpMode
     }
 
     TargetWaypoint[] path = {
-            // tiger's tions, 
+            // tiger's instructions, change these numbers to what you have on the board in order, you can delete this when you add the new ones
             new TargetWaypoint(69, -1, 50, 20), // pos 1
             new TargetWaypoint(21, -1, 50, 20), // pos 1
             new TargetWaypoint(62, -7, 37, 24),  // pos 2
