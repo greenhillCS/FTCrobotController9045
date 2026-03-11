@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -47,7 +48,10 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 /*
@@ -90,6 +94,7 @@ public class NiamTest extends OpMode {
     public AprilTagProcessor aprilTag;
     public VisionPortal visionPortal;
     LLResultTypes.FiducialResult fiducial;
+    static boolean atSpot = true;
 
     public void update(double DESIRED_DISTANCE, double DESIRED_YAW, int DESIRED_TAG_ID) {
 
@@ -219,6 +224,7 @@ public class NiamTest extends OpMode {
         limelight.pipelineSwitch(0); // Switch to pipeline number
         telemetry.addData("Status", "Initializing");
         telemetry.addData("Status", "Initialized");
+        obj = new NiamTest();
     }
 
     /*
@@ -243,23 +249,29 @@ public class NiamTest extends OpMode {
      */
     NiamTest obj;
 
+
+
     @Override
     public void loop() {
         while (targetFound) {
-            if (fiducial.getFiducialId() == 20) {
-                obj.update(118, -45, 20);
-                obj.update(22, -45, 20);
-                obj.update(22, 45, 24);
-                obj.update(118, 45, 24);
-            }
-        }
-        while (targetFound) {
-            if (fiducial.getFiducialId() == 24) {
-                obj.update(118, 45, 24);
-                obj.update(22, 45, 24);
-                obj.update(22, -45, 20);
-                obj.update(118, -45, 20);
-            }
+            obj.update(118, -45, 24);
+            obj.update(22, -45, 24);
+
+
+
+
+//            if (fiducial.getFiducialId() == 20) {
+//
+//
+//            }
+//        }
+//        while (targetFound) {
+//            if (fiducial.getFiducialId() == 24) {
+//                obj.update(118, 45, 24);
+//                obj.update(22, 45, 24);
+//                obj.update(22, -45, 20);
+//                obj.update(118, -45, 20);
+//            }
         }
     }
         /*
