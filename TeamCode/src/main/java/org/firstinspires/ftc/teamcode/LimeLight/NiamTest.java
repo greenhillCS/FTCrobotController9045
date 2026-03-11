@@ -225,8 +225,6 @@ public class NiamTest extends OpMode {
         limelight.pipelineSwitch(0); // Switch to pipeline number
         telemetry.addData("Status", "Initializing");
         telemetry.addData("Status", "Initialized");
-        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
-
     }
 
     /*
