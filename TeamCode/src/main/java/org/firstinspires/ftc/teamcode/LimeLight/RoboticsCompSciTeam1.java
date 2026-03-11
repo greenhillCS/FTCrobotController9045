@@ -82,7 +82,7 @@ import java.util.List;
  *
  */
 
-@TeleOp(name="LimeLight Drive To AprilTag", group = "Concept")
+@TeleOp(name="LimeLight Drive", group = "Concept")
 public class RoboticsCompSciTeam1 extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.

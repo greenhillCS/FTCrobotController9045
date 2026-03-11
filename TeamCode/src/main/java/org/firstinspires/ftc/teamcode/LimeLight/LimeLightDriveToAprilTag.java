@@ -89,10 +89,51 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(name="LimeLight Drive To AprilTag", group = "Concept")
 public class LimeLightDriveToAprilTag extends LinearOpMode
 {
+
+    static class TargetWaypoint{
+        double distance;
+        double heading;
+        double yaw;
+        double tagID;
+
+        public TargetWaypoint(double distance, double heading, double yaw, int tagId) {
+            this.distance = distance;
+            this.heading = heading;
+            this.yaw = yaw;
+            this.tagID = tagId;
+        }
+    }
+
+    TargetWaypoint[] path = {
+            new TargetWaypoint(69, -1, 50, 20), // pos 1
+            new TargetWaypoint(21, -1, 50, 20), // pos 1
+            new TargetWaypoint(62, -7, 37, 24),  // pos 2
+            new TargetWaypoint(21, -16, 28, 24),  // pos 2
+            new TargetWaypoint(60, -2, -31, 20),  // pos 3
+            new TargetWaypoint(40, 0, -31, 20),  // pos 3
+            new TargetWaypoint(21, 17, -54, 24),  // pos 4
+            new TargetWaypoint(68, 3, -50, 24),  // pos 4
+            new TargetWaypoint(71, -5, -20, 24),   // pos 5
+            new TargetWaypoint(69, -1, 50, 20)   // pos 6 -- reset
+    };
     // Adjust these numbers to suit your robot.
-    double DESIRED_DISTANCE = 30.0; //  this is how close the camera should get to the target (inches)
-    double DESIRED_YAW = 0;
-    double DESIRED_HEADING = 0;
+    //double DESIRED_DISTANCE = 30.0; //  this is how close the camera should get to the target (inches)
+    //double DESIRED_YAW = 0;
+    //double DESIRED_HEADING = 0;
+    int currentWaypointIndex = 0;
+    // positions are range, heading, yaw
+    // blue id is 20, red id is 24
+    // pos 1 bottom left 70, -10, 53, blue id
+    // dissappers at 21, -10, 39, blue id
+    // pos 2 62, -7, 37, red id
+    // dissapears 21, -16, 28, red id
+    // pos 3 62, 9, -39, blue id
+    // pos 4 68, 7, -52 red id
+
+    //other wise its gonna tweak
+    final double RANGE_TOLERANCE = 1.5;   // inches
+    final double HEADING_TOLERANCE = 2.5; // degrees
+    final double YAW_TOLERANCE = 4;
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
@@ -115,10 +156,9 @@ public class LimeLightDriveToAprilTag extends LinearOpMode
 
     @Override public void runOpMode()
     {
-        boolean targetFound     = false;    // Set to true when an AprilTag target is detected
-        double  drive           = 0;        // Desired forward power/speed (-1 to +1)
-        double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
-        double  turn            = 0;        // Desired turning power/speed (-1 to +1)
+        double  drive           = 1;        // Desired forward power/speed (-1 to +1)
+        double  strafe          = 1;        // Desired strafe power/speed (-1 to +1)
+        double  turn            = 1;        // Desired turning power/speed (-1 to +1)
 
         // Initialize the Apriltag Detection process
 //        initAprilTag();
@@ -148,122 +188,92 @@ public class LimeLightDriveToAprilTag extends LinearOpMode
         telemetry.update();
         waitForStart();
 
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
+
+            // Check if we have finished the entire sequence
+            if (currentWaypointIndex >= path.length) {
+                moveRobot(0, 0, 0);
+                telemetry.addData("Status", "SEQUENCE COMPLETE!");
+                telemetry.update();
+                continue; // Skip the rest of the loop
+            }
+
+            // Get the current target waypoint data
+            TargetWaypoint currentTarget = path[currentWaypointIndex];
+            telemetry.addData("Current Waypoint", "Pos " + (currentWaypointIndex + 1) + " (Tag " + currentTarget.tagID + ")");
+
             LLResult result = limelight.getLatestResult();
+            boolean targetFound = false;
+            double yawError = 0, headingError = 0, rangeError = 0;
+
             if (result != null && result.isValid()) {
-                double tx = result.getTx(); // How far left or right the target is (degrees)
-                double ty = result.getTy(); // How far up or down the target is (degrees)
-                double ta = result.getTa(); // How big the target looks (0%-100% of the image)
-                double yawError = 0;
-                double headingError = 0;
-                double rangeError = 0;
                 List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
+
                 for (LLResultTypes.FiducialResult fiducial : fiducials) {
-                    int id = fiducial.getFiducialId(); // The ID number of the fiducial
-                    double x = fiducial.getTargetXDegrees(); // Where it is (left-right)
-                    double y = fiducial.getTargetYDegrees(); // Where it is (up-down)
-                    Pose3D pose = fiducial.getTargetPoseCameraSpace();
-                    double range = pose.getPosition().z * 39.3701;
-                    double yaw = pose.getOrientation().getPitch(AngleUnit.DEGREES) * -1;
-                    double heading = tx;
-                    yawError = yaw - DESIRED_YAW;
-                    headingError =  heading - DESIRED_HEADING;
-                    rangeError = range - DESIRED_DISTANCE;
+                    // Check if this is the tag we currently want
+                    if (fiducial.getFiducialId() == currentTarget.tagID) {
+                        targetFound = true;
 
-                    telemetry.addData("Range", range);
-                    telemetry.addData("Heading", heading);
-                    telemetry.addData("Yaw", yaw);
+                        Pose3D pose = fiducial.getTargetPoseCameraSpace();
+                        double range = pose.getPosition().z * 39.3701; // convert to inches
+                        double yaw = pose.getOrientation().getPitch(AngleUnit.DEGREES) * -1;
+                        double heading = fiducial.getTargetXDegrees(); // Use specific tag's X, not overall Tx
 
-                    telemetry.addData("Range Error", rangeError);
-                    telemetry.addData("Heading Error", headingError);
-                    telemetry.addData("Yaw Error", yawError);
+                        yawError = yaw - currentTarget.yaw;
+                        headingError = heading - currentTarget.heading;
+                        rangeError = range - currentTarget.distance;
 
+                        telemetry.addData("Range", range);
+                        telemetry.addData("Heading", heading);
+                        telemetry.addData("Yaw", yaw);
+
+
+                        telemetry.addData("Range Error", "%.2f (Tol: %.1f)", rangeError, RANGE_TOLERANCE);
+                        telemetry.addData("Heading Error", "%.2f (Tol: %.1f)", headingError, HEADING_TOLERANCE);
+                        telemetry.addData("Yaw Error", "%.2f (Tol: %.1f)", yawError, YAW_TOLERANCE);
+
+                        break; // Found our tag, stop looping through fiducials
+                    }
                 }
-                // Use the speed and turn "gains" to calculate how we want the robot to move.
-                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+            }
 
+            // Drive logic based on left bumper
+            if (!gamepad1.left_bumper) {
+                // AUTO MODE: Try to drive to the current waypoint
+                if (targetFound) {
+                    // Have we reached the target?
+                    if (Math.abs(rangeError) <= RANGE_TOLERANCE &&
+                            Math.abs(headingError) <= HEADING_TOLERANCE &&
+                            Math.abs(yawError) <= YAW_TOLERANCE) {
+
+                        // Arrived! Move to the next point
+                        currentWaypointIndex++;
+                        drive = 0; strafe = 0; turn = 0;
+                        telemetry.addData("Status", "Reached point! Moving to next...");
+                    } else {
+                        // Still driving to target
+                        drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                        turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+                        strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+                        telemetry.addData("Auto Driving", "Drive %.2f, Strafe %.2f, Turn %.2f", drive, strafe, turn);
+                    }
+                } else {
+                    // Target not found, stop or search
+                    drive = 0; strafe = 0; turn = 0.2; // slight turn to search
+                    telemetry.addData("Limelight", "Target Tag " + currentTarget.tagID + " not found. Searching...");
+                }
             } else {
-                drive= 0.0;
-                strafe = 0.0;
-                turn = 0.2;
-                telemetry.addData("Limelight", "No Targets");
+                // MANUAL MODE
+                drive  = -gamepad1.left_stick_y  / 2.0;
+                strafe = -gamepad1.left_stick_x  / 2.0;
+                turn   = gamepad1.right_stick_x / 3.0;
+
+                telemetry.addData("Manual Mode", "Hold Left Bumper for Auto Sequence");
             }
-
-                        // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-            if (gamepad1.left_bumper) {
-                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-                drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
-                strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
-                turn   = gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
-                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-
-            }
-
-//            targetFound = false;
-//            desiredTag  = null;
-//
-//            // Step through the list of detected tags and look for a matching tag
-//            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-//            for (AprilTagDetection detection : currentDetections) {
-//                // Look to see if we have size info on this tag.
-//                if (detection.metadata != null) {
-//                    //  Check to see if we want to track towards this tag.
-//                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-//                        // Yes, we want to use this tag.
-//                        targetFound = true;
-//                        desiredTag = detection;
-//                        break;  // don't look any further.
-//                    } else {
-//                        // This tag is in the library, but we do not want to track it right now.
-//                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
-//                    }
-//                } else {
-//                    // This tag is NOT in the library, so we don't have enough information to track to it.
-//                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
-//                }
-//            }
-//
-//            // Tell the driver what we see, and what to do.
-//            if (targetFound) {
-//                telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
-//                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-//                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-//                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-//                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-//            } else {
-//                telemetry.addData("\n>","Drive using joysticks to find valid target\n");
-//            }
-//
-//            // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-//            if (gamepad1.left_bumper && targetFound) {
-//
-//                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-//                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-//                double  headingError    = desiredTag.ftcPose.bearing;
-//                double  yawError        = desiredTag.ftcPose.yaw;
-//
-//                // Use the speed and turn "gains" to calculate how we want the robot to move.
-//                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-//                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-//                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-//
-//                telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-//            } else {
-//
-//                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-//                drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
-//                strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
-//                turn   = -gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
-//                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-//            }
-            telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
 
             telemetry.update();
 
-            // Apply desired axes motions to the drivetrain.
+            // Apply calculated power to wheels
             moveRobot(drive, strafe, turn);
             sleep(10);
         }
