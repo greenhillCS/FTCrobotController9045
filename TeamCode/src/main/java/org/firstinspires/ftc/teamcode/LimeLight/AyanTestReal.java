@@ -207,6 +207,11 @@ public class AyanTestReal extends LinearOpMode
 
                         break;
                     }
+                    else {
+                        moveRobot(0, 0, 0.3);
+                        telemetry.addData("Limelight", "No Targets");
+                    }
+
                 }
 
 
