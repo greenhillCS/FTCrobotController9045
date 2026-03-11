@@ -204,6 +204,7 @@ public class NiamTest extends OpMode {
         backRight.setPower(rightBackPower);
     }
 
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -218,13 +219,13 @@ public class NiamTest extends OpMode {
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
-        Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
+//        Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
         limelight.start(); // This tells Limelight to start looking!
         limelight.pipelineSwitch(0); // Switch to pipeline number
         telemetry.addData("Status", "Initializing");
         telemetry.addData("Status", "Initialized");
-        obj = new NiamTest();
+        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
     }
 
     /*
@@ -247,15 +248,13 @@ public class NiamTest extends OpMode {
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
-    NiamTest obj;
 
 
 
     @Override
     public void loop() {
-        while (targetFound) {
-            obj.update(118, -45, 24);
-            obj.update(22, -45, 24);
+            update(118, -45, 24);
+
 
 
 
@@ -272,7 +271,7 @@ public class NiamTest extends OpMode {
 //                obj.update(22, -45, 20);
 //                obj.update(118, -45, 20);
 //            }
-        }
+
     }
         /*
          * Code to run ONCE after the driver hits STOP
