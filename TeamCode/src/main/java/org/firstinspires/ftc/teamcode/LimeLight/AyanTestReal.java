@@ -201,7 +201,7 @@ public class AyanTestReal extends LinearOpMode
 
 
 
-                        if (Math.abs(rangeError) < 2.5 && Math.abs(headingError) < 2.5 && Math.abs(yawError) < 2.5) {
+                        if (Math.abs(rangeError) < 3.0 && Math.abs(headingError) < 3.0 && Math.abs(yawError) < 3.0) {
                             totalBalls++;
                         }
 
