@@ -67,7 +67,6 @@ import java.util.concurrent.TimeUnit;
 
 public class NiamTest extends OpMode {
     // Declare OpMode members.
-    Limelight3A limelight;
     double DESIRED_HEADING = 0;
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
@@ -93,6 +92,7 @@ public class NiamTest extends OpMode {
     double turn = 0;        // Desired turning power/speed (-1 to +1)
     public AprilTagProcessor aprilTag;
     public VisionPortal visionPortal;
+    private Limelight3A limelight;
     LLResultTypes.FiducialResult fiducial;
     static boolean atSpot = true;
 
@@ -219,13 +219,14 @@ public class NiamTest extends OpMode {
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
-//        Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
         limelight.start(); // This tells Limelight to start looking!
         limelight.pipelineSwitch(0); // Switch to pipeline number
         telemetry.addData("Status", "Initializing");
         telemetry.addData("Status", "Initialized");
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+
     }
 
     /*
