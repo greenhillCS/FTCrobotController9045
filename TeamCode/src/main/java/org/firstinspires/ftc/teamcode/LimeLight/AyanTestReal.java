@@ -143,11 +143,11 @@ public class AyanTestReal extends LinearOpMode
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
         waitForStart();
-        int[] ballID = { 20, 20, 24, 24, 20, 20, 24 };
+        int[] ballID = { 20, 20, 24, 24, 20, 20, 24, 24, 20 }; //add intermediary point to one, change to ID:20, and then finish
 
-        double[] ballDistance = { 68.0, 28.6, 64, 34.5, 63.6, 77, 69.0 };
-        double[] ballHeading = { -4.6, -15.3, -7, -9.17, 5.02, 0, 4.6 };
-        double[] ballYaw = { 50, 53.0, 36.4, 33.7, -34.6, -3.0, -55.0 };
+        double[] ballDistance = { 68.0, 28.6, 64, 34.5, 63.6, 77, 69.0, 0.0, 68.0};
+        double[] ballHeading = { -4.6, -15.3, -7, -9.17, 5.02, 0, 4.6, 0.0, -4.6};
+        double[] ballYaw = { 50, 53.0, 36.4, 33.7, -34.6, -3.0, -55.0, 0.0, 50};
         int totalBalls = 0;
 
         while (opModeIsActive() && totalBalls < 7) {
