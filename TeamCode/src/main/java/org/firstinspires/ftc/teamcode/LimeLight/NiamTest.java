@@ -87,7 +87,6 @@ public class NiamTest extends OpMode {
     private static int DESIRED_TAG_ID;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private ElapsedTime runtime = new ElapsedTime();
     boolean targetFound = false;    // Set to true when an AprilTag target is detected
-    boolean atTarget = false;
     boolean atTarget1 = false;
     boolean atTarget2 = false;
     boolean atTarget3 = false;
@@ -136,11 +135,6 @@ public class NiamTest extends OpMode {
             drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
             turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
             strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-            if ((yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1)) {
-                atTarget = false;
-            } else {
-                atTarget = true;
-            }
             if ((DESIRED_TAG_ID == 20 && DESIRED_DISTANCE == 118 && DESIRED_YAW == -45 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1)) || (DESIRED_TAG_ID == 24 && DESIRED_DISTANCE == 166.877 && DESIRED_YAW == 0 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1))){
                 atTarget1 = false;
             } else {
