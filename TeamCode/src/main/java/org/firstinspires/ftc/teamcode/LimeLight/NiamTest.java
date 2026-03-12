@@ -87,6 +87,11 @@ public class NiamTest extends OpMode {
     private static int DESIRED_TAG_ID;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private ElapsedTime runtime = new ElapsedTime();
     boolean targetFound = false;    // Set to true when an AprilTag target is detected
+    boolean atTarget = false;
+    boolean atTarget1 = false;
+    boolean atTarget2 = false;
+    boolean atTarget3 = false;
+    boolean atTarget4 = false;
     double drive = 0;        // Desired forward power/speed (-1 to +1)
     double strafe = 0;        // Desired strafe power/speed (-1 to +1)
     double turn = 0;        // Desired turning power/speed (-1 to +1)
@@ -94,10 +99,8 @@ public class NiamTest extends OpMode {
     public VisionPortal visionPortal;
     private Limelight3A limelight;
     LLResultTypes.FiducialResult fiducial;
-    static boolean atSpot = true;
 
     public void update(double DESIRED_DISTANCE, double DESIRED_YAW, int DESIRED_TAG_ID) {
-
         LLResult result = limelight.getLatestResult();
         if (result != null && result.isValid()) {
             double tx = result.getTx(); // How far left or right the target is (degrees)
@@ -107,7 +110,6 @@ public class NiamTest extends OpMode {
             double headingError = 0;
             double rangeError = 0;
             List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
-
 
             for (LLResultTypes.FiducialResult fiducial : fiducials) {
                 int id = fiducial.getFiducialId(); // The ID number of the fiducial
@@ -134,6 +136,31 @@ public class NiamTest extends OpMode {
             drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
             turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
             strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+            if ((yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1)) {
+                atTarget = false;
+            } else {
+                atTarget = true;
+            }
+            if ((DESIRED_TAG_ID == 20 && DESIRED_DISTANCE == 118 && DESIRED_YAW == -45 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1)) || (DESIRED_TAG_ID == 24 && DESIRED_DISTANCE == 166.877 && DESIRED_YAW == 0 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1))){
+                atTarget1 = false;
+            } else {
+                atTarget1 = true;
+            }
+            if ((DESIRED_TAG_ID == 20 && DESIRED_DISTANCE == 22 && DESIRED_YAW == -45 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1)) || (DESIRED_TAG_ID == 24 && DESIRED_DISTANCE == 118 && DESIRED_YAW == -45 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1))){
+                atTarget2 = false;
+            } else {
+                atTarget2 = true;
+            }
+            if ((DESIRED_TAG_ID == 20 && DESIRED_DISTANCE == 118 && DESIRED_YAW == 45 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1)) || (DESIRED_TAG_ID == 24 && DESIRED_DISTANCE == 22 && DESIRED_YAW == -45 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1))){
+                atTarget3 = false;
+            } else {
+                atTarget3 = true;
+            }
+            if ((DESIRED_TAG_ID == 20 && DESIRED_DISTANCE == 166.877 && DESIRED_YAW == 0 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1)) || (DESIRED_TAG_ID == 24 && DESIRED_DISTANCE == 118 && DESIRED_YAW == 45 && (yawError > 1 || yawError < 1) && (rangeError > 1 || rangeError < 1))){
+                atTarget4 = false;
+            } else {
+                atTarget4 = true;
+            }
 
         } else {
             drive = 0.0;
@@ -249,13 +276,79 @@ public class NiamTest extends OpMode {
      */
 
 
-
     @Override
     public void loop() {
-            update(118, -45, 24);
+update(118, -45, 20);
+if (atTarget1){
+    while(targetFound){
+        update(22, -45, 20);
+    }
+    if (!atTarget2){
+        update(118, -45, 24);
+    }
+}
+else {
+    update(166.887, 0, 24);
+}
+if (atTarget2){
+    while(targetFound){
+        update(22, -45, 24);
+    }
+    if (!atTarget2){
+        update(118, 45, 20);
+    }
+}
+if (atTarget3){
+    while(targetFound){
+        update(118, 45, 24);
+    }
+    if (!atTarget4){
+        update(166.887, 0, 20);
+    }
+}
+}
 
 
 
+
+
+
+//
+//    update(118, -45, 20);
+//if (!targetFound){
+//        update(166.877, 0, 24);
+//        if (atTarget && targetFound){
+//            update(118, -45, 24);
+//        }
+//}
+//if (atTarget & targetFound){
+//    update(22, -45, 20);
+//    if (!targetFound){
+//        update(118, -45, 24);
+//        if (atTarget && targetFound){
+//            update(22, -45, 24);
+//            if (!targetFound){
+//                update(118, 45, 20);
+//                if (atTarget && targetFound){
+//                    update(166.877, 0, 20);
+//                    if (!targetFound){
+//                        update(118, 45, 24);
+//                    }
+//                }
+//            }
+//            if (atTarget && targetFound){
+//                update(118, 45, 24);
+//            }
+//        }
+//    }
+//    if (atTarget && targetFound){
+//        update(118, 45, 20);
+//        if (!targetFound){
+//            update(22, -45, 24);
+//        }
+//    }
+//}
+//    }
 
 
 //            if (fiducial.getFiducialId() == 20) {
@@ -271,14 +364,13 @@ public class NiamTest extends OpMode {
 //                obj.update(118, -45, 20);
 //            }
 
-    }
+
         /*
          * Code to run ONCE after the driver hits STOP
          */
         @Override
         public void stop () {
         }
-
 }
 
 
