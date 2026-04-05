@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Tools;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +13,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
+
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TejDesignTools {
     //Define variables here
@@ -24,6 +34,7 @@ public class TejDesignTools {
     Gamepad gamepad;
     DcMotor intake;
     DcMotorEx launcher;
+    Limelight3A limelight;
     double maxLauncherPower = 1;
     double idleLauncherPower = 0.5;
 
@@ -38,6 +49,8 @@ public class TejDesignTools {
     double medTps = 850;
     double shortTps = 750;
     double tps = shortTps;
+    private double distance = 0;
+    private Map<String, Integer> ids;
 
     public TejDesignTools(HardwareMap h, Telemetry t, Gamepad g){
         //Initialize devices and other variables here
@@ -59,6 +72,15 @@ public class TejDesignTools {
 
         gate = hardwareMap.get(Servo.class, "gate");// Port 1
         closeGate();
+
+        ids = new HashMap<>();
+        ids.put("Red", 24);
+        ids.put("Blue", 20);
+
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
+        limelight.start(); // This tells Limelight to start looking!
+        limelight.pipelineSwitch(0); // Switch to pipeline number
     }
     private void updateIntake(){
         switch (state){
@@ -109,13 +131,25 @@ public class TejDesignTools {
 
         previousButtonState = currentButtonState;
 
-        if(gamepad.triangle){
-            tps = farTps;
-        }else if(gamepad.circle){
-            tps = medTps;
-        }else if(gamepad.cross){
-            tps = shortTps;
+//        if(gamepad.triangle){
+//            tps = farTps;
+//        }else if(gamepad.circle){
+//            tps = medTps;
+//        }else if(gamepad.cross){
+//            tps = shortTps;
+//        }
+
+        LLResult result = limelight.getLatestResult();
+        if (result != null && result.isValid()) {
+            List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
+            for (LLResultTypes.FiducialResult fiducial : fiducials) {
+                if(AlianceColorSyncTool.getSelectedColor().equals("None") || fiducial.getFiducialId() == ids.get(AlianceColorSyncTool.getSelectedColor())) {
+                    Pose3D pose = fiducial.getTargetPoseCameraSpace();
+                    distance = pose.getPosition().z * 39.3701;
+                }
+            }
         }
+        tps = 5 * distance + 450;
 
 
         if (launcherPressed) {
@@ -125,6 +159,7 @@ public class TejDesignTools {
         }
         telemetry.addData("LauncherPressed", launcherPressed);
         telemetry.addData("TPS", tps);
+        telemetry.addData("Distance", distance);
     }
     private void updateTurret(){
         turret.setPower(gamepad.left_stick_x * maxTurretPower);
