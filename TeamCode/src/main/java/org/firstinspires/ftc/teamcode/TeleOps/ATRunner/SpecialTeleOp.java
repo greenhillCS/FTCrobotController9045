@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 import org.firstinspires.ftc.teamcode.Testing.LimeLight.TurretLimelight;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.IntakeToolClass;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.LauncherToolClass;
@@ -68,6 +69,7 @@ public class SpecialTeleOp extends OpMode
     private IntakeToolClass intake;
     private LauncherToolClass launcher;
     private TurretLimelight turret;
+    private AlianceColorSyncTool as;
     private double accelerate(double currentPower, double targetPower, double acceleration){
         if (currentPower < targetPower) {
             return Math.min(currentPower + acceleration, targetPower);
@@ -98,6 +100,8 @@ public class SpecialTeleOp extends OpMode
         launcher = new LauncherToolClass(hardwareMap, telemetry, gamepad2);
         turret = new TurretLimelight(hardwareMap, telemetry, gamepad2);
 
+        as = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad1);
+
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
         // ########################################################################################
@@ -117,7 +121,7 @@ public class SpecialTeleOp extends OpMode
      */
     @Override
     public void init_loop() {
-
+        as.update();
     }
 
     /*
@@ -125,7 +129,6 @@ public class SpecialTeleOp extends OpMode
      */
     @Override
     public void start() {
-
         runtime.reset();
     }
 

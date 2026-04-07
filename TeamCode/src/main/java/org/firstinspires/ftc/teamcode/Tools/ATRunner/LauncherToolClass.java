@@ -30,6 +30,9 @@ public class LauncherToolClass {
     Gamepad gamepad;
     double testVelo;
 
+    private double inToTPS(double in){
+        return 185.16793*Math.pow(in, 0.351101);
+    }
     public LauncherToolClass(HardwareMap h, Telemetry t, Gamepad g){
         //Initialize devices and other variables here
         hardwareMap = h;
@@ -71,7 +74,7 @@ public class LauncherToolClass {
                     }
                 }
 
-                tps = 5 * distance + 400;
+                tps = inToTPS(distance);
 
                 launcher.setVelocity(tps);
 
@@ -118,12 +121,14 @@ public class LauncherToolClass {
             testVelo -= 10;
         }
 
+        launcher.setVelocity(testVelo);
+
         telemetry.addData("Controls", "");
         telemetry.addData("+100", "Right Bumper");
         telemetry.addData("-100", "Left Bumper");
         telemetry.addData("+10", "Dpad Up");
         telemetry.addData("-10", "Dpad Down");
-        telemetry.addData("", "--------------------:");
+        telemetry.addData("", "-------------------- :");
         telemetry.addData("Distance (Inches)", distance);
         telemetry.addData("Velocity (Ticks per Second)", testVelo);
     }

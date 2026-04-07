@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.Tools.ATRunner.IntakeToolClass;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.LauncherToolClass;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.v;
 
-@Autonomous(name="Change the name of your Auton", group="zzzzz")
-@Disabled
+@Autonomous(name="*Special Close Auton*", group="AAAAAAAAAAAAAAAAAAAAAAAAA")
+
 public class CloseAuton extends OpMode {
     // Declare OpMode members.
 
@@ -71,7 +71,7 @@ public class CloseAuton extends OpMode {
      */
     @Override
     public void init_loop() {
-
+        as.update();
     }
 
     /*
@@ -90,7 +90,7 @@ public class CloseAuton extends OpMode {
 
         double s = runtime.seconds();
 
-        if(s < 2){
+        if(s < 1.5){
             frontLeft.setPower (-0.5);
             frontRight.setPower (-0.5);
             backRight.setPower (-0.5);
@@ -98,9 +98,19 @@ public class CloseAuton extends OpMode {
         }else if (s < 12){
             turret.update();
             launcher.setState(v.STATE.OUT);
+
+            frontLeft.setPower (0.0);
+            frontRight.setPower (0.0);
+            backRight.setPower (0.0);
+            backLeft.setPower (0.0);
         }else if (s < 15){
             turret.update();
             intake.setState(v.STATE.IN);
+
+            frontLeft.setPower (0.0);
+            frontRight.setPower (0.0);
+            backRight.setPower (0.0);
+            backLeft.setPower (0.0);
         }else if (s < 16){
             intake.setState(v.STATE.STOP);
             launcher.setState(v.STATE.STOP);

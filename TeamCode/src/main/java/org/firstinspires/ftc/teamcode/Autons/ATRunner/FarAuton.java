@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.Tools.ATRunner.IntakeToolClass;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.LauncherToolClass;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.v;
 
-@Autonomous(name="Change the name of your Auton", group="zzzzz")
-@Disabled
+@Autonomous(name="*Special Far Auton*", group="AAAAAAAAAAAAAAAAAAAAAAAAA")
+
 public class FarAuton extends OpMode {
     // Declare OpMode members.
 
@@ -76,7 +76,7 @@ public class FarAuton extends OpMode {
      */
     @Override
     public void init_loop() {
-
+        as.update();
     }
 
     /*
