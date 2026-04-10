@@ -33,7 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Tools.Launcher;
+import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
+import org.firstinspires.ftc.teamcode.Tools.ATRunner.LauncherToolClass;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -46,10 +47,11 @@ import org.firstinspires.ftc.teamcode.Tools.Launcher;
 @TeleOp(name="Launcher Velo Test", group="Test")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
-public class LauncherTest extends OpMode
+public class LauncherVeloTest extends OpMode
 {
     // Declare OpMode members.
-    LauncherTPS launcher;
+    LauncherToolClass launcher;
+    AlianceColorSyncTool aliance;
 
     private ElapsedTime runtime = new ElapsedTime();
     /*
@@ -58,7 +60,8 @@ public class LauncherTest extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        launcher = new LauncherTPS(hardwareMap, telemetry, gamepad1);
+        launcher = new LauncherToolClass(hardwareMap, telemetry, gamepad1);
+        aliance = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -67,7 +70,7 @@ public class LauncherTest extends OpMode
      */
     @Override
     public void init_loop() {
-
+        aliance.update();
     }
 
     /*
