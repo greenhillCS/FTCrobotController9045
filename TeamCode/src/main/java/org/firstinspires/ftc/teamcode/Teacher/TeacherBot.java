@@ -37,6 +37,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -80,10 +81,14 @@ public class TeacherBot
     HashMap<String, Waypoint> waypoints;
     Shooter shooter;
     Releaser release;
+    private double shotTime = 0;
+    private double dropTime = 0;
+    ElapsedTime runtime;
     public TeacherBot(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry, HashMap<String, Waypoint> waypoints){
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must match the names assigned during the robot configuration.
         // step (using the FTC Robot Controller app on the phone).
+        runtime = new ElapsedTime();
         shooter = new Shooter(hardwareMap);
         release = new Releaser(hardwareMap);
         this.gamepad1 = gamepad;
@@ -128,49 +133,55 @@ public class TeacherBot
             List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
             for (LLResultTypes.FiducialResult fiducial : fiducials) {
                 int id = fiducial.getFiducialId(); // The ID number of the fiducial
-                Pose3D pose = fiducial.getTargetPoseCameraSpace();
+                if (curPose.id != id){
+                    if (drive == 0 && strafe == 0 && turn ==0){
+                        drive = 0.0;
+                        strafe = 0.0;
+                        turn = 0.15;
 
-                if (curPose.id == id) {
-                    range = pose.getPosition().z * 39.3701;
-                    yaw = pose.getOrientation().getPitch(AngleUnit.DEGREES) * -1;
-                    heading = tx;
-                    DESIRED_HEADING = curPose.heading;
-                    DESIRED_DISTANCE = curPose.distance;
-                    DESIRED_YAW = curPose.yaw;
-
-                    yawError = yaw - DESIRED_YAW;
-                    headingError = heading - DESIRED_HEADING;
-                    rangeError = range - DESIRED_DISTANCE;
-                    variance = abs(yawError) + abs(headingError) + abs(rangeError);
-
-                    shooter.setSpinSpeed(curPose.shootTPS);
-                    if (currentWaypoint.equals("humanDrop")) {
-                        release.setHold();
                     }
-                    if ((variance < 2.0) && (currentWaypoint.contains("Shoot"))) {
-                        // release the servo
-                        release.setRelease();
-                        //start timer
-//                            if (shotTime == 0){
-//                                shotTime = runtime.milliseconds();
-//                            }
-//                            if (runtime.milliseconds() - shotTime >= 2000){
-//                                currentWaypoint = "humanDrop";
-//                                shotTime = 0;
-//                            }
-                    }
+                    telemetry.addData("Limelight", "Wrong Tag");
+                    // not the right tag, ignore
                     continue;
-                } else {
-                    telemetry.addData("wrong tag", "looking for Tag");
-                    range = 0;
-                    heading = 0;
-                    yaw = 0;
-                    headingError = 10;
-                    rangeError = 0;
-                    yawError = 0;
                 }
+                Pose3D pose = fiducial.getTargetPoseCameraSpace();
+                range = pose.getPosition().z * 39.3701;
+                yaw = pose.getOrientation().getPitch(AngleUnit.DEGREES) * -1;
+                heading = tx;
+                DESIRED_HEADING = curPose.heading;
+                DESIRED_DISTANCE = curPose.distance;
+                DESIRED_YAW = curPose.yaw;
 
+                yawError = yaw - DESIRED_YAW;
+                headingError = heading - DESIRED_HEADING;
+                rangeError = range - DESIRED_DISTANCE;
+                variance = abs(yawError) + abs(headingError) + abs(rangeError);
 
+                shooter.setSpinSpeed(curPose.shootTPS);
+                if (curPose.name.equals("humanDrop")) {
+                    release.setHold();
+                }
+                if ((variance < 2.0) && (curPose.name.contains("Shoot"))) {
+                    // release the servo
+                    release.setRelease();
+                    //start timer
+                    if (shotTime == 0){
+                        shotTime = runtime.milliseconds();
+                    }
+                    if (runtime.milliseconds() - shotTime >= 4000){
+                        shotTime = 0;
+                        currentWaypoint = "humanDrop";
+                    }
+                }
+                if ((variance < 5.0) && (curPose.name.equals("humanDrop"))){
+                    if (dropTime == 0){
+                        dropTime = runtime.milliseconds();
+                    }
+                    if (runtime.milliseconds()-dropTime >=2000){
+                        dropTime = 0;
+                        currentWaypoint = "shortShoot";
+                    }
+                }
                 telemetry.addData("Variance", variance);
                 telemetry.addData("Current WP", currentWaypoint);
                 telemetry.addData("curPoseid", curPose.id);
@@ -180,6 +191,8 @@ public class TeacherBot
                 telemetry.addData("Range Error", rangeError);
                 telemetry.addData("Heading Error", headingError);
                 telemetry.addData("Yaw Error", yawError);
+                telemetry.addData("shot Time", shotTime);
+                telemetry.addData("dropTime", dropTime);
 
             }
             // Use the speed and turn "gains" to calculate how we want the robot to move.
@@ -212,7 +225,6 @@ public class TeacherBot
             telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
         }
         shooter.Update();
-        telemetry.update();
 
         // Apply desired axes motions to the drivetrain.
         moveRobot(drive, strafe, turn);

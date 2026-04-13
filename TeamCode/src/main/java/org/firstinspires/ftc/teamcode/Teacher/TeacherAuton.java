@@ -29,15 +29,15 @@
 
 package org.firstinspires.ftc.teamcode.Teacher;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 
 import java.util.HashMap;
 
-@TeleOp(name="Teacher TeleOp 70pts", group = "Main")
-public class TeacherTeleOp extends OpMode
+@Autonomous(name="Teacher Auton", group = "Main")
+public class TeacherAuton extends OpMode
 {
     TeacherBot bot;
     HashMap<String, Waypoint> waypoints;
@@ -68,21 +68,6 @@ public class TeacherTeleOp extends OpMode
 
     @Override
     public void loop() {
-        if (gamepad1.triangleWasPressed()){
-            bot.setCurrentWaypoint("shortShoot");
-        }
-        if (gamepad1.circleWasPressed()){
-            bot.setCurrentWaypoint("mediumShoot");
-        }
-        if (gamepad1.crossWasPressed()){
-            bot.setCurrentWaypoint("longShoot");
-        }
-        if (gamepad1.squareWasPressed()){
-            bot.setCurrentWaypoint("humanDrop");
-        }
-        if (gamepad1.dpadLeftWasPressed()){
-            bot.setCurrentWaypoint("park");
-        }
         bot.Update();
         telemetry.update();
     }
