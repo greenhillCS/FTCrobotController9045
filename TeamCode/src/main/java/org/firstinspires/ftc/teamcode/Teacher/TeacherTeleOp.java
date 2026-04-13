@@ -29,61 +29,84 @@
 
 package org.firstinspires.ftc.teamcode.Teacher;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
+
 import java.util.HashMap;
 
-@TeleOp(name="Teacher TeleOp 70pts RED", group = "Main")
-public class TeacherTeleOp extends LinearOpMode
+@TeleOp(name="Teacher TeleOp 70pts", group = "Main")
+public class TeacherTeleOp extends OpMode
 {
+    TeacherBot bot;
+    HashMap<String, Waypoint> waypoints;
+    AlianceColorSyncTool ac;
 
-    @Override public void runOpMode()
-    {
-
+    @Override
+    public void init_loop(){
+        ac.update();
+        telemetry.update();
+    }
+    @Override
+    public void init() {
         // Make Waypoints
-        HashMap<String, Waypoint> waypoints = new HashMap<>();
-        // start point
-        waypoints.put("humanDrop",new Waypoint(24, 152,-2, 0, 0));
 
-        // halfway to blue
-        waypoints.put("longShoot", new Waypoint(24, 130, -24,-5, 2000));
-
-        // all the way to blue
-        waypoints.put("mediumShoot", new Waypoint(24, 90, 0, -5, 1700));
-
-        // halfway to red
-        waypoints.put("shortShoot", new Waypoint(24, 54, 0,-5, 1500));
-
-        // all the way to red
-        waypoints.put("park", new Waypoint(24, 60, -34,6, 0));
-
-        TeacherBot bot = new TeacherBot(hardwareMap, gamepad1, telemetry, waypoints);
-        bot.setCurrentWaypoint("shortShoot");
+        ac = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad1);
 
         telemetry.setAutoClear(true);
+
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
-        waitForStart();
+    }
 
-        while (opModeIsActive())
-        {
-            if (gamepad1.triangleWasPressed()){
-                bot.setCurrentWaypoint("shortShoot");
-            }
-            if (gamepad1.circleWasPressed()){
-                bot.setCurrentWaypoint("mediumShoot");
-            }
-            if (gamepad1.crossWasPressed()){
-                bot.setCurrentWaypoint("longShoot");
-            }
-            if (gamepad1.squareWasPressed()){
-                bot.setCurrentWaypoint("humanDrop");
-            }
-            if (gamepad1.dpadLeftWasPressed()){
-                bot.setCurrentWaypoint("park");
-            }
-            bot.Update();
-            sleep(10);
+    @Override
+    public void start() {
+        super.start();
+        int multiplier = 1;
+        int id=24;
+        if (AlianceColorSyncTool.getSelectedColor().equals("Blue")){
+            multiplier = multiplier * -1;
+            id = 20;
         }
+        waypoints = new HashMap<>();
+        // start point
+        waypoints.put("humanDrop",new Waypoint(id, 152,-2 * multiplier, 0 * multiplier, 0));
+
+        // halfway to blue
+        waypoints.put("longShoot", new Waypoint(id, 130, -24 * multiplier,-5, 2000));
+
+        // all the way to blue
+        waypoints.put("mediumShoot", new Waypoint(id, 90, 0 * multiplier, -5, 1700));
+
+        // halfway to red
+        waypoints.put("shortShoot", new Waypoint(id, 54, 0 * multiplier,-5, 1500));
+
+        // all the way to red
+        waypoints.put("park", new Waypoint(id, 60, -34 * multiplier,6 * multiplier, 0));
+
+        bot = new TeacherBot(hardwareMap, gamepad1, telemetry, waypoints);
+        bot.setCurrentWaypoint("shortShoot");
+
+    }
+
+    @Override
+    public void loop() {
+        if (gamepad1.triangleWasPressed()){
+            bot.setCurrentWaypoint("shortShoot");
+        }
+        if (gamepad1.circleWasPressed()){
+            bot.setCurrentWaypoint("mediumShoot");
+        }
+        if (gamepad1.crossWasPressed()){
+            bot.setCurrentWaypoint("longShoot");
+        }
+        if (gamepad1.squareWasPressed()){
+            bot.setCurrentWaypoint("humanDrop");
+        }
+        if (gamepad1.dpadLeftWasPressed()){
+            bot.setCurrentWaypoint("park");
+        }
+        bot.Update();
     }
 }
