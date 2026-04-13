@@ -131,13 +131,13 @@ public class LimeLightDriveToAprilTag_Teacher extends LinearOpMode
         waypoints.put("humanDrop",new Waypoint(24, 152,-2, 0, 0));
 
         // halfway to blue
-        waypoints.put("longShoot", new Waypoint(24, 130, -24,-5, 2200));
+        waypoints.put("longShoot", new Waypoint(24, 130, -24,-5, 2000));
 
         // all the way to blue
-        waypoints.put("mediumShoot", new Waypoint(24, 90, 0, -5, 1800));
+        waypoints.put("mediumShoot", new Waypoint(24, 90, 0, -5, 1700));
 
         // halfway to red
-        waypoints.put("shortShoot", new Waypoint(24, 54, 0,-5, 1700));
+        waypoints.put("shortShoot", new Waypoint(24, 54, 0,-5, 1500));
 
         // all the way to red
         waypoints.put("park", new Waypoint(24, 60, -34,6, 0));
