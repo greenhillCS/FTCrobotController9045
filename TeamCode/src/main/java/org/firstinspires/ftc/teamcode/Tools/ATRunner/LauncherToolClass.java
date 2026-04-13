@@ -33,6 +33,7 @@ public class LauncherToolClass {
     Gamepad gamepad;
     double testVelo;
     ElapsedTime runtime;
+    public boolean launch = false;
 
     private double inToTPS(double in){
         return 185.16793*Math.pow(in, 0.351101);
@@ -70,7 +71,7 @@ public class LauncherToolClass {
                 if(gamepad.rightBumperWasPressed()){
                     state = STATE.STOP;
                     break;
-                }else if(gamepad.a && runtime.seconds() >= 2){
+                }else if((gamepad.a || launch) && runtime.seconds() >= 2){
                     runtime.reset();
                     state = STATE.OPEN;
                     break;
@@ -115,6 +116,8 @@ public class LauncherToolClass {
                 }
 
                 launcher.setVelocity(0);
+
+                launch = false;
 
                 break;
         }
