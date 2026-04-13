@@ -101,7 +101,9 @@ public class FarAuton extends OpMode {
         }else if (s < 13){
             turret.update();
             intake.setState(v.STATE.IN);
-        }else if (s < 14){
+            launcher.launch = true;
+
+        }else if (s < 28){
             intake.setState(v.STATE.STOP);
             launcher.setState(v.STATE.STOP);
 
