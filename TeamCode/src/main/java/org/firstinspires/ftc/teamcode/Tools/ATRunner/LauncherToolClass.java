@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -25,10 +27,12 @@ public class LauncherToolClass {
     private Map<String, Integer> ids;
     Limelight3A limelight;
     DcMotorEx launcher;
+    Servo gate;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad;
     double testVelo;
+    ElapsedTime runtime;
 
     private double inToTPS(double in){
         return 185.16793*Math.pow(in, 0.351101);
@@ -44,6 +48,9 @@ public class LauncherToolClass {
         launcher = hardwareMap.get(DcMotorEx.class,"launcher");// Port 2
         launcher.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        gate = hardwareMap.get(Servo.class, "gate");
+        gateClose();
+
         ids = new HashMap<>();
         ids.put("Red", 24);
         ids.put("Blue", 20);
@@ -52,15 +59,24 @@ public class LauncherToolClass {
         limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
         limelight.start(); // This tells Limelight to start looking!
         limelight.pipelineSwitch(0); // Switch to pipeline number
+
+        runtime = new ElapsedTime();
     }
 
     public void update(){
         switch (state){
-            case OUT:
+            case CLOSED:
 
                 if(gamepad.rightBumperWasPressed()){
                     state = STATE.STOP;
+                    break;
+                }else if(gamepad.a && runtime.seconds() >= 2){
+                    runtime.reset();
+                    state = STATE.OPEN;
+                    break;
                 }
+
+                gateClose();
 
                 LLResult result = limelight.getLatestResult();
 
@@ -76,14 +92,26 @@ public class LauncherToolClass {
 
                 tps = inToTPS(distance);
 
-                launcher.setVelocity(tps);
+                launcher.setVelocity((int) tps);
 
+                break;
+
+            case OPEN:
+
+                if(runtime.seconds() >= 3){
+                    runtime.reset();
+                    state = STATE.CLOSED;
+                }
+
+                gateOpen();
+
+                launcher.setVelocity(tps);
                 break;
 
             case STOP:
 
                 if(gamepad.rightBumperWasPressed()){
-                    state = STATE.OUT;
+                    state = STATE.CLOSED;
                 }
 
                 launcher.setVelocity(0);
@@ -91,6 +119,8 @@ public class LauncherToolClass {
                 break;
         }
     }
+    public void gateOpen(){gate.setPosition(0);}
+    public void gateClose(){gate.setPosition(1);}
     public void setState(STATE s){
         state = s;
     }
