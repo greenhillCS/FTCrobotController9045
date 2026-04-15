@@ -28,19 +28,11 @@ public class Waypoint {
             id = 20;
         }
         HashMap<String, Waypoint> waypoints = new HashMap<>();
-        // start point
         waypoints.put("humanDrop",new Waypoint(id, 154,-1 * multiplier, 0 * multiplier, 0, "humanDrop"));
-
-        // halfway to blue
+        waypoints.put("ballRelease",new Waypoint(id, 68,-50 * multiplier, -4 * multiplier, 0, "ballRelease"));
         waypoints.put("longShoot", new Waypoint(id, 130, -24 * multiplier,-5, 2000, "longShoot"));
-
-        // all the way to blue
         waypoints.put("mediumShoot", new Waypoint(id, 90, 0 * multiplier, -5, 1700, "mediumShoot"));
-
-        // halfway to red
         waypoints.put("shortShoot", new Waypoint(id, 54, 0 * multiplier,-5, 1500, "shortShoot"));
-
-        // all the way to red
         waypoints.put("park", new Waypoint(id, 60, -34 * multiplier,6 * multiplier, 0, "park"));
         return waypoints;
     }

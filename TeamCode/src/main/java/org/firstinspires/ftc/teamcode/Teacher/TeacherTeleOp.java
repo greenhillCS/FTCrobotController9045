@@ -83,6 +83,9 @@ public class TeacherTeleOp extends OpMode
         if (gamepad1.dpadLeftWasPressed()){
             bot.setCurrentWaypoint("park");
         }
+        if (gamepad1.dpadRightWasPressed()){
+            bot.setCurrentWaypoint("ballRelease");
+        }
         bot.Update();
         telemetry.update();
     }
