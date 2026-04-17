@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Testing.Tank_Team;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Four Motors Continuous Spin Test", group="Testing")
@@ -11,8 +13,8 @@ public class FourMotorsTestCode extends OpMode {
     // Motors
     private DcMotor intakeMotor;
     private DcMotor pusherMotor;
-    private DcMotor shooterMotorLeft;
-    private DcMotor shooterMotorRight;
+    private DcMotorEx shooterMotorLeft;
+    private DcMotorEx shooterMotorRight;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -23,8 +25,8 @@ public class FourMotorsTestCode extends OpMode {
         // Hardware map names MUST match the Robot Controller config
         intakeMotor = hardwareMap.get(DcMotor.class, "intake");
         pusherMotor = hardwareMap.get(DcMotor.class, "pusher");
-        shooterMotorLeft = hardwareMap.get(DcMotor.class, "shooterLeft");
-        shooterMotorRight = hardwareMap.get(DcMotor.class, "shooterRight");
+        shooterMotorLeft = hardwareMap.get(DcMotorEx.class, "shooterLeft");
+        shooterMotorRight = hardwareMap.get(DcMotorEx.class, "shooterRight");
 
         // Reverse one shooter motor so they spin opposite directions
         shooterMotorLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -44,12 +46,14 @@ public class FourMotorsTestCode extends OpMode {
         runtime.reset();
 
         // Continuous spinning powers
-        intakeMotor.setPower(1.0);        // intake speed
-        pusherMotor.setPower(1.0);        // wheel pusher speed
+        shooterMotorRight.setPower(0.45);        // intake speed
+        shooterMotorLeft.setPower(0.45);        // wheel pusher speed
+//        shooterMotorRight.setVelocity(-1100);
+//        shooterMotorLeft.setVelocity(1100);
 
         // Shooter motors VERY fast
-        shooterMotorLeft.setPower(0.5);
-        shooterMotorRight.setPower(0.5);
+        pusherMotor.setPower(1.0);
+        intakeMotor.setPower(1.0);
     }
 
     @Override
