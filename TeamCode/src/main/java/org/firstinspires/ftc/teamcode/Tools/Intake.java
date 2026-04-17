@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Intake {
-    enum STATE {
+    public enum STATE {
         IN,
         OUT,
         STOP
@@ -18,7 +18,7 @@ public class Intake {
     private Telemetry telemetry;
     private Gamepad gamepad;
     private DcMotor intake;
-    private double maxPower = 1.0;
+    private double maxPower = 0.5;
 
     public Intake(HardwareMap h, Telemetry t, Gamepad g) {
         hardwareMap = h;
@@ -43,7 +43,7 @@ public class Intake {
             case IN:
                 if(gamepad.dpad_down){
                     mode = STATE.OUT;
-                }else if(gamepad.x){
+                }else if(gamepad.y){
                     mode = STATE.STOP;
                 }
                 intake.setPower(maxPower);
@@ -51,7 +51,7 @@ public class Intake {
             case OUT:
                 if(gamepad.dpad_up){
                     mode = STATE.IN;
-                }else if(gamepad.x){
+                }else if(gamepad.y){
                     mode = STATE.STOP;
                 }
                 intake.setPower(-maxPower);

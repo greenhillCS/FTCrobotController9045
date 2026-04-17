@@ -1,0 +1,30 @@
+
+Plan to get you to success (Mrs Kim and Mr Meagher are NOT the machine):
+
+Tune your camera -
+    connect it to your laptop on the field
+    Google "LimeLight 3A quick start" for guidance,
+    use http://limelight.local:5801 to access the interface
+    configure exposure to 200
+    sensor Gain to 15+ (make sure tags are visible from field)
+    Advanced Full 3D enabled
+
+TEST - Run the default code we gave you to
+    move around to a defined position based on tags
+
+TEST - Change three variables to move almost anywhere on the field
+    NOTE: hold left bumper to move around
+    read data from telemetry for the values to use
+
+TEST - Change between two points (same id)
+    figure out variance when you get close enough
+
+TEST - Change between two points (different IDs),
+    swapping april tag targets
+
+TEST - Build a data structure to store waypoints (id, range, heading, yaw)
+
+TEST - Build a list of waypoints
+
+Final TEST - Run the square
+

@@ -139,7 +139,7 @@ public class LifterTeleOp extends OpMode
             rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
             rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
             */
-
+lifter.update();
 
 
         // Show the elapsed game time and wheel power.

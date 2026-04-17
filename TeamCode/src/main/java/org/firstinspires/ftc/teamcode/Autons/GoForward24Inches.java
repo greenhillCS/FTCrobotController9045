@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name="Go Forward 24 Inches", group="A_Decode")
-
+@Disabled
 public class GoForward24Inches extends OpMode {
     // Declare OpMode members.
 

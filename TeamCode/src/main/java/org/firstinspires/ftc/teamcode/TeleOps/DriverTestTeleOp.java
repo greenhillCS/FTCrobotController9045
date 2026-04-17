@@ -36,8 +36,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 import org.firstinspires.ftc.teamcode.Tools.Intake;
 import org.firstinspires.ftc.teamcode.Tools.Launcher;
+import org.firstinspires.ftc.teamcode.Tools.ManualTools;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -71,8 +73,13 @@ public class DriverTestTeleOp extends OpMode
     private double rightFrontPower = 0;
     private double leftBackPower = 0;
     private double rightBackPower = 0;
+
+    AlianceColorSyncTool AlianceColor;
+
+    ManualTools manualTools;
     Intake intake;
-    Launcher launcher;
+
+
     private double accelerate(double currentPower, double targetPower, double acceleration){
         if (currentPower < targetPower) {
             return Math.min(currentPower + acceleration, targetPower);
@@ -90,9 +97,9 @@ public class DriverTestTeleOp extends OpMode
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");//port 1
-        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");//port 3
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//port 0
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");//port 0
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");//port 1
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//port 3
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//port 2
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -102,6 +109,10 @@ public class DriverTestTeleOp extends OpMode
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        manualTools = new ManualTools(hardwareMap, telemetry, gamepad2);
+        intake = new Intake(hardwareMap, telemetry, gamepad2);
+        AlianceColor = new AlianceColorSyncTool(hardwareMap,telemetry,gamepad2);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -114,8 +125,7 @@ public class DriverTestTeleOp extends OpMode
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
 
-        intake = new Intake(hardwareMap, telemetry, gamepad2);
-        launcher = new Launcher(hardwareMap, telemetry, gamepad2);
+
 
         telemetry.addData("TeleOp", "Initialized");
     }
@@ -200,8 +210,9 @@ public class DriverTestTeleOp extends OpMode
         leftBackDrive.setPower(leftBackPower * MAX_SPEED);
         rightBackDrive.setPower(rightBackPower * MAX_SPEED);
 
+        manualTools.update();
         intake.update();
-        launcher.update();
+        AlianceColor.update();
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());

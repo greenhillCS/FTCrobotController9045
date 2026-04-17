@@ -45,7 +45,7 @@ import org.firstinspires.ftc.teamcode.Testing.Location_Gabe_Johnny_Sammie.AprilT
  * class is instantiated on the Robot Controller and executed.
  */
 
-@TeleOp(name="Gabriel Color Sensor Test", group="Testing")
+@TeleOp(name="TryingOp", group="Testing")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
 public class ColorSensorTest extends OpMode
