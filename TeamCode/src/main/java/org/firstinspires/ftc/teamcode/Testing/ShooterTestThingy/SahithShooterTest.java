@@ -30,12 +30,21 @@
 package org.firstinspires.ftc.teamcode.Testing.ShooterTestThingy;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+
+import java.util.List;
 
 
 
@@ -106,6 +115,202 @@ public class SahithShooterTest extends OpMode
         }
         return targetPower;
     }
+    @Override public void runOpMode()
+    {
+        boolean targetFound     = false;    // Set to true when an AprilTag target is detected
+        double  drive           = 0;        // Desired forward power/speed (-1 to +1)
+        double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
+        double  turn            = 0;        // Desired turning power/speed (-1 to +1)
+
+        // Initialize the Apriltag Detection process
+//        initAprilTag();
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must match the names assigned during the robot configuration.
+        // step (using the FTC Robot Controller app on the phone).
+        frontLeft  = hardwareMap.get(DcMotor.class, "rightBack");
+        frontRight = hardwareMap.get(DcMotor.class, "leftBack");
+        backLeft  = hardwareMap.get(DcMotor.class, "rightFront");
+        backRight = hardwareMap.get(DcMotor.class, "leftFront");
+
+        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
+        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
+        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
+        limelight.start(); // This tells Limelight to start looking!
+        limelight.pipelineSwitch(0); // Switch to pipeline number
+
+        telemetry.addData(">", "Touch Play to start OpMode");
+        telemetry.update();
+        waitForStart();
+        int[] ballID = { 20, 20, 24, 24, 20, 20, 24, 24, 20};
+
+        double[] ballDistance = { 68.0, 28.6, 64, 34.5, 63.6, 67, 69.0, 74, 68.0};
+        double[] ballHeading = { -4.6, -15.3, -7, -9.17, 5.02, 2, 4.6, -0.5, -4.6};
+        double[] ballYaw = { 55.0, 53.0, 36.4, 33.7, -34.6, -8, -55.0, -17.0, 55.0};
+        int totalBalls = 0;
+
+        while (opModeIsActive() && totalBalls < ballID.length) {
+            LLResult result = limelight.getLatestResult();
+            targetFound = false;
+            drive = 0;
+            strafe = 0;
+            turn = 0;
+            double yawError = 0;
+            double headingError = 0;
+            double rangeError = 0;
+
+            if (result != null && result.isValid()) {
+                List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
+
+
+
+                for (LLResultTypes.FiducialResult fiducial : fiducials) {
+                    int id = fiducial.getFiducialId();
+
+
+
+                    if (id == ballID[totalBalls]) {
+                        targetFound = true;
+
+                        Pose3D pose = fiducial.getTargetPoseCameraSpace();
+                        double range = pose.getPosition().z * 39.3701;
+                        double yaw = pose.getOrientation().getPitch(AngleUnit.DEGREES) * -1;
+                        double heading = result.getTx();
+
+
+                        rangeError = range - ballDistance[totalBalls];
+                        headingError = heading - ballHeading[totalBalls];
+                        yawError = yaw - ballYaw[totalBalls];
+
+                        telemetry.addData("Range", range);
+                        telemetry.addData("Heading", heading);
+                        telemetry.addData("Yaw", yaw);
+
+                        telemetry.addData("Range Error", rangeError);
+                        telemetry.addData("Heading Error", headingError);
+                        telemetry.addData("Yaw Error", yawError);
+
+                        drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                        turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+                        strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+
+
+
+
+                        if (Math.abs(rangeError) < 3.0 && Math.abs(headingError) < 3.0 && Math.abs(yawError) < 3.0) {
+                            totalBalls++;
+                        }
+
+                        break;
+                    }
+                    else {
+                        moveRobot(0, 0, 0.3);
+                        telemetry.addData("Limelight", "No Targets");
+                    }
+
+                }
+
+
+                moveRobot(drive, strafe, turn);
+
+            } else {
+
+                moveRobot(0, 0, 0.3);
+                telemetry.addData("Limelight", "No Targets");
+            }
+
+
+            telemetry.addData("Target Ball", totalBalls + 1);
+            telemetry.addData("Range Error", rangeError);
+            telemetry.update();
+
+
+            // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
+            if (gamepad1.left_bumper) {
+                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
+                drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
+                strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
+                turn   = gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
+                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+
+            }
+
+//            targetFound = false;
+//            desiredTag  = null;
+//
+//            // Step through the list of detected tags and look for a matching tag
+//            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+//            for (AprilTagDetection detection : currentDetections) {
+//                // Look to see if we have size info on this tag.
+//                if (detection.metadata != null) {
+//                    //  Check to see if we want to track towards this tag.
+//                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+//                        // Yes, we want to use this tag.
+//                        targetFound = true;
+//                        desiredTag = detection;
+//                        break;  // don't look any further.
+//                    } else {
+//                        // This tag is in the library, but we do not want to track it right now.
+//                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+//                    }
+//                } else {
+//                    // This tag is NOT in the library, so we don't have enough information to track to it.
+//                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+//                }
+//            }
+//
+//            // Tell the driver what we see, and what to do.
+//            if (targetFound) {
+//                telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
+//                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+//                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
+//                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
+//                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+//            } else {
+//                telemetry.addData("\n>","Drive using joysticks to find valid target\n");
+//            }
+//
+//            // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
+//            if (gamepad1.left_bumper && targetFound) {
+//
+//                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+//                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
+//                double  headingError    = desiredTag.ftcPose.bearing;
+//                double  yawError        = desiredTag.ftcPose.yaw;
+//
+//                // Use the speed and turn "gains" to calculate how we want the robot to move.
+//                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+//                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+//                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+//
+//                telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+//            } else {
+//
+//                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
+//                drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
+//                strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
+//                turn   = -gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
+//                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+//            }
+            telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+
+            telemetry.update();
+
+            // Apply desired axes motions to the drivetrain.
+            moveRobot(drive, strafe, turn);
+            sleep(10);
+        }
+    }
+
+
 
     @Override
     public void init() {
