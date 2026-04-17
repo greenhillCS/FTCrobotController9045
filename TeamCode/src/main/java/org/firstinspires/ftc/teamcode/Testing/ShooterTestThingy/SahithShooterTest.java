@@ -35,12 +35,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoControllerEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
-import org.firstinspires.ftc.teamcode.Tools.Intake;
-import org.firstinspires.ftc.teamcode.Tools.ManualTools;
+
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -69,6 +66,23 @@ public class SahithShooterTest extends OpMode
     private Servo flicker;
     static double x = 0;
     private double shooterTicksPerSecond = 1000;
+    private DcMotor leftFrontDrive;
+    private DcMotor leftBackDrive;
+    private DcMotor rightFrontDrive;
+    private DcMotor rightBackDrive;
+    private double leftFrontPower = 0;
+    private double rightFrontPower = 0;
+    private double leftBackPower = 0;
+    private double rightBackPower = 0;
+
+    private double accelerate(double currentPower, double targetPower, double acceleration){
+        if (currentPower < targetPower) {
+            return Math.min(currentPower + acceleration, targetPower);
+        } else if (currentPower > targetPower) {
+            return Math.max(currentPower - acceleration, targetPower);
+        }
+        return targetPower;
+    }
 
     @Override
     public void init() {
@@ -76,6 +90,18 @@ public class SahithShooterTest extends OpMode
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");//port 0
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBack");//port 1
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");//port 3
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBack");//port 2
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");//port 0
         flicker = hardwareMap.get(Servo.class, "flicker");
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -88,10 +114,7 @@ public class SahithShooterTest extends OpMode
      */
     @Override
     public void init_loop() {
-        if (gamepad1.dpad_down){
-            flicker.setPosition(0.4);
-            telemetry.addData("Flicker Status: ", " Was pressed");
-        }
+
     }
 
     /*
@@ -120,7 +143,7 @@ public class SahithShooterTest extends OpMode
         // Send calculated power to wheels
         shooter.setPower(MAX_SPEED);
         if (gamepad1.aWasPressed()){
-            flicker.setPosition(0.5);
+            flicker.setPosition(1);
             telemetry.addData("Flicker Status:", " Was pressed");
         }
         if (gamepad1.dpad_down){
@@ -133,6 +156,64 @@ public class SahithShooterTest extends OpMode
         }
     flicker.setPosition(x);
 
+
+        double max;
+
+        // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
+        double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+        double lateral =  gamepad1.left_stick_x;
+        double yaw     =  gamepad1.right_stick_x;
+
+        // Combine the joystick requests for each axis-motion to determine each wheel's power.
+        // Set up a variable for each drive wheel to save the power level for telemetry.
+
+        // Calculate the target powers for each wheel
+        double targetLeftFrontPower = axial + lateral + yaw;
+        double targetRightFrontPower = axial - lateral - yaw;
+        double targetLeftBackPower = axial - lateral + yaw;
+        double targetRightBackPower = axial + lateral - yaw;
+
+        // Apply acceleration to the wheel powers
+        leftFrontPower = accelerate(leftFrontPower, targetLeftFrontPower, ACCELERATION);
+        rightFrontPower = accelerate(rightFrontPower, targetRightFrontPower, ACCELERATION);
+        leftBackPower = accelerate(leftBackPower, targetLeftBackPower, ACCELERATION);
+        rightBackPower = accelerate(rightBackPower, targetRightBackPower, ACCELERATION);
+
+        // Normalize the values so no wheel power exceeds 100%
+        // This ensures that the robot maintains the desired motion.
+        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower  /= max;
+            rightFrontPower /= max;
+            leftBackPower   /= max;
+            rightBackPower  /= max;
+        }
+
+        // This is test code:
+        //
+        // Uncomment the following code to test your motor directions.
+        // Each button should make the corresponding motor run FORWARD.
+        //   1) First get all the motors to take to correct positions on the robot
+        //      by adjusting your Robot Configuration if necessary.
+        //   2) Then make sure they run in the correct direction by modifying the
+        //      the setDirection() calls above.
+        // Once the correct motors move in the correct direction re-comment this code.
+
+            /*
+            leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
+            leftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
+            rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
+            rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
+            */
+
+        // Send calculated power to wheels
+        leftFrontDrive.setPower(leftFrontPower * MAX_SPEED);
+        rightFrontDrive.setPower(rightFrontPower * MAX_SPEED);
+        leftBackDrive.setPower(leftBackPower * MAX_SPEED);
+        rightBackDrive.setPower(rightBackPower * MAX_SPEED);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
