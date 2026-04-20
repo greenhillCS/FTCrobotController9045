@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.Testing.LimeLight;
+package org.firstinspires.ftc.teamcode.Tools.ATRunner;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -15,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
-import org.firstinspires.ftc.teamcode.Tools.Intake;
 
 import java.util.List;
 
@@ -156,12 +154,12 @@ public class TurretLimelight{
 
                     break;
                 case SWITCH:
-                    telemetry.addData("STATE", "Searching");
+                    telemetry.addData("STATE", "Switching");
                     if (!magnet.getState() && runtime.seconds() > dWait) {
                         state = STATE.SCANNING;
                         break;
                     }
-                    turretMotor.setPower(searchPower);
+                    turretMotor.setPower(1.5*searchPower);
                     break;
                 case SCANNING:
                     telemetry.addData("STATE", "Scanning");

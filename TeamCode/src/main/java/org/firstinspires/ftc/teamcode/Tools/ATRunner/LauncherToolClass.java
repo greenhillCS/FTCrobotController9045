@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Tools.ATRunner;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -21,13 +22,13 @@ import java.util.Map;
 
 public class LauncherToolClass {
     //Define variables here
-    STATE state = STATE.OUT;
+    STATE state = STATE.CLOSED;
     double tps = 0;
     private double distance = 0;
     private Map<String, Integer> ids;
     Limelight3A limelight;
     DcMotorEx launcher;
-    Servo gate;
+    DcMotor gate;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad;
@@ -49,7 +50,7 @@ public class LauncherToolClass {
         launcher = hardwareMap.get(DcMotorEx.class,"launcher");// Port 2
         launcher.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        gate = hardwareMap.get(Servo.class, "gate");
+        gate = hardwareMap.get(DcMotor.class, "gate");
         gateClose();
 
         ids = new HashMap<>();
@@ -71,7 +72,7 @@ public class LauncherToolClass {
                 if(gamepad.rightBumperWasPressed()){
                     state = STATE.STOP;
                     break;
-                }else if((gamepad.a || launch) && runtime.seconds() >= 2){
+                }else if((gamepad.b || gamepad.a || launch) && runtime.seconds() >= 0.5){
                     runtime.reset();
                     state = STATE.OPEN;
                     break;
@@ -99,7 +100,7 @@ public class LauncherToolClass {
 
             case OPEN:
 
-                if(runtime.seconds() >= 3){
+                if(!gamepad.b && runtime.seconds() >= 0.75){
                     runtime.reset();
                     state = STATE.CLOSED;
                 }
@@ -121,9 +122,10 @@ public class LauncherToolClass {
 
                 break;
         }
+        telemetry.addData("Launcher", state);
     }
-    public void gateOpen(){gate.setPosition(0);}
-    public void gateClose(){gate.setPosition(1);}
+    public void gateOpen(){gate.setPower(0.6);}
+    public void gateClose(){gate.setPower(0);}
     public void setState(STATE s){
         state = s;
     }
