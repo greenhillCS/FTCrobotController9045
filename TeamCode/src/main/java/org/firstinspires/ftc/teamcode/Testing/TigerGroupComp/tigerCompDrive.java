@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Testing.TigerGroupComp;
 
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,7 +19,9 @@ public class tigerCompDrive extends OpMode {
     private double shooterSpeed;
     private double testServo;
     private double shootertpr = 103.8;
-    private double targetRPM = 1134;
+    private double targetRPM = 1000;
+    private Limelight3A limelight;
+    private final double TURN_KP = 0.03;
 
     @Override
     public void init() {
@@ -28,21 +31,25 @@ public class tigerCompDrive extends OpMode {
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");
         gate = hardwareMap.get(Servo.class, "gate");
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.pipelineSwitch(0);
+        limelight.start();
     }
 
     @Override
     public void loop() {
         double tps = shooter.getVelocity();
-        double currentRPM = (tps/shootertpr) * 60;
+        double currentRPM = (tps / shootertpr) * 60;
+        telemetry.addData("israel save us", "confirmed");
         telemetry.addData("rpm shooter", currentRPM);
-        telemetry.addData("target rpm", (shooter.getVelocity()*shootertpr)/60);
+        telemetry.addData("target rpm", targetRPM);
         telemetry.addData("gate", testServo);
         telemetry.update();
 
-        if (gamepad1.right_bumper){
+        if (gamepad1.right_bumper) {
             targetRPM++;
         }
-        if(gamepad1.left_bumper){
+        if (gamepad1.left_bumper) {
             targetRPM--;
         }
 
@@ -56,12 +63,12 @@ public class tigerCompDrive extends OpMode {
         }
 
         double y = -gamepad1.left_stick_y;
-        double x = gamepad1.left_stick_x * 1.1;
+        double x = gamepad1.left_stick_x;
         double rx = gamepad1.right_stick_x;
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        frontLeft.setPower((y + x + rx) / denominator);
-        backLeft.setPower((y - x + rx) / denominator);
-        frontRight.setPower((y - x - rx) / denominator);
-        backRight.setPower((y + x - rx) / denominator);
+        frontLeft.setPower(-0.5 * ((y + x + rx) / denominator));
+        backLeft.setPower(-0.5 * ((y - x + rx) / denominator));
+        frontRight.setPower(0.5 * (y - x - rx) / denominator);
+        backRight.setPower(0.5 * (y + x - rx) / denominator);
     }
 }
