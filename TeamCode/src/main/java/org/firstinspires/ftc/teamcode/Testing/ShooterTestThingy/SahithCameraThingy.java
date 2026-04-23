@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.Testing.ShooterTestThingy;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -82,7 +83,7 @@ import java.util.List;
  *
  */
 
-@TeleOp(name="Shahith Camera Test", group = "Testing")
+@Autonomous(name="Sahith Auton Test", group = "Testing")
 public class SahithCameraThingy extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
