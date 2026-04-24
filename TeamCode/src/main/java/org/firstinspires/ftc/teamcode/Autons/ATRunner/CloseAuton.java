@@ -89,12 +89,12 @@ public class CloseAuton extends OpMode {
 
         double s = runtime.seconds();
 
-        if(s < 1.5){
+        if(s < 2){
             frontLeft.setPower (-0.5);
             frontRight.setPower (-0.5);
             backRight.setPower (-0.5);
             backLeft.setPower (-0.5);
-        }else if (s < 10){
+        }else if (s < 8){
             turret.update();
             launcher.setState(v.STATE.CLOSED);
 
@@ -102,7 +102,7 @@ public class CloseAuton extends OpMode {
             frontRight.setPower (0.0);
             backRight.setPower (0.0);
             backLeft.setPower (0.0);
-        }else if (s < 13){
+        }else if (s < 18){
             turret.update();
             intake.setState(v.STATE.IN);
             launcher.launch = true;
@@ -111,7 +111,7 @@ public class CloseAuton extends OpMode {
             frontRight.setPower (0.0);
             backRight.setPower (0.0);
             backLeft.setPower (0.0);
-        }else if (s < 28){
+        }else if (s < 19){
             intake.setState(v.STATE.STOP);
             launcher.setState(v.STATE.STOP);
 
