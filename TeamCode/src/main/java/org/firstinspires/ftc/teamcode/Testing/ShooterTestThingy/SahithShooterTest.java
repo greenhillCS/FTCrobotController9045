@@ -114,8 +114,8 @@ public class SahithShooterTest extends OpMode
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        shooter = hardwareMap.get(DcMotorEx.class, "shooter");//port 0
-        flicker = hardwareMap.get(Servo.class, "flicker");
+        shooter = hardwareMap.get(DcMotorEx.class, "Shooter");//port 0
+        flicker = hardwareMap.get(Servo.class, "Flicker");
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooter.setDirection(DcMotor.Direction.FORWARD);
         telemetry.addData("TeleOp", "Initialized");
@@ -156,10 +156,14 @@ public class SahithShooterTest extends OpMode
         shooter.setPower(shooterTicksPerSecond);
 
         if (gamepad1.dpad_down){
-            flicker.setPosition(0);
+            flicker.setPosition(0.5);
         }
         if (gamepad1.dpad_up){
-            flicker.setPosition(1);
+            runtime.reset();
+            flicker.setPosition(0);
+            if (runtime.time() > 0.1) {
+                flicker.setPosition(0.5);
+            }
         }
 
 
