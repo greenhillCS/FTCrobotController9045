@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp(name = "tiger competition robot teleop")
@@ -19,9 +20,13 @@ public class tigerCompDrive extends OpMode {
     private double shooterSpeed;
     private double testServo;
     private double shootertpr = 103.8;
-    private double targetRPM = 1000;
+    private double targetRPM = 1100;
     private Limelight3A limelight;
     private final double TURN_KP = 0.03;
+    private ElapsedTime timer = new ElapsedTime();
+    private int gateCount = 0;
+    private boolean gateOpen = false;
+    private boolean running = false;
 
     @Override
     public void init() {
@@ -55,6 +60,35 @@ public class tigerCompDrive extends OpMode {
 
         shooter.setVelocity((targetRPM * shootertpr) / 60);
 
+        if (gamepad1.right_trigger > 0.5 && !running) {
+            gateCount = 0;
+            gateOpen = false;
+            running = true;
+            gate.setPosition(0.3);
+            timer.reset();
+        }
+
+        if (running) {
+            if (!gateOpen && timer.milliseconds() >= 400) {
+                // Open phase done → close
+                gate.setPosition(0.05);
+                gateOpen = true;
+                timer.reset();
+
+            } else if (gateOpen && timer.milliseconds() >= 600) {
+                // Close phase done → next cycle
+                gateCount++;
+                gateOpen = false;
+
+                if (gateCount < 3) {
+                    gate.setPosition(0.3);
+                    timer.reset();
+                } else {
+                    running = false; // All 3 cycles done
+                }
+            }
+        }
+
         if (gamepad1.a) {
             gate.setPosition(0.3);
         }
@@ -66,9 +100,9 @@ public class tigerCompDrive extends OpMode {
         double x = gamepad1.left_stick_x;
         double rx = gamepad1.right_stick_x;
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        frontLeft.setPower(-0.5 * ((y + x + rx) / denominator));
-        backLeft.setPower(-0.5 * ((y - x + rx) / denominator));
-        frontRight.setPower(0.5 * (y - x - rx) / denominator);
-        backRight.setPower(0.5 * (y + x - rx) / denominator);
+        frontLeft.setPower(-0.8 * ((y + x + rx) / denominator));
+        backLeft.setPower(-0.8 * ((y - x + rx) / denominator));
+        frontRight.setPower(0.8 * (y - x - rx) / denominator);
+        backRight.setPower(0.8 * (y + x - rx) / denominator);
     }
 }
