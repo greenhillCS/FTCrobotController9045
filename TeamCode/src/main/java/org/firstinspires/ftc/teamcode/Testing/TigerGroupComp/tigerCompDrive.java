@@ -90,7 +90,7 @@ public class tigerCompDrive extends OpMode {
         }
 
         if (gamepad1.a) {
-            gate.setPosition(0.3);
+            gate.setPosition(0.29);
         }
         if (gamepad1.y) {
             gate.setPosition(0.05);
