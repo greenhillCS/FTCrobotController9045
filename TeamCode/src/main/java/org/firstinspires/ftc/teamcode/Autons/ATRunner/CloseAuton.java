@@ -2,14 +2,13 @@ package org.firstinspires.ftc.teamcode.Autons.ATRunner;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
-import org.firstinspires.ftc.teamcode.Testing.LimeLight.TurretLimelight;
+import org.firstinspires.ftc.teamcode.Tools.ATRunner.TurretLimelight;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.IntakeToolClass;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.LauncherToolClass;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.v;
@@ -90,12 +89,12 @@ public class CloseAuton extends OpMode {
 
         double s = runtime.seconds();
 
-        if(s < 1.5){
+        if(s < 2){
             frontLeft.setPower (-0.5);
             frontRight.setPower (-0.5);
             backRight.setPower (-0.5);
             backLeft.setPower (-0.5);
-        }else if (s < 10){
+        }else if (s < 8){
             turret.update();
             launcher.setState(v.STATE.CLOSED);
 
@@ -103,7 +102,7 @@ public class CloseAuton extends OpMode {
             frontRight.setPower (0.0);
             backRight.setPower (0.0);
             backLeft.setPower (0.0);
-        }else if (s < 13){
+        }else if (s < 18){
             turret.update();
             intake.setState(v.STATE.IN);
             launcher.launch = true;
@@ -112,7 +111,7 @@ public class CloseAuton extends OpMode {
             frontRight.setPower (0.0);
             backRight.setPower (0.0);
             backLeft.setPower (0.0);
-        }else if (s < 28){
+        }else if (s < 19){
             intake.setState(v.STATE.STOP);
             launcher.setState(v.STATE.STOP);
 

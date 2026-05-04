@@ -9,8 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
-import org.firstinspires.ftc.teamcode.Testing.LimeLight.SensorLimelight3A;
-import org.firstinspires.ftc.teamcode.Testing.LimeLight.TurretLimelight;
+import org.firstinspires.ftc.teamcode.Tools.ATRunner.TurretLimelight;
 
 @Autonomous(name="LimelightAuton Far", group="Autons")
 

@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -70,14 +71,15 @@ public class SahithShooterTest extends OpMode
 
     private ElapsedTime runtime = new ElapsedTime();
     private static final double ACCELERATION = 0.25;
-    private static final double MAX_SPEED = 0.5;
+    private static final double MAX_SPEED = 1;
+    private static final double MAX_POWER = 0.8;
     private DcMotorEx shooter;
     private Servo flicker;
     static double x = 0;
-    private double shooterTicksPerSecond = 1000;
+    private double shooterTicksPerSecond = 1900;
     private DcMotor leftFrontDrive;
-    private DcMotor leftBackDrive;
     private DcMotor rightFrontDrive;
+    private DcMotor leftBackDrive;
     private DcMotor rightBackDrive;
     private double leftFrontPower = 0;
     private double rightFrontPower = 0;
@@ -108,12 +110,12 @@ public class SahithShooterTest extends OpMode
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        shooter = hardwareMap.get(DcMotorEx.class, "shooter");//port 0
-        flicker = hardwareMap.get(Servo.class, "flicker");
+        shooter = hardwareMap.get(DcMotorEx.class, "Shooter");//port 0
+        flicker = hardwareMap.get(Servo.class, "Flicker");
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooter.setDirection(DcMotor.Direction.FORWARD);
         telemetry.addData("TeleOp", "Initialized");
@@ -151,20 +153,18 @@ public class SahithShooterTest extends OpMode
             shooterTicksPerSecond -=10;
         }
         // Send calculated power to wheels
-        shooter.setPower(MAX_SPEED);
-        if (gamepad1.aWasPressed()){
-            flicker.setPosition(1);
-            telemetry.addData("Flicker Status:", " Was pressed");
-        }
+        shooter.setPower(shooterTicksPerSecond);
+
         if (gamepad1.dpad_down){
-            x = 0.5;
-            telemetry.addData("Flicker Status: ", " Was pressed");
+            flicker.setPosition(0.5);
         }
         if (gamepad1.dpad_up){
-            x = 0;
-            telemetry.addData("Flicker Status: ", "Was pressed");
+            runtime.reset();
+            flicker.setPosition(0);
+            if (runtime.time() > 0.1) {
+                flicker.setPosition(0.5);
+            }
         }
-    flicker.setPosition(x);
 
 
         double max;

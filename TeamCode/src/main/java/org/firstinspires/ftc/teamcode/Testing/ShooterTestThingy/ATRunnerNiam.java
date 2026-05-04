@@ -27,13 +27,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Testing.LimeLight;
+package org.firstinspires.ftc.teamcode.Testing.ShooterTestThingy;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Tools.ATRunner.TurretLimelight;
+import org.firstinspires.ftc.teamcode.Autons.ATRunner.ATRunner;
+import org.firstinspires.ftc.teamcode.Autons.ATRunner.ATRunnerBasic;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -42,22 +47,38 @@ import org.firstinspires.ftc.teamcode.Tools.ATRunner.TurretLimelight;
  * When a selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
  */
-@TeleOp(group="Limelight")
-//@Autonomous(name="Change the name of your Auton", group="zzzzz")
+//TODO:Uncomment one of the following and rename group and name as needed.
+//@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
+@Autonomous(name="Sahith Official Auton", group="ATRunner")
 
-public class TurretTest extends OpMode
+public class ATRunnerNiam extends OpMode
 {
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
-    TurretLimelight turret;
+    private DcMotor launcher;
+    private Servo gate;
+    private ATRunnerBasic atr;
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        turret = new TurretLimelight(hardwareMap, telemetry, gamepad2);
+        atr = new ATRunnerBasic(hardwareMap, telemetry, gamepad1);
+        atr.addPoint(40, 0, 0, 24, 1, 1);
+        atr.addPoint(92, 0, 0, 24, 2, 1);
+        atr.addPoint(40, 0, 0, 24, 1, 1);
+        atr.addPoint(92, 0, 0, 24, 2, 1);
+        atr.addPoint(40, 0, 0, 24, 1, 1);
+        atr.addPoint(92, 0, 0, 24, 2, 1);
+        atr.addPoint(40, 0, 0, 24, 1, 1);
+        atr.addPoint(80, 0, 0, 24, 1, 1);
+        launcher = hardwareMap.get(DcMotor.class, "Shooter");
+        launcher.setDirection(DcMotorSimple.Direction.FORWARD);
+        launcher.setPower(1);
+        gate = hardwareMap.get(Servo.class, "Flicker");
+        gate.setPosition(0.5);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -74,7 +95,7 @@ public class TurretTest extends OpMode
      */
     @Override
     public void start() {
-        turret.updateID();
+        atr.init();
         runtime.reset();
     }
 
@@ -83,7 +104,21 @@ public class TurretTest extends OpMode
      */
     @Override
     public void loop() {
-        turret.update();
+        atr.update();
+        if(atr.state.equals(ATRunnerBasic.STATE.WAITING)) {
+            switch (atr.pointIndex) {
+                case 0, 2, 4, 6:
+                    gate.setPosition(0);
+                    break;
+                case 1, 3, 5:
+                    gate.setPosition(0.5);
+                    break;
+                case 7:
+                    gate.setPosition(0.5);
+                    launcher.setPower(0);
+                    break;
+            }
+        }
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
 
