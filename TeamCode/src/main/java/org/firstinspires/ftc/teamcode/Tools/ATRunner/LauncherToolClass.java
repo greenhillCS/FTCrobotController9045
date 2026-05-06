@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class LauncherToolClass {
     //Define variables here
-    STATE state = STATE.CLOSED;
+    STATE state = STATE.OUT;
     double tps = 0;
     private double distance = 0;
     private Map<String, Integer> ids;
@@ -37,7 +37,7 @@ public class LauncherToolClass {
     public boolean launch = false;
 
     private double inToTPS(double in){
-        return 185.16793*Math.pow(in, 0.351101);
+        return 397.68732 * Math.pow(in, 0.269105);
     }
     public LauncherToolClass(HardwareMap h, Telemetry t, Gamepad g){
         //Initialize devices and other variables here
@@ -67,14 +67,13 @@ public class LauncherToolClass {
 
     public void update(){
         switch (state){
-            case CLOSED:
+            case OUT:
 
                 if(gamepad.rightBumperWasPressed()){
                     state = STATE.STOP;
                     break;
-                }else if((gamepad.b || gamepad.a || launch) && runtime.seconds() >= 0.5){
-                    runtime.reset();
-                    state = STATE.OPEN;
+                }else if(gamepad.a || launch){
+                    gateOpen();
                     break;
                 }
 
@@ -94,20 +93,8 @@ public class LauncherToolClass {
 
                 tps = inToTPS(distance);
 
-                launcher.setVelocity((int) tps);
-
-                break;
-
-            case OPEN:
-
-                if(!gamepad.b && runtime.seconds() >= 0.75){
-                    runtime.reset();
-                    state = STATE.CLOSED;
-                }
-
-                gateOpen();
-
                 launcher.setVelocity(tps);
+
                 break;
 
             case STOP:
@@ -118,13 +105,17 @@ public class LauncherToolClass {
 
                 launcher.setVelocity(0);
 
+                gateClose();
+
                 launch = false;
 
                 break;
         }
         telemetry.addData("Launcher", state);
+        telemetry.addData("target TPS", tps);
+        telemetry.addData("current TPS", launcher.getVelocity());
     }
-    public void gateOpen(){gate.setPower(0.6);}
+    public void gateOpen(){gate.setPower(0.8);}
     public void gateClose(){gate.setPower(0);}
     public void setState(STATE s){
         state = s;
@@ -157,6 +148,7 @@ public class LauncherToolClass {
         }
 
         launcher.setVelocity(testVelo);
+        gateOpen();
 
         telemetry.addData("Controls", "");
         telemetry.addData("+100", "Right Bumper");

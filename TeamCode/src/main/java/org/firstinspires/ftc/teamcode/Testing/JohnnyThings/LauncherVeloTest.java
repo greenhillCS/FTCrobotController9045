@@ -34,7 +34,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
+import org.firstinspires.ftc.teamcode.Tools.ATRunner.IntakeToolClass;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.LauncherToolClass;
+import org.firstinspires.ftc.teamcode.Tools.ATRunner.TurretLimelight;
+import org.firstinspires.ftc.teamcode.Tools.ATRunner.v;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -51,7 +54,9 @@ public class LauncherVeloTest extends OpMode
 {
     // Declare OpMode members.
     LauncherToolClass launcher;
+    IntakeToolClass intake;
     AlianceColorSyncTool aliance;
+    TurretLimelight turret;
 
     private ElapsedTime runtime = new ElapsedTime();
     /*
@@ -61,7 +66,9 @@ public class LauncherVeloTest extends OpMode
     public void init() {
         telemetry.addData("Status", "Initializing");
         launcher = new LauncherToolClass(hardwareMap, telemetry, gamepad1);
+        intake = new IntakeToolClass(hardwareMap, telemetry, gamepad2);
         aliance = new AlianceColorSyncTool(hardwareMap, telemetry, gamepad1);
+        turret = new TurretLimelight(hardwareMap, telemetry, gamepad1);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -78,7 +85,7 @@ public class LauncherVeloTest extends OpMode
      */
     @Override
     public void start() {
-
+        intake.setState(v.STATE.IN);
         runtime.reset();
     }
 
@@ -88,6 +95,8 @@ public class LauncherVeloTest extends OpMode
     @Override
     public void loop() {
         launcher.testUpdate();
+        intake.update();
+        turret.update();
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
 
