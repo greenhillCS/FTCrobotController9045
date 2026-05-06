@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.LimeLight.LimeLightDriveToAprilTag_Joe;
+import org.firstinspires.ftc.teamcode.Tools.ATRunner.TurretLimelight;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,9 @@ public class ATRunner {
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad;
+    TurretLimelight turret;
     ArrayList<Point> posList;
     private int currentPoint = 0;
-    DcMotorEx turret;
     Limelight3A limelight;
     final double degreesPerTick = (1.0 / 384.5) * (28.0 / 145.0) * (360.0 / 1.0);
     private double robotRange = 0;
@@ -40,15 +41,13 @@ public class ATRunner {
     private double camX = 0;
     private double camY = 0;
 
-    public ATRunner(HardwareMap h, Telemetry t, Gamepad g){
+    public ATRunner(HardwareMap h, Telemetry t, Gamepad g, TurretLimelight tl){
         //Initialize devices and other variables here
         hardwareMap = h;
         telemetry = t;
         gamepad = g;
 
-        turret = hardwareMap.get(DcMotorEx.class, "turret");
-        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turret = tl;
 
         posList = new ArrayList<>();
 
@@ -141,9 +140,8 @@ public class ATRunner {
     }
 
     public boolean update(){
-        turretAngle = (double) turret.getCurrentPosition() * -degreesPerTick;
+        turretAngle = turret.getDegree();
         telemetry.addData("turret", turretAngle);
-        telemetry.addData("turret 1", (double) turret.getCurrentPosition() * -degreesPerTick);
 
         LLResult result = limelight.getLatestResult();
         if (result != null && result.isValid()) {
@@ -172,7 +170,7 @@ public class ATRunner {
 
 
 
-//                    robotPosCalc(yaw, heading, range, p);
+                    robotPosCalc(yaw, heading, range, p);
 
 
 

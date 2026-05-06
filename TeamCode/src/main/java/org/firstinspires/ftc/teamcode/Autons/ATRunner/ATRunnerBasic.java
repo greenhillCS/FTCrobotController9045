@@ -103,7 +103,6 @@ public class ATRunnerBasic {
         return pointIndex;
     }
     private void moveRobot(double x, double y, double yaw) {
-        speed = point.getSpeed();
 
         // Calculate wheel powers.
         double leftFrontPower    =  x -y -yaw;
@@ -136,7 +135,9 @@ public class ATRunnerBasic {
         frontLeft.setPower(0);
     }
     public void update(){
-
+        if(state != STATE.DONE) {
+            point = points.get(pointIndex);
+        }
         switch(state) {
             case MOVING:
                 LLResult result = limelight.getLatestResult();
@@ -157,7 +158,6 @@ public class ATRunnerBasic {
                         double x = fiducial.getTargetXDegrees(); // Where it is (left-right)
                         double y = fiducial.getTargetYDegrees(); // Where it is (up-down)
                         Pose3D pose = fiducial.getTargetPoseCameraSpace();
-                        point = points.get(pointIndex);
                         if (point.getId() == id) {
                             range = pose.getPosition().z * 39.3701;
                             yaw = pose.getOrientation().getPitch(AngleUnit.DEGREES) * -1;
@@ -236,8 +236,6 @@ public class ATRunnerBasic {
                         state = STATE.DONE;
                         break;
                     }
-
-                    point = points.get(pointIndex);
                     break;
                 }
                 break;
