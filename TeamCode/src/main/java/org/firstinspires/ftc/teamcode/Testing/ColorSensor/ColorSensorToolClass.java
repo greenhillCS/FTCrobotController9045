@@ -34,6 +34,7 @@ public class ColorSensorToolClass {
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private Gamepad gamepad;
+    String[] String;
     private NormalizedColorSensor ballColor;
     private NormalizedRGBA colors;
     final float[] hsvValue = new float[3];
@@ -67,7 +68,8 @@ colors = ballColor.getNormalizedColors();
 
     //Purple: Hue 225 (210-240)
     //Green:  Hue 155 (145-165) idk why but green is more accurate
-
+    String[] String =  {"green", "purple", "green"};
+    int[] myNum = {0,1,2};
 }
 
 

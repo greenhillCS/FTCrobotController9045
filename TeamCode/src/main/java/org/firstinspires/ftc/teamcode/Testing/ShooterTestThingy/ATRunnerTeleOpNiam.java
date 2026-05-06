@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.Testing.ShooterTestThingy;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -49,9 +50,9 @@ import org.firstinspires.ftc.teamcode.Autons.ATRunner.ATRunnerBasic;
  */
 //TODO:Uncomment one of the following and rename group and name as needed.
 //@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
-@Autonomous(name="Sahith Official Auton", group="ATRunner")
+@TeleOp(name="Sahith Official Auton", group="ATRunner")
 
-public class ATRunnerNiam extends OpMode
+public class ATRunnerTeleOpNiam extends OpMode
 {
     // Declare OpMode members.
 
@@ -78,7 +79,7 @@ public class ATRunnerNiam extends OpMode
         launcher.setDirection(DcMotorSimple.Direction.FORWARD);
         launcher.setPower(1);
         gate = hardwareMap.get(Servo.class, "Flicker");
-        gate.setPosition(0.5);
+        gate.setPosition(0);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -108,13 +109,13 @@ public class ATRunnerNiam extends OpMode
         if(atr.state.equals(ATRunnerBasic.STATE.WAITING)) {
             switch (atr.pointIndex) {
                 case 0, 2, 4, 6:
-                    gate.setPosition(0);
+                    gate.setPosition(1);
                     break;
                 case 1, 3, 5:
-                    gate.setPosition(0.5);
+                    gate.setPosition(0);
                     break;
                 case 7:
-                    gate.setPosition(0.5);
+                    gate.setPosition(1);
                     launcher.setPower(0);
                     break;
             }
