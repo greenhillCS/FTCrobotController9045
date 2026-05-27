@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Testing.tigercomp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "tiger shooter tester 4141")
+@Disabled
 public class shooterTester extends OpMode {
     private DcMotor shooter;
 

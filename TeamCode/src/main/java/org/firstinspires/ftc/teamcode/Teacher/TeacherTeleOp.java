@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Teacher;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -37,6 +38,7 @@ import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 import java.util.HashMap;
 
 @TeleOp(name="Teacher TeleOp 70pts", group = "Main")
+@Disabled
 public class TeacherTeleOp extends OpMode
 {
     TeacherBot bot;

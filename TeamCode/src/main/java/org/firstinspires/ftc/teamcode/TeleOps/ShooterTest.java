@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.TeleOps;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -55,7 +56,7 @@ import org.firstinspires.ftc.teamcode.Tools.ManualTools;
  */
 
 @TeleOp(name="Shooter Test TeleOp", group="Shooter")
-
+@Disabled
 public class ShooterTest extends OpMode
 {
     // Declare OpMode members.

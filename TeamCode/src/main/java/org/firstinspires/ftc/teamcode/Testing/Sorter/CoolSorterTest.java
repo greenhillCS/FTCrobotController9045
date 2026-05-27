@@ -28,6 +28,7 @@
  */
 
 package org.firstinspires.ftc.teamcode.Testing.Sorter;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -45,7 +46,7 @@ import org.firstinspires.ftc.teamcode.Testing.ColorSensor.ColorSensorToolClass;
 //TODO:Uncomment one of the following and rename group and name as needed.
 @TeleOp(name="Random Ahh Sorter Test", group="Sorter")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
-
+@Disabled
 public class CoolSorterTest extends OpMode
 {
     private SorterToolClass sorter;

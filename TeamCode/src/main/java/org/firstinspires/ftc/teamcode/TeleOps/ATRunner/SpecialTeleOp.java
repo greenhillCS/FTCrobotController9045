@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.TeleOps.ATRunner;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -54,7 +55,7 @@ import org.firstinspires.ftc.teamcode.Tools.ATRunner.LauncherToolClass;
  */
 
 @TeleOp(name="*Special TeleOp*", group="AAAAAAAAAAAAAAAAAAAAAAAAAAA")
-
+@Disabled
 public class SpecialTeleOp extends OpMode
 {
     // Declare OpMode members.

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name="SammieAndGabrielAuton", group="SammieAndGabriel")
-
+@Disabled
 public class SammieAndGabrielAuton extends OpMode {
     // Declare OpMode members.
 

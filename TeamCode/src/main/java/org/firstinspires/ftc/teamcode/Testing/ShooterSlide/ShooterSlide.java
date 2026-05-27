@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Testing.ShooterSlide;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -44,7 +45,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //TODO:Uncomment one of the following and rename group and name as needed.
 @TeleOp(name="ShooterSlide", group="Testing")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
-
+@Disabled
 public class ShooterSlide extends OpMode
 {
     // Declare OpMode members.

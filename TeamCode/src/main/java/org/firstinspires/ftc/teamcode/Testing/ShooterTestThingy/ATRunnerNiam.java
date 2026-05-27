@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.Testing.ShooterTestThingy;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -50,7 +51,7 @@ import org.firstinspires.ftc.teamcode.Autons.ATRunner.ATRunnerBasic;
 //TODO:Uncomment one of the following and rename group and name as needed.
 //@TeleOp(name="Change the name of your TeleOp", group="zzzzz")
 @Autonomous(name="Sahith Official Auton", group="ATRunner")
-
+@Disabled
 public class ATRunnerNiam extends OpMode
 {
     // Declare OpMode members.

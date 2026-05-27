@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autons.ATRunner;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Tools.ATRunner.TurretLimelight;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.v;
 
 @Autonomous(name="ATRunner Test Blue", group="ATRunner")
-
+@Disabled
 public class ATRunnerTestBlue extends OpMode {
     // Declare OpMode members.
 

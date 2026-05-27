@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autons;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.TurretLimelight;
 
 @Autonomous(name="LimelightAuton Far", group="Autons")
-
+@Disabled
 public class AutonLimeLight extends OpMode {
     // Declare OpMode members.
 

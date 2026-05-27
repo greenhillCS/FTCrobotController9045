@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Testing.Tank_Team;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Four Motors Continuous Spin Test", group="Testing")
+@Disabled
 public class FourMotorsTestCode extends OpMode {
 
     // Motors

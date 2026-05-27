@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.Teacher;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
@@ -37,6 +38,7 @@ import org.firstinspires.ftc.teamcode.Testing.AlianceColor.AlianceColorSyncTool;
 import java.util.HashMap;
 
 @Autonomous(name="Teacher Auton", group = "Main")
+@Disabled
 public class TeacherAuton extends OpMode
 {
     TeacherBot bot;

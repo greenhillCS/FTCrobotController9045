@@ -121,6 +121,8 @@ public class TeacherBot
         Waypoint curPose = waypoints.get(currentWaypoint);
         assert curPose != null;
         LLResult result = limelight.getLatestResult();
+        shooter.setSpinSpeed(curPose.shootTPS);
+
         if (result != null && result.isValid()) {
             double tx = result.getTx(); // How far left or right the target is (degrees)
             double yawError = 0;
@@ -157,7 +159,6 @@ public class TeacherBot
                 rangeError = range - DESIRED_DISTANCE;
                 variance = abs(yawError) + abs(headingError) + abs(rangeError);
 
-                shooter.setSpinSpeed(curPose.shootTPS);
                 if (curPose.name.equals("humanDrop")) {
                     release.setHold();
                 }

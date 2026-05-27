@@ -57,7 +57,7 @@ import org.firstinspires.ftc.teamcode.Tools.ManualTools;
 
 @Config
 @TeleOp(name="Driver Test TeleOp", group="A_Decode")
-
+@Disabled
 public class DriverTestTeleOp extends OpMode
 {
     // Declare OpMode members.

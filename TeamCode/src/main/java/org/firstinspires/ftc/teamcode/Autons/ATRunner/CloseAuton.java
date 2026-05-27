@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autons.ATRunner;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Tools.ATRunner.LauncherToolClass;
 import org.firstinspires.ftc.teamcode.Tools.ATRunner.v;
 
 @Autonomous(name="*Special Close Auton*", group="AAAAAAAAAAAAAAAAAAAAAAAAA")
-
+@Disabled
 public class CloseAuton extends OpMode {
     // Declare OpMode members.
 

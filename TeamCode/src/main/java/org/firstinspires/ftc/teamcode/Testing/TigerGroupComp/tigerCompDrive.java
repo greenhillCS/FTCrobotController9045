@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Testing.TigerGroupComp;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp(name = "tiger competition robot teleop")
+@Disabled
 public class tigerCompDrive extends OpMode {
     private DcMotor frontLeft;
     private DcMotor frontRight;

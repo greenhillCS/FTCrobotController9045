@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.AutonAssets.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.AutonAssets.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name="DriveForwardAuton", group="Decode")
-
+@Disabled
 public class DriveForwardAuton extends OpMode {
     // Declare OpMode members.
 

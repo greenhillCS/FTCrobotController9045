@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Testing.JohnnyThings;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -44,7 +45,7 @@ import org.firstinspires.ftc.teamcode.Tools.TejDesignTools;
  */
 @TeleOp(name="Tej Design", group="Tej")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
-
+@Disabled
 public class TejDesign extends OpMode
 {
     // Declare OpMode members.

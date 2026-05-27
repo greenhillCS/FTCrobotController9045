@@ -50,6 +50,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Sammie Drive", group="Robot")
+@Disabled
 public class SammieDrive extends OpMode{
 
     /* Declare OpMode members. */

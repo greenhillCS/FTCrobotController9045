@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Testing;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "tiger arm test")
+@Disabled
 public class tigerarmtest extends OpMode {
     Servo base;
     Servo turret;

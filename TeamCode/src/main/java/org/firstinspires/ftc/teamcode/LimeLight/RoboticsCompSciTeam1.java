@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.LimeLight;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -83,6 +84,7 @@ import java.util.List;
  */
 
 @TeleOp(name="LimeLight Drive", group = "Concept")
+@Disabled
 public class RoboticsCompSciTeam1 extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.

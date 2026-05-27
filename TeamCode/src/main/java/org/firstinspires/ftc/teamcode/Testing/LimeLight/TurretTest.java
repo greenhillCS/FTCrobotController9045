@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Testing.LimeLight;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -43,6 +44,7 @@ import org.firstinspires.ftc.teamcode.Tools.ATRunner.TurretLimelight;
  * class is instantiated on the Robot Controller and executed.
  */
 @TeleOp(group="Limelight")
+@Disabled
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
 public class TurretTest extends OpMode

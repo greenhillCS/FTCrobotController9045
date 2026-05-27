@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Tools.Intake;
 import org.firstinspires.ftc.teamcode.Tools.RobotAutoDriveToAprilTagOmniToolClass;
 
 @Autonomous(name="BIG JUICY AUTON", group="Testing")
+@Disabled
 public class AprilTagOmniAuton extends OpMode {
     // Declare OpMode members.
 

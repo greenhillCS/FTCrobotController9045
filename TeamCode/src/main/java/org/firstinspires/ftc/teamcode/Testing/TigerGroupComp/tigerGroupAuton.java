@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Testing.TigerGroupComp;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @Autonomous(name = "tiger competition robot auton")
+@Disabled
 public class tigerGroupAuton extends LinearOpMode {
     private DcMotor frontLeft;
     private DcMotor frontRight;

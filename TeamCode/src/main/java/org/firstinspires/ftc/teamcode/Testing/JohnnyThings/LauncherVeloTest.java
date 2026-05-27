@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Testing.JohnnyThings;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -49,7 +50,7 @@ import org.firstinspires.ftc.teamcode.Tools.ATRunner.v;
 
 @TeleOp(name="Launcher Velo Test", group="Test")
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
-
+@Disabled
 public class LauncherVeloTest extends OpMode
 {
     // Declare OpMode members.

@@ -33,6 +33,7 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -84,6 +85,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Sahith Auton Test", group = "Testing")
+@Disabled
 public class SahithCameraThingy extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.

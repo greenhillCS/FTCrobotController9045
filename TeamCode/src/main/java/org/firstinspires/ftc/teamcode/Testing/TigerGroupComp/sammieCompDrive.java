@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,6 +21,7 @@ import java.util.List;
 
 
 @TeleOp(name = "sammie competition robot teleop")
+@Disabled
 public class sammieCompDrive extends OpMode {
     private DcMotor frontLeft;
     private DcMotor frontRight;

@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.Testing.Ayan_Try;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -54,6 +55,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 //TODO:Uncomment one of the following and rename group and name as needed.
 @TeleOp(name="TryingOp", group="Testing")
+@Disabled
 //@Autonomous(name="Change the name of your Auton", group="zzzzz")
 
 public class TryingOp extends OpMode

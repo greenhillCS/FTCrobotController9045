@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Testing.JohnnyThings;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Tools.Intake;
 import org.firstinspires.ftc.teamcode.Tools.Launcher;
 
 @Autonomous(name="Red Auton", group="Testing")
+@Disabled
 public class TestAuton extends OpMode {
     // Declare OpMode members.
 

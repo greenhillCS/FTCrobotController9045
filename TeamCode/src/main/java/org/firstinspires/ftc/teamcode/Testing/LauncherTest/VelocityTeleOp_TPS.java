@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Testing.LauncherTest;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "VelocityTeleOp_TPS")
+@Disabled
 public class VelocityTeleOp_TPS extends OpMode {
 
     // Motor / encoder
