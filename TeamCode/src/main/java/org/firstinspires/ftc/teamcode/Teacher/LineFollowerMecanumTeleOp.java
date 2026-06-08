@@ -50,12 +50,13 @@ public class LineFollowerMecanumTeleOp extends LinearOpMode {
     //   2. Raise KD to damp remaining oscillation.
     //   3. Add a tiny KI only if there is a persistent left or right drift.
     private static double KP = 0.0003;
-    private static double KI = 0.0000001;
-    private static double KD = 0.0000001;
+    private static double KI = 0.00000000;
+    private static double KD = 0.00000000;
 
     // ── Calibrated values — filled in by runCalibration() ────────────────────
-    private double floorValue = 180;      // Raw sensor reading over bare floor
-    private double lineValue = 520;       // Raw sensor reading over line center
+    private double dampening = 100.0;
+    private double floorValue = 18;      // Raw sensor reading over bare floor
+    private double lineValue = 52;       // Raw sensor reading over line center
     private double edgeTarget = (floorValue+lineValue)/2;      // PID setpoint: midpoint of floor and line
     private double lostThreshold=floorValue;   // Below this → line considered lost
     private double correctionSign = 1.0;  // +1.0 or -1.0 to match chosen edge
@@ -139,21 +140,27 @@ public class LineFollowerMecanumTeleOp extends LinearOpMode {
 
             if (gamepad1.rightBumperWasPressed()){
                 KI *= 1.1;
+                pid.setGains(KP, KI, KD);
             }
             if (gamepad1.leftBumperWasPressed()){
                 KI *= 0.9;
+                pid.setGains(KP, KI, KD);
             }
             if (gamepad1.dpadUpWasPressed()){
                 KP *= 1.1;
+                pid.setGains(KP, KI, KD);
             }
             if (gamepad1.dpadDownWasPressed()){
                 KP *= 0.9;
+                pid.setGains(KP, KI, KD);
             }
             if (gamepad1.dpadRightWasPressed()){
                 KD *= 1.1;
+                pid.setGains(KP, KI, KD);
             }
             if (gamepad1.dpadLeftWasPressed()){
                 KD *= 0.9;
+                pid.setGains(KP, KI, KD);
             }
 
 
@@ -348,7 +355,7 @@ public class LineFollowerMecanumTeleOp extends LinearOpMode {
      * Change to .red() or .green() for other line colors.
      */
     private double readSensor() {
-        return colorSensor.blue()/10.0;
+        return colorSensor.blue()/dampening;
     }
 
     private void stopMotors() {
